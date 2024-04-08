@@ -1,0 +1,79 @@
+<odoo>
+    <data>
+        <template id="forum_index" inherit_id="website_forum.forum_index">
+            <xpath expr="//t[@t-call='website_forum.header']/div[1]/div[1]" position="after">
+                <div class="d-flex">
+                    <div t-attf-class="flex-grow-1">
+                        <t t-if="knowledge_ids">
+                            <div style="margin-top: 10px;">
+                                <h4>Knowledge</h4>
+                                <ul>
+                                    <t t-foreach="knowledge_ids" t-as="knowledge_id">
+                                        <li>
+                                            <a t-att-href="'/knowledge/%s' % (knowledge_id.id)"
+                                                   t-attf-title="Read: #{knowledge_id.name}"
+                                                   class="text-reset"
+                                                   t-esc="knowledge_id.name"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+<!--                <span class="mx-1 text-400 d-none d-lg-block">|</span>-->
+<!--                <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='knowledge')"-->
+<!--                    t-attf-class="nav-link py-1 rounded-pill #{filters == 'knowledge' and 'active fw-bold' or 'px-2'}">Knowledge-->
+<!--                </a>-->
+            </xpath>
+            <xpath expr="//t[@t-call='website_forum.header']/div[2]/div[@t-if='question_count == 0 or original_search']/div[@t-if='search or tag or (not no_filters)']/t[@t-set='result_msg']" position="replace">
+                <t t-set="result_msg">
+                    Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s in Forum.
+                </t>
+            </xpath>
+        </template>
+
+<!--        <div class="d-flex">
+                    <div t-attf-class="flex-grow-1">
+                        <t t-if="knowledge_ids">
+                            <div style="margin-top: 50px;">
+                                <h4>Knowledge</h4>
+                                <ul>
+                                    <t t-foreach="knowledge_ids" t-as="knowledge_id">
+                                        <li>
+                                            <a t-att-href="'/knowledge/%s' % (knowledge_id.id)"
+                                                   t-attf-title="Read: #{knowledge_id.name}"
+                                                   class="text-reset"
+                                                   t-esc="knowledge_id.name"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </t>
+                    </div>
+                </div>-->
+
+        <template id="knowledge_post" name="Knowledge Post">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <section class="py-2">
+                        <div class="container">
+                            <a class="btn btn-light border me-2 o_back_button" title="Back">
+                                <i class="fa fa-chevron-left me-1"/>Back
+                            </a>
+                            <h1 t-esc="document.name"/>
+                            <div class="row">
+                                <div t-raw="document.content"/>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+<!--                <div id="wrap" class="oe_structure">-->
+<!--                    <div t-raw="document.content"/>-->
+
+<!--                </div>-->
+            </t>
+        </template>
+    </data>
+</odoo>
