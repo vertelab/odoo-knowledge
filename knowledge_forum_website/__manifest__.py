@@ -30,9 +30,10 @@
     'author': 'Vertel AB',
     'website': 'https://vertel.se/apps/',
     'license': 'AGPL-3',
-    'depends': ['website_forum', 'document_knowledge'],
+    'depends': ['website_forum', 'document_knowledge', 'document_page'],
     'data': [
-        'views/website_forum.xml'
+        'security/document_knowledge_security.xml',
+        'views/website_forum.xml',
     ],
     'demo': [],
     'application': False,

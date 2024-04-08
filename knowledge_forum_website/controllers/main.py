@@ -105,12 +105,11 @@ class WebsiteForumExtended(WebsiteForum):
         return request.render("website_forum.forum_index", values)
 
     def _forum_knowledge_search(self, search, options):
-        knowledge_ids = request.env['document.page'].search([('name', 'ilike', search)], order="id asc")
+        knowledge_ids = request.env['document.page'].sudo().search([('name', 'ilike', search)], order="id asc")
         return knowledge_ids
 
-    @http.route(['/knowledge/<model("document.page"):document>',
-                 '/forum/<model("document.page"):document>/page/<int:page>',
-                 ], type='http', auth="public", website=True, sitemap=WebsiteForum.sitemap_forum)
+    @http.route('/knowledge/<model("document.page"):document>', type='http', auth="public",
+                website=True, sitemap=WebsiteForum.sitemap_forum)
     def knowledge(self, document=None, page=1, filters='all', search='', **post):
         values = {
             'document': document

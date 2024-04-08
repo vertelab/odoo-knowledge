@@ -40,7 +40,7 @@
                             </a>
                             <h1 t-esc="document.name"/>
                             <div class="row">
-                                <div t-raw="document.content"/>
+                                <div t-out="document.content"/>
                             </div>
                         </div>
                     </section>
