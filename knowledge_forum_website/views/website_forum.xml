@@ -24,7 +24,7 @@
             </xpath>
             <xpath expr="//t[@t-call='website_forum.header']/div[2]/div[@t-if='question_count == 0 or original_search']/div[@t-if='search or tag or (not no_filters)']/t[@t-set='result_msg']" position="replace">
                 <t t-set="result_msg">
-                    Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s in Forum.
+                    Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s <t t-if="knowledge_ids">in Forum</t>.
                 </t>
             </xpath>
         </template>
