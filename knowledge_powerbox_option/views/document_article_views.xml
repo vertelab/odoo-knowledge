@@ -1,0 +1,8 @@
+<odoo>
+    <record id="document_knowledge_article_action_form" model="ir.actions.act_window">
+        <field name="name">Pages</field>
+        <field name="res_model">document.page</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="document_page.view_wiki_form"/>
+    </record>
+</odoo>
