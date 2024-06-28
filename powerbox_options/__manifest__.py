@@ -22,27 +22,22 @@
 # https://www.odoo.com/documentation/16.0/reference/module.html
 #
 {
-    'name': 'Knowledge Powerbox Option',
+    'name': 'Extra Powerbox Options',
     'version': '16.0.0.0',
-    'summary': 'Knowledge Powerbox Option',
+    'summary': 'Extra Powerbox Options',
     'category': 'Knowledge',
-    'description': """ Knowledge Powerbox Option """,
+    'description': """ Extra Powerbox Options """,
     'author': 'Vertel AB',
     'website': 'https://vertel.se/apps/',
     'license': 'AGPL-3',
-    'depends': ['document_knowledge', 'document_page', 'web_editor'],
+    'depends': ['web_editor'],
     'data': [
-        'views/document_article_views.xml',
-        'data/behaviors_templates.xml',
     ],
     'assets': {
         'web_editor.assets_wysiwyg': [
-            'knowledge_powerbox_option/static/src/js/wysiwyg/wysiwyg.js',
-            'knowledge_powerbox_option/static/src/js/wysiwyg/knowledge_article_link.js',
-            'knowledge_powerbox_option/static/src/xml/knowledge_editor.xml',
-
-            'knowledge_powerbox_option/static/src/js/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js',
-            'knowledge_powerbox_option/static/src/js/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.xml',
+            'powerbox_options/static/src/js/wysiwyg/wysiwyg.js',
+            'powerbox_options/static/src/js/wysiwyg/knowledge_article_link.js',
+            'powerbox_options/static/src/xml/knowledge_editor.xml',
         ],
     },
     'application': True,

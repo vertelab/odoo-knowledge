@@ -4,7 +4,9 @@ import { ComponentWrapper } from 'web.OwlCompatibility';
 import { qweb as QWeb, _t } from 'web.core';
 import Wysiwyg from 'web_editor.wysiwyg';
 import { KnowledgeArticleLinkModal } from './knowledge_article_link.js';
+import { PromptEmbeddedViewNameDialogWrapper } from '../prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js';
 import { preserveCursor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
+
 
 
 Wysiwyg.include({
@@ -13,6 +15,7 @@ Wysiwyg.include({
      * @override
      */
     init: function (parent, options) {
+        console.log("options", options)
         if (options.knowledgeCommands) {
             /**
              * knowledgeCommands is a view option from a field_html that
@@ -56,9 +59,9 @@ Wysiwyg.include({
         if (anchor.nodeType !== Node.ELEMENT_NODE) {
             anchor = anchor.parentElement;
         }
-        if (anchor && anchor.closest('.o_knowledge_content')) {
-            commands = commands.filter(command => command.category !== 'Knowledge');
-        }
+//        if (anchor && anchor.closest('.o_knowledge_content')) {
+//            commands = commands.filter(command => command.category !== 'Knowledge');
+//        }
         return commands;
     },
     /**
@@ -79,7 +82,7 @@ Wysiwyg.include({
                 this._insertArticleLink();
             },
         });
-        if (this.options.knowledgeCommands) {
+//        if (this.options.knowledgeCommands) {
             categories.push({ name: 'Knowledge', priority: 10 });
             commands.push({
                 category: 'Knowledge',
@@ -98,15 +101,6 @@ Wysiwyg.include({
                 }
             }, {
                 category: 'Knowledge',
-                name: _t('Template'),
-                priority: 10,
-                description: _t('Add a template section.'),
-                fontawesome: 'fa-pencil-square',
-                callback: () => {
-                    this._insertTemplate();
-                },
-            }, {
-                category: 'Knowledge',
                 name: _t('Table Of Content'),
                 priority: 30,
                 description: _t('Add a table of content.'),
@@ -114,25 +108,6 @@ Wysiwyg.include({
                 callback: () => {
                     this._insertTableOfContent();
                 },
-            }, {
-                category: 'Knowledge',
-                name: _t('Item Kanban'),
-                priority: 40,
-                description: _t('Insert a Kanban view of article items'),
-                fontawesome: 'fa-th-large',
-                callback: () => {
-                    const restoreSelection = preserveCursor(this.odooEditor.document);
-                    const viewType = 'kanban';
-                    this._openEmbeddedViewDialog(viewType, name => {
-                        restoreSelection();
-                        this._insertEmbeddedView('knowledge_powerbox_option.knowledge_article_item_action', viewType, name, {
-                            active_id: this.options.recordInfo.res_id,
-                            default_parent_id: this.options.recordInfo.res_id,
-                            default_icon: '📄',
-                            default_is_article_item: true,
-                        });
-                    });
-                }
             }, {
                 category: 'Knowledge',
                 name: _t('Item List'),
@@ -144,7 +119,7 @@ Wysiwyg.include({
                     const viewType = 'list';
                     this._openEmbeddedViewDialog(viewType, name => {
                         restoreSelection();
-                        this._insertEmbeddedView('knowledge_powerbox_option.knowledge_article_item_action', viewType, name, {
+                        this._insertEmbeddedView('knowledge_powerbox_option.document_article_item_action', viewType, name, {
                             active_id: this.options.recordInfo.res_id,
                             default_parent_id: this.options.recordInfo.res_id,
                             default_icon: '📄',
@@ -171,7 +146,7 @@ Wysiwyg.include({
                     this._insertArticlesStructure(false);
                 }
             });
-        }
+//        }
         return {...options, commands, categories};
     },
     /**
@@ -201,6 +176,7 @@ Wysiwyg.include({
         const tableOfContentBlock = $(QWeb.render('knowledge_powerbox_option.abstract_behavior', {
             behaviorType: "o_knowledge_behavior_type_toc",
         }))[0];
+        console.log('tableOfContentBlock', tableOfContentBlock)
         const [container] = this.odooEditor.execCommand('insert', tableOfContentBlock);
         this._notifyNewBehavior(container);
     },
@@ -213,7 +189,9 @@ Wysiwyg.include({
         const articlesStructureBlock = $(QWeb.render('knowledge_powerbox_option.articles_structure_wrapper', {
             childrenOnly: childrenOnly
         }))[0];
+        console.log('articlesStructureBlock', articlesStructureBlock)
         const [container] = this.odooEditor.execCommand('insert', articlesStructureBlock);
+        console.log('container', container)
         this._notifyNewBehavior(container);
     },
     /**
@@ -271,7 +249,9 @@ Wysiwyg.include({
             method: 'render_embedded_view',
             args: [[this.options.recordInfo.res_id], actWindowId, viewType, name, context],
         }))[0];
+        console.log('embeddedViewBlock', embeddedViewBlock)
         const [container] = this.odooEditor.execCommand('insert', embeddedViewBlock);
+        console.log('container', container)
         this._notifyNewBehavior(container);
     },
     /**
@@ -300,6 +280,21 @@ Wysiwyg.include({
         } else {
             return this._super(...arguments);
         }
+    },
+
+    /**
+     * Inserts the dialog allowing the user to specify name for the embedded view.
+     * @param {String} viewType
+     * @param {Function} save
+     */
+    _openEmbeddedViewDialog: function (viewType, save) {
+        // TODO: remove the wrapper when the wysiwyg is converted to owl.
+        const dialog = new ComponentWrapper(this, PromptEmbeddedViewNameDialogWrapper, {
+            isNew: true,
+            viewType: viewType,
+            save: save
+        });
+        dialog.mount(document.body);
     },
 
 
