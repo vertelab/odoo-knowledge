@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { AbstractBehavior } from "@knowledge/components/behaviors/abstract_behavior/abstract_behavior";
-import { HEADINGS, fetchValidHeadings } from "@knowledge/js/tools/knowledge_tools";
+import { AbstractBehavior } from "@knowledge_powerbox_option/components/behaviors/abstract_behavior/abstract_behavior";
+import { HEADINGS, fetchValidHeadings } from "@knowledge_powerbox_option/js/tools/knowledge_tools";
 
 const {
     onPatched,
@@ -238,5 +238,5 @@ export class TableOfContentBehavior extends AbstractBehavior {
     }
 }
 
-TableOfContentBehavior.template = "knowledge.TableOfContentBehavior";
+TableOfContentBehavior.template = "knowledge_powerbox_option.TableOfContentBehavior";
 TableOfContentBehavior.components = {};

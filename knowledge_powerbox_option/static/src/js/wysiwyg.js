@@ -3,10 +3,9 @@
 import { ComponentWrapper } from 'web.OwlCompatibility';
 import { qweb as QWeb, _t } from 'web.core';
 import Wysiwyg from 'web_editor.wysiwyg';
-import { KnowledgeArticleLinkModal } from './knowledge_article_link.js';
-import { PromptEmbeddedViewNameDialogWrapper } from '../prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js';
+import { KnowledgeArticleLinkModal } from './wysiwyg/knowledge_article_link.js';
+import { PromptEmbeddedViewNameDialogWrapper } from '../components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js';
 import { preserveCursor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
-
 
 
 Wysiwyg.include({
@@ -15,7 +14,6 @@ Wysiwyg.include({
      * @override
      */
     init: function (parent, options) {
-        console.log("options", options)
         if (options.knowledgeCommands) {
             /**
              * knowledgeCommands is a view option from a field_html that
@@ -59,9 +57,9 @@ Wysiwyg.include({
         if (anchor.nodeType !== Node.ELEMENT_NODE) {
             anchor = anchor.parentElement;
         }
-//        if (anchor && anchor.closest('.o_knowledge_content')) {
-//            commands = commands.filter(command => command.category !== 'Knowledge');
-//        }
+        if (anchor && anchor.closest('.o_knowledge_content')) {
+            commands = commands.filter(command => command.category !== 'Knowledge');
+        }
         return commands;
     },
     /**
@@ -82,24 +80,9 @@ Wysiwyg.include({
                 this._insertArticleLink();
             },
         });
-//        if (this.options.knowledgeCommands) {
+        if (this.options.knowledgeCommands) {
             categories.push({ name: 'Knowledge', priority: 10 });
             commands.push({
-                category: 'Knowledge',
-                name: _t('File'),
-                priority: 20,
-                description: _t('Embed a file.'),
-                fontawesome: 'fa-file',
-                callback: () => {
-                    this.openMediaDialog({
-                        noVideos: true,
-                        noImages: true,
-                        noIcons: true,
-                        noDocuments: true,
-                        knowledgeDocuments: true,
-                    });
-                }
-            }, {
                 category: 'Knowledge',
                 name: _t('Table Of Content'),
                 priority: 30,
@@ -108,25 +91,6 @@ Wysiwyg.include({
                 callback: () => {
                     this._insertTableOfContent();
                 },
-            }, {
-                category: 'Knowledge',
-                name: _t('Item List'),
-                priority: 50,
-                description: _t('Insert a List view of article items'),
-                fontawesome: 'fa-th-list',
-                callback: () => {
-                    const restoreSelection = preserveCursor(this.odooEditor.document);
-                    const viewType = 'list';
-                    this._openEmbeddedViewDialog(viewType, name => {
-                        restoreSelection();
-                        this._insertEmbeddedView('knowledge_powerbox_option.document_article_item_action', viewType, name, {
-                            active_id: this.options.recordInfo.res_id,
-                            default_parent_id: this.options.recordInfo.res_id,
-                            default_icon: '📄',
-                            default_is_article_item: true,
-                        });
-                    });
-                }
             }, {
                 category: 'Knowledge',
                 name: _t('Index'),
@@ -146,7 +110,7 @@ Wysiwyg.include({
                     this._insertArticlesStructure(false);
                 }
             });
-//        }
+        }
         return {...options, commands, categories};
     },
     /**
@@ -176,7 +140,6 @@ Wysiwyg.include({
         const tableOfContentBlock = $(QWeb.render('knowledge_powerbox_option.abstract_behavior', {
             behaviorType: "o_knowledge_behavior_type_toc",
         }))[0];
-        console.log('tableOfContentBlock', tableOfContentBlock)
         const [container] = this.odooEditor.execCommand('insert', tableOfContentBlock);
         this._notifyNewBehavior(container);
     },
@@ -189,9 +152,7 @@ Wysiwyg.include({
         const articlesStructureBlock = $(QWeb.render('knowledge_powerbox_option.articles_structure_wrapper', {
             childrenOnly: childrenOnly
         }))[0];
-        console.log('articlesStructureBlock', articlesStructureBlock)
         const [container] = this.odooEditor.execCommand('insert', articlesStructureBlock);
-        console.log('container', container)
         this._notifyNewBehavior(container);
     },
     /**
@@ -211,7 +172,6 @@ Wysiwyg.include({
     _insertArticleLink: function () {
         const restoreSelection = preserveCursor(this.odooEditor.document);
         const dialog = new KnowledgeArticleLinkModal(this, {});
-        console.log("dialog", dialog)
         dialog.on('save', this, article => {
             if (article) {
                 const articleLinkBlock = $(QWeb.render('knowledge_powerbox_option.wysiwyg_article_link', {
@@ -249,9 +209,7 @@ Wysiwyg.include({
             method: 'render_embedded_view',
             args: [[this.options.recordInfo.res_id], actWindowId, viewType, name, context],
         }))[0];
-        console.log('embeddedViewBlock', embeddedViewBlock)
         const [container] = this.odooEditor.execCommand('insert', embeddedViewBlock);
-        console.log('container', container)
         this._notifyNewBehavior(container);
     },
     /**

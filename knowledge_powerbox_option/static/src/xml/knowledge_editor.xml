@@ -19,12 +19,24 @@
             #{childrenOnly ? 'o_knowledge_articles_structure_children_only' : ''}"/>
     </t>
 
-    <t t-name="knowledge_powerbox_option.abstract_behavior">
-        <div t-attf-class="o_knowledge_behavior_anchor #{behaviorType}">
-            <div class="p-3 text-center">
-                <i class="fa fa-circle-o-notch fa-2x fa-spin" title="loader" role="img"/>
-            </div>
-        </div>
+    <t t-name="knowledge_powerbox_option.articles_structure">
+        <i t-if="!articles or articles.length === 0">Nest articles under this one to generate a structure</i>
+        <ol class="mb-0">
+            <t t-foreach="articles" t-as="article">
+                <li>
+                    <!-- Use 'data-oe-nodeid' as we need something that is not removed during sanitizing -->
+                    <a t-attf-href="/document/article/#{article.id}" t-att-data-oe-nodeid="article.id"
+                        class="d-block w-100 ps-1 border-0 o_knowledge_article_structure_link"
+                        contenteditable="false" t-out="article.name">
+                    </a>
+                </li>
+                <li t-if="article.child_ids and article.child_ids.length !== 0">
+                    <t t-call="knowledge_powerbox_option.articles_structure">
+                        <t t-set="articles" t-value="article.child_ids"/>
+                    </t>
+                </li>
+            </t>
+        </ol>
     </t>
 
 </templates>

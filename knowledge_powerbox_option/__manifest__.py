@@ -36,13 +36,20 @@
         'data/behaviors_templates.xml',
     ],
     'assets': {
-        'web_editor.assets_wysiwyg': [
-            'knowledge_powerbox_option/static/src/js/wysiwyg/wysiwyg.js',
-            'knowledge_powerbox_option/static/src/js/wysiwyg/knowledge_article_link.js',
-            'knowledge_powerbox_option/static/src/xml/knowledge_editor.xml',
+        'web.assets_backend': [
+            'knowledge_powerbox_option/static/src/components/**/*.js',
+            'knowledge_powerbox_option/static/src/components/**/*.xml',
 
-            'knowledge_powerbox_option/static/src/js/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js',
-            'knowledge_powerbox_option/static/src/js/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.xml',
+            'knowledge_powerbox_option/static/src/scss/knowledge_blocks.scss',
+            'knowledge_powerbox_option/static/src/js/knowledge_plugin.js',
+        ],
+        'web_editor.assets_wysiwyg': [
+            'knowledge_powerbox_option/static/src/js/wysiwyg/*.js',
+            'knowledge_powerbox_option/static/src/js/wysiwyg.js',
+            'knowledge_powerbox_option/static/src/xml/knowledge_editor.xml',
+        ],
+        'web.assets_common': [
+            'knowledge_powerbox_option/static/src/js/tools/knowledge_tools.js',
         ],
     },
     'application': True,

@@ -69,7 +69,6 @@ const KnowledgeArticleLinkModal = Dialog.extend({
                             domain: [['name', '=ilike', `%${term}%`]],
                         },
                     });
-                    console.log("results---", results)
                     params.success({ results });
                 },
                 /**

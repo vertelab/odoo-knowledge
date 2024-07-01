@@ -28,6 +28,9 @@
             <xpath expr="//form" position="attributes">
                 <attribute name="js_class">knowledge_article_view_form</attribute>
             </xpath>
+            <field name="content" position="attributes">
+                <attribute name="options">{'safe': True, 'codeview': True, 'collaborative': True, 'knowledge_commands': true}</attribute>
+            </field>
         </field>
     </record>
 </odoo>
