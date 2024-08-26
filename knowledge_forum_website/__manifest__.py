@@ -23,13 +23,20 @@
 #
 {
     'name': 'Knowledge Forum Website',
-    'version': '16.0.0.0',
+    'version': '0.0.0',
     'summary': 'Knowledge Forum Website',
     'category': 'Knowledge',
-    'description': """ """,
+    'description': """
+    """,
     'author': 'Vertel AB',
-    'website': 'https://vertel.se/apps/',
+    'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_forum_website',
+    'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'AGPL-3',
+    'contributor': '',
+    'maintainer': 'Vertel AB',
+    'repository': 'https://github.com/vertelab/odoo-knowledge',
+    # Any module necessary for this one to work correctly
+    
     'depends': ['website_forum', 'document_knowledge', 'document_page'],
     'data': [
         'security/document_knowledge_security.xml',
