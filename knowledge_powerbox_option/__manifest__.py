@@ -30,7 +30,7 @@
     Knowledge Powerbox Option
     """,
     'author': 'Vertel AB',
-    'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_forum_website',
+    'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_powerbox_option',
     'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'AGPL-3',
     'contributor': '',
