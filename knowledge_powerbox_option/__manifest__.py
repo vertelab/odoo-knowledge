@@ -23,13 +23,21 @@
 #
 {
     'name': 'Knowledge Powerbox Option',
-    'version': '16.0.0.0',
+    'version': '0.0',
     'summary': 'Knowledge Powerbox Option',
     'category': 'Knowledge',
-    'description': """ Knowledge Powerbox Option """,
+    'description': """
+    Knowledge Powerbox Option
+    """,
     'author': 'Vertel AB',
-    'website': 'https://vertel.se/apps/',
+    'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_powerbox_option',
+    'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'AGPL-3',
+    'contributor': '',
+    'maintainer': 'Vertel AB',
+    'repository': 'https://github.com/vertelab/odoo-knowledge',
+    # Any module necessary for this one to work correctly
+    
     'depends': ['document_knowledge', 'document_page', 'web_editor'],
     'data': [
         'views/document_article_views.xml',
