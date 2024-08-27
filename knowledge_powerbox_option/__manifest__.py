@@ -34,6 +34,7 @@
     'data': [
         'views/document_article_views.xml',
         'data/behaviors_templates.xml',
+        'data/ir_actions_data.xml',
     ],
     'assets': {
         'web.assets_backend': [

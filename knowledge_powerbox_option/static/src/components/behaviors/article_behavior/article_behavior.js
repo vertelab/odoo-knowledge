@@ -31,7 +31,7 @@ export class ArticleBehavior extends AbstractBehavior {
 
     async openArticle () {
         try {
-            await this.actionService.doAction('knowledge.ir_actions_server_knowledge_home_page', {
+            await this.actionService.doAction('knowledge_powerbox_option.ir_actions_server_knowledge_home_page', {
                 additionalContext: {
                     res_id: parseInt(this.props.article_id)
                 }

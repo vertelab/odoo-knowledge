@@ -31,7 +31,6 @@ class Article(models.Model):
         """
         self.ensure_one()
         action_data = self._extract_act_window_data(act_window_id_or_xml_id, name)
-        print("action_data", action_data)
         return self.env['ir.qweb']._render(
             'knowledge_powerbox_option.knowledge_embedded_view', {
                 'behavior_props': json.dumps({
@@ -43,6 +42,31 @@ class Article(models.Model):
             minimal_qcontext=True,
             raise_if_not_found=False
         )
+
+    def action_home_page(self):
+        """ Redirect to the home page of knowledge, which displays an article.
+        Chosen articles comes from
+
+          * either self if it is not void (taking the first article);
+          * ``res_id`` key from context;
+          * find the first accessible article, based on favorites and sequence
+            (see ``_get_first_accessible_article``);
+        """
+        article = self[0] if self else False
+        if not article and self.env.context.get('res_id', False):
+            article = self.browse([self.env.context["res_id"]])
+        if not article:
+            article = self._get_first_accessible_article()
+
+        # mode = 'edit' if article.user_has_write_access else 'readonly'
+        action = self.env['ir.actions.act_window']._for_xml_id('knowledge_powerbox_option'
+                                                               '.document_knowledge_article_action_form')
+        action['res_id'] = article.id
+        action['context'] = dict(
+            ast.literal_eval(action.get('context')),
+            # form_view_initial_mode=mode,
+        )
+        return action
 
     def _extract_act_window_data(self, act_window_id_or_xml_id, name):
         """
