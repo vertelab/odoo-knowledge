@@ -1,0 +1,137 @@
+<odoo>
+  <data>
+
+    <record id="view_law_tree_children" model="ir.ui.view">
+      <field name="name">document.law.tree</field>
+      <field name="model">document.law</field>
+      <field name="field_parent">child_ids</field>
+      <field name="priority">100</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="rss_titel" />
+          <field name="creation_date" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_law_tree" model="ir.ui.view">
+      <field name="name">document.law.list</field>
+      <field name="model">document.law</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="rss_titel" />
+          <field name="stage" />
+          <field name="category_id" />
+          <field name="company_id" groups="base.group_multi_company" />
+          <field name="creation_date"/>
+          <field name="rss_dok_id" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_law_form" model="ir.ui.view">
+      <field name="name">document.law.form</field>
+      <field name="model">document.law</field>
+      <field name="priority">9</field>
+      <field name="arch" type="xml">
+        <form string="Document Law">
+          <header>
+            <button name="set_stage_to_in_progres" type="object" string="Set To In Progress" class="oe_highlight" attrs="{'invisible': ['|',('stage', '==', 'in_progress'),('stage', '==', 'done')]}"/>
+            <button name="set_stage_to_done" type="object" string="Set To Done" class="oe_highlight" attrs="{'invisible': [('stage', '!=', 'in_progress')]}"/>
+            <button name="set_stage_to_cancel" type="object" string="Cancel" attrs="{'invisible': ['|',('stage', '==', 'done'),('stage', '==', 'cancel')]}" />
+            <button name="set_stage_to_cancel" type="object" string="Cancel" class="oe_highlight" attrs="{'invisible': [('stage', '!=', 'done')]}" />
+            <field name="stage" widget="statusbar" statusbar_visible="draft,in_progress,done" options="{'clickable': '1', 'fold_field': 'fold'}" />
+          </header>
+          <sheet>
+            <div name="button_box" id="button_box" class="oe_button_box" />
+            <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+            <field name="active" invisible="1" />
+            <div class="oe_title">
+              <h1>
+                <field name="rss_titel" placeholder="Name" />
+              </h1>
+            </div>
+            <field name="rss_html" widget="html" placeholder="e.g. Once upon a time..." required="0" options="{'safe': True, 'codeview': True, 'collaborative': True}" />
+            <notebook>
+              <page name="info" string="Information">
+                <group>
+                  <group>
+                    <field name="category_id" string="Category" />
+                    <field name="stage" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="creation_date" />
+                  </group>
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" />
+            <field name="activity_ids" widget="mail_activity" />
+            <field name="message_ids" widget="mail_thread" />
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_law_menu_form" model="ir.ui.view">
+      <field name="name">document.law.menu.form</field>
+      <field name="model">document.law</field>
+      <field name="arch" type="xml">
+        <form string="Document Law" create="0">
+          <h1>
+            <field name="rss_titel" placeholder="Name" />
+          </h1>
+          <field name="rss_html" widget="html" class="oe_view_only" required="1" options='{"safe": True}'/>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_law_filter" model="ir.ui.view">
+      <field name="name">document.law.search</field>
+      <field name="model">document.law</field>
+      <field name="arch" type="xml">
+        <search string="Document Law">
+          <field name="rss_titel" string="Content" filter_domain="['|', ('name','ilike',self), ('rss_html','ilike',self)]" />
+          <field name="rss_dok_id" />
+          <field name="company_id" />
+          <field name="rss_titel" />
+          <group expand="0" string="Group By...">
+            <filter name="group_by_category" string="Category" context="{'group_by':'category_id'}" />
+            <filter name="group_by_stage" string="Stage" context="{'group_by':'stage'}" />
+          </group>
+          <searchpanel>
+            <field name="stage" icon="fa-folder" string="Stages" enable_counters="1" />
+          </searchpanel>
+        </search>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_laws">
+      <field name="name">Laws</field>
+      <field name="res_model">document.law</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="document_law.view_law_tree"/>
+      <field name="search_view_id" ref="document_law.view_law_filter" />
+      <field name="help">No laws at the moment.</field>
+      <field name="domain" eval="[('rss_dok_id','!=',False)]" />
+    </record>
+
+    <record id="action_laws_tree" model="ir.actions.act_window.view">
+      <field name="sequence" eval="0" />
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="document_law.view_law_tree" />
+      <field name="act_window_id" ref="action_laws" />
+    </record>
+
+    <record id="action_laws_form" model="ir.actions.act_window.view">
+      <field name="sequence" eval="5" />
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_law_form" />
+      <field name="act_window_id" ref="action_laws" />
+    </record>
+
+    <menuitem id="menu_document_law" name="Laws" parent="document_page.menu_wiki" action="action_laws" sequence="20" />
+
+  </data>
+</odoo>
