@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+
+        <record id="import_esg_wizard" model="ir.ui.view">
+            <field name="name">import.esg.wizard</field>
+            <field name="model">import.esg.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Import ESG">
+                    <group>
+                        <group>
+                            <field name="file"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="import_esg" string="Import" type="object" class="btn-primary" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="import_esg_action" model="ir.actions.act_window">
+            <field name="name">Import ESG</field>
+            <field name="res_model">import.esg.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="import_esg_wizard" />
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_import_esg_wizard" name="CSRD Wizard" parent="document_page.menu_wiki" action="import_esg_action" sequence="20" />
+
+    </data>
+</odoo>

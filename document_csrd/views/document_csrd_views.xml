@@ -1,0 +1,112 @@
+<odoo>
+  <data>
+
+    <record id="view_csrd_tree" model="ir.ui.view">
+      <field name="name">document.csrd.list</field>
+      <field name="model">document.csrd</field>
+      <field name="arch" type="xml">
+        <header>
+            <!-- <button name="document_csrd.import_esg_action" type="action" string="Import ESRS" class="oe_highlight" display="always" /> -->
+        </header>
+        <tree>
+          <field name="csrd_name" />
+          <field name="company_id" groups="base.group_multi_company" />
+          <field name="creation_date"/>
+          <field name="csrd_id" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_csrd_form" model="ir.ui.view">
+      <field name="name">document.csrd.form</field>
+      <field name="model">document.csrd</field>
+      <field name="priority">9</field>
+      <field name="arch" type="xml">
+        <form string="Document csrd">
+          <sheet>
+            <div name="button_box" id="button_box" class="oe_button_box" />
+            <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+            <field name="active" invisible="1" />
+            <div class="oe_title">
+              <h1>
+                <field name="csrd_name" placeholder="Name" />
+              </h1>
+            </div>
+            <notebook>
+              <page name="info" string="Information">
+                <group>
+                  <group>
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="creation_date" readonly="1" />
+                    <field name="csrd_sheet_name" readonly="1" />
+                    <field name="csrd_id" readonly="1" />
+                    <field name="csrd_esrs" readonly="1" attrs="{'invisible': [('csrd_esrs', '=', False)]}"/>
+                    <field name="csrd_dr" readonly="1" attrs="{'invisible': [('csrd_dr', '=', False)]}"/>
+                    <field name="csrd_paragraph" readonly="1" attrs="{'invisible': [('csrd_paragraph', '=', False)]}"/>
+                    <field name="csrd_related_ar" readonly="1" attrs="{'invisible': [('csrd_related_ar', '=', False)]}"/>
+                    <field name="csrd_data_type" readonly="1" attrs="{'invisible': [('csrd_data_type', '=', False)]}"/>
+                    <field name="csrd_conditional_or_alternative_dp" readonly="1" attrs="{'invisible': [('csrd_conditional_or_alternative_dp', '=', False)]}"/>
+                    <field name="csrd_may_v" readonly="1" attrs="{'invisible': [('csrd_may_v', '=', False)]}"/>
+                    <field name="csrd_appendix_b" readonly="1" attrs="{'invisible': [('csrd_appendix_b', '=', False)]}"/>
+                    <field name="csrd_appendix_c_less_then_750" readonly="1" attrs="{'invisible': [('csrd_appendix_c_less_then_750', '=', False)]}"/>
+                    <field name="csrd_appendix_c_more_then_750" readonly="1" attrs="{'invisible': [('csrd_appendix_c_more_then_750', '=', False)]}"/>
+                  </group>
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" />
+            <field name="activity_ids" widget="mail_activity" />
+            <field name="message_ids" widget="mail_thread" />
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_csrd_filter" model="ir.ui.view">
+      <field name="name">document.csrd.search</field>
+      <field name="model">document.csrd</field>
+      <field name="arch" type="xml">
+        <search string="Document csrd">
+          <field name="csrd_name" string="Content" filter_domain="['|', ('name','ilike',self), ('csrd_name','ilike',self)]" />
+          <field name="csrd_id" />
+          <field name="company_id" />
+          <group expand="0" string="Group By...">
+            <!-- <filter name="group_by_id" string="ID" context="{'group_by':'csrd_id'}" /> -->
+          </group>
+          <searchpanel>
+            <field name="csrd_sheet_name" icon="fa-folder" string="Sheets" enable_counters="1" />
+          </searchpanel>
+        </search>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_csrd">
+      <field name="name">CSRD</field>
+      <field name="res_model">document.csrd</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="document_csrd.view_csrd_tree"/>
+      <field name="search_view_id" ref="document_csrd.view_csrd_filter" />
+      <field name="help">No laws at the moment.</field>
+      <field name="domain" eval="[('csrd_id','!=',False)]" />
+    </record>
+
+    <record id="action_csrd_tree" model="ir.actions.act_window.view">
+      <field name="sequence" eval="0" />
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="document_csrd.view_csrd_tree" />
+      <field name="act_window_id" ref="action_csrd" />
+    </record>
+
+    <record id="action_csrd_form" model="ir.actions.act_window.view">
+      <field name="sequence" eval="5" />
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_csrd_form" />
+      <field name="act_window_id" ref="action_csrd" />
+    </record>
+
+    <menuitem id="menu_document_csrd" name="CSRD" parent="document_page.menu_wiki" action="action_csrd" sequence="20" />
+
+  </data>
+</odoo>
