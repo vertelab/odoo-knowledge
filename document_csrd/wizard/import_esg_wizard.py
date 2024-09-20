@@ -43,14 +43,27 @@ class ImportESGWizard(models.TransientModel):
 
                     for col in range(1, 13):
 
-                        record[self.field_keys[col-1]] = activews.cell(row=row, column=col).value
+                        record_value = activews.cell(row=row, column=col).value
+
+                        if record_value != None:
+
+                            record_value = str(record_value).strip() 
+
+                        record[self.field_keys[col-1]] = record_value
 
                     record['csrd_sheet_name'] = ws
 
-                    self._create_record(record)
+                    self.create_record(record)
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     
-    def _create_record(self,record):
+    def create_record(self,record):
 
         self.env["document.csrd"].create(record)
+
+        
 

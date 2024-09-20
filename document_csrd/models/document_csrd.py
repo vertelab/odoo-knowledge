@@ -24,6 +24,23 @@ class DocumentCSRD(models.Model):
 
     active = fields.Boolean(default=True)
 
+    currency_id = fields.Many2one('res.currency', string="Currency",
+                                 related='company_id.currency_id',
+                                 default=lambda self: self.env.user.company_id.currency_id.id)
+
+    stage = fields.Selection(selection=[
+       ('draft', 'Draft'),
+       ('done', 'Done'),
+   ], string='Status', required=True, copy=False,
+   tracking=True, default='draft')
+
+    implementation_narrative = fields.Text(string="Implementation Text")
+    implementation_monetary = fields.Monetary(string="Monetary Value")
+    implementation_decimal = fields.Float(string="Decimal Value")
+    implementation_integer = fields.Integer(string="Integer Value")
+    implementation_percent = fields.Float(string="Percentage")  
+    implementation_date = fields.Date(string="Date")
+
     csrd_sheet_name = fields.Selection(
         string="CSRD Category", 
         selection=[
