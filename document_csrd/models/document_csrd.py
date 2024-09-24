@@ -3,7 +3,7 @@ from odoo import models, fields, api
 class DocumentCSRD(models.Model):
     _name = 'document.csrd'
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _description = 'scaffold_test.scaffold_test'
+    _description = 'Creates ESRS datapoints'
 
     name = fields.Char(compute='_compute_name')
     company_id = fields.Many2one(
@@ -25,8 +25,7 @@ class DocumentCSRD(models.Model):
     active = fields.Boolean(default=True)
 
     currency_id = fields.Many2one('res.currency', string="Currency",
-                                 related='company_id.currency_id',
-                                 default=lambda self: self.env.user.company_id.currency_id.id)
+                                 related='company_id.currency_id')
 
     stage = fields.Selection(selection=[
        ('draft', 'Draft'),

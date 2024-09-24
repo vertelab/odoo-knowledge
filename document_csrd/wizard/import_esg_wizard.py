@@ -47,7 +47,16 @@ class ImportESGWizard(models.TransientModel):
 
                         if record_value != None:
 
-                            record_value = str(record_value).strip() 
+                            record_value = str(record_value).strip()
+                            record_value = record_value.lower()
+
+                            if record_value == "monerary":
+
+                                record_value = "monetary"
+
+                            if "percentage" in record_value:
+
+                                record_value = record_value.replace("percentage", "percent")
 
                         record[self.field_keys[col-1]] = record_value
 
@@ -63,7 +72,11 @@ class ImportESGWizard(models.TransientModel):
     
     def create_record(self,record):
 
-        self.env["document.csrd"].create(record)
+        document_id = self.env["document.csrd"].search([("csrd_id", "=", record["csrd_id"])])
+
+        if not document_id:
+
+            self.env["document.csrd"].create(record)
 
         
 
