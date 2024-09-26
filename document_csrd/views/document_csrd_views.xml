@@ -1,0 +1,157 @@
+<odoo>
+  <data>
+    <record id="view_csrd_tree" model="ir.ui.view">
+      <field name="name">document.csrd.list</field>
+      <field name="model">document.csrd</field>
+      <field name="arch" type="xml">
+        <tree> 
+          <field name="csrd_id" />
+          <field name="csrd_name" />
+          <field name="stage" />
+          <field name="csrd_esrs" optional="hide"/>
+          <field name="csrd_dr" optional="hide"/>
+          <field name="csrd_related_ar" optional="hide"/>
+          <field name="csrd_data_type" optional="hide"/>
+          <field name="csrd_conditional_or_alternative_dp" optional="hide"/>
+          <field name="csrd_may_v" optional="hide"/>
+          <field name="company_id" groups="base.group_multi_company" optional="hide" />
+          <field name="creation_date" optional="hide"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_csrd_form" model="ir.ui.view">
+      <field name="name">document.csrd.form</field>
+      <field name="model">document.csrd</field>
+      <field name="priority">9</field>
+      <field name="arch" type="xml">
+        <form string="Document csrd">
+          <header>
+            <field name="stage" widget="statusbar" statusbar_visible="draft,done" options="{'clickable': '1', 'fold_field': 'fold'}" />
+          </header>
+          <sheet>
+            <div name="button_box" id="button_box" class="oe_button_box" />
+            <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True" />
+            <field name="active" invisible="1" />
+            <div class="oe_title">
+              <h1>
+                <field name="csrd_name" placeholder="Name" />
+              </h1>
+            </div>
+            <notebook>
+              <page name="info" string="Information">
+                <group>
+                  <group>
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="creation_date" readonly="1" />
+                    <field name="csrd_sheet_name" readonly="1" />
+                    <field name="csrd_id" readonly="1" />
+                    <field name="csrd_esrs" readonly="1" invisible="csrd_esrs == False"/>
+                    <field name="csrd_dr" readonly="1" invisible="csrd_dr == False"/>
+                    <field name="csrd_paragraph" readonly="1" invisible="csrd_paragraph == False"/>
+                    <field name="csrd_related_ar" readonly="1" invisible="csrd_related_ar == False"/>
+                    <field name="csrd_data_type" readonly="1" invisible="csrd_data_type == False"/>
+                    <field name="csrd_conditional_or_alternative_dp" readonly="1" invisible="csrd_conditional_or_alternative_dp == False"/>
+                    <field name="csrd_may_v" readonly="1" invisible="csrd_may_v == False"/>
+                    <field name="csrd_appendix_b" readonly="1" invisible="csrd_appendix_b == False"/>
+                    <field name="csrd_appendix_c_less_then_750" readonly="1" invisible="csrd_appendix_c_less_then_750 == False"/>
+                    <field name="csrd_appendix_c_more_then_750" readonly="1" invisible="csrd_appendix_c_more_then_750 == False"/>
+                  </group>
+                </group>
+              </page>
+              <page name="policy" string="Policy">
+                <group>
+                  <group>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="implementation_narrative" invisible="not 'narrative' in csrd_data_type"/>
+                    <field name="implementation_monetary" widget="monetary" invisible="not 'monetary' in csrd_data_type"/>
+                    <field name="implementation_decimal" invisible="not 'decimal' in csrd_data_type"/>
+                    <field name="implementation_integer" invisible="not 'integer' in csrd_data_type"/>
+                    <field name="implementation_percent" widget='percentage' invisible="not 'percent' in csrd_data_type"/>
+                    <field name="implementation_date" invisible="not 'date' in csrd_data_type"/>
+                  </group>
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" />
+            <field name="activity_ids" widget="mail_activity" />
+            <field name="message_ids" widget="mail_thread" />
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_csrd_pivot" model="ir.ui.view">
+      <field name="name">document.csrd.pivot</field>
+      <field name="model">document.csrd</field>
+      <field name="arch" type="xml">
+        <pivot default_order="implementation_monetary asc">
+          <field name="implementation_monetary" type="measure"/>
+          <field name="implementation_decimal" type="measure"/>
+          <field name="implementation_integer" type="measure"/>
+          <field name="implementation_percent" type="measure"/>
+          <!-- <field name="implementation_date" type="measure"/> -->
+        </pivot>
+      </field>
+    </record>
+
+    <record id="view_csrd_filter" model="ir.ui.view">
+      <field name="name">document.csrd.search</field>
+      <field name="model">document.csrd</field>
+      <field name="arch" type="xml">
+        <search string="Document csrd">
+          <field name="csrd_name" string="Content" filter_domain="['|', ('name','ilike',self), ('csrd_name','ilike',self)]" />
+          <field name="csrd_id" />
+          <field name="company_id" />
+          <group expand="0" string="Group By...">
+            <filter name="group_by_esrs" string="ESRS" context="{'group_by':'csrd_esrs'}" />
+            <filter name="group_by_dr" string="DR" context="{'group_by':'csrd_dr'}" />
+            <filter name="group_by_conditional_or_alternative_dp" string="Conditional or Alternative DP" context="{'group_by':'csrd_conditional_or_alternative_dp'}" />
+            <filter name="group_by_data_type" string="Data Type" context="{'group_by':'csrd_data_type'}" />
+            <filter name="group_by_v" string="May V" context="{'group_by':'csrd_may_v'}" />
+            <filter name="group_by_company" string="Company" context="{'group_by':'company_id'}" />
+          </group>
+          <searchpanel>
+            <field name="csrd_sheet_name" icon="fa-folder" string="Sheets" enable_counters="1" />
+          </searchpanel>
+        </search>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_csrd">
+      <field name="name">CSRD</field>
+      <field name="res_model">document.csrd</field>
+      <field name="view_mode">tree,form,pivot</field>
+      <field name="view_id" ref="document_csrd.view_csrd_tree"/>
+      <field name="search_view_id" ref="document_csrd.view_csrd_filter" />
+      <field name="help">No laws at the moment.</field>
+      <field name="domain" eval="[('csrd_id','!=',False)]" />
+    </record>
+
+    <record id="action_csrd_tree" model="ir.actions.act_window.view">
+      <field name="sequence" eval="0" />
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="document_csrd.view_csrd_tree" />
+      <field name="act_window_id" ref="action_csrd" />
+    </record>
+
+    <record id="action_csrd_form" model="ir.actions.act_window.view">
+      <field name="sequence" eval="5" />
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_csrd_form" />
+      <field name="act_window_id" ref="action_csrd" />
+    </record>
+
+    <record id="action_csrd_pivot" model="ir.actions.act_window.view">
+      <field name="sequence" eval="5" />
+      <field name="view_mode">pivot</field>
+      <field name="view_id" ref="view_csrd_pivot" />
+      <field name="act_window_id" ref="action_csrd" />
+    </record>
+
+    <menuitem id="menu_document_csrd" name="CSRD" parent="document_page.menu_wiki" action="action_csrd" sequence="20" />
+
+  </data>
+</odoo>
