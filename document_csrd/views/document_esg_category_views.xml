@@ -63,11 +63,13 @@
       <field name="name">document.csrd.pivot</field>
       <field name="model">document.esg.category</field>
       <field name="arch" type="xml">
-        <pivot>
+        <pivot default_order="impact_materiality_value asc">
+          <field name="impact_materiality_value" type="measure"/>
+          <field name="impact_materiality" type="row"/>
+          <field name="financial_materiality" type="col"/>
         </pivot>
       </field>
     </record>
-
 
     <record model="ir.actions.act_window" id="action_esg_category">
       <field name="name">ESG Category</field>

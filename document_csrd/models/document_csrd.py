@@ -86,7 +86,7 @@ class DocumentCSRD(models.Model):
 
         for rec in self:
 
-            category_id = self.env["document.esg.category"].search([("esg_category", '=', rec.csrd_sheet_name)])
+            category_id = self.env["document.esg.category"].search([("name", '=', rec.csrd_sheet_name)])
 
             if category_id:
 
