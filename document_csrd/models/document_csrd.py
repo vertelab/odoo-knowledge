@@ -65,7 +65,7 @@ class DocumentCSRD(models.Model):
     csrd_dr = fields.Char(string="CSRD DR")
     csrd_paragraph = fields.Char(string="CSRD Paragraph")
     csrd_related_ar = fields.Char(string="CSRD Related_AR")
-    csrd_name = fields.Char(string="CSRD Name")
+    csrd_name = fields.Char(string="CSRD Name", translate=True)
     csrd_data_type = fields.Char(string="CSRD Data Type")
     csrd_conditional_or_alternative_dp = fields.Char(string="CSRD Conditional or Alternative DP")
     csrd_may_v = fields.Char(string="CSRD May V")
