@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 document_csrd.access_document_csrd,access_document_csrd,document_csrd.model_document_csrd,base.group_user,1,1,1,1
 document_csrd.access_import_esg_wizard,access_import_esg_wizard,document_csrd.model_import_esg_wizard,base.group_user,1,1,1,0
+document_csrd.access_document_esg_category,access_document_esg_category,document_csrd.model_document_esg_category,base.group_user,1,1,1,1

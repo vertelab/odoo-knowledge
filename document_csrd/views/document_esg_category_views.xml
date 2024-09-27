@@ -1,0 +1,104 @@
+<odoo>
+  <data>
+
+    <record id="view_esg_category_tree" model="ir.ui.view">
+      <field name="name">document.esg.category.list</field>
+      <field name="model">document.esg.category</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_esg_category_form" model="ir.ui.view">
+      <field name="name">document.esg.category.form</field>
+      <field name="model">document.esg.category</field>
+      <field name="priority">9</field>
+      <field name="arch" type="xml">
+        <form string="Document ESG Category">
+          <header>
+            <button name="set_materiality_downward" type="object" string="Update Children"/>
+            <!-- <button name="set_materiality_upward" type="object" string="Update Parents"/> -->
+          </header>
+          <sheet>
+            <div name="button_box" id="button_box" class="oe_button_box" />
+            <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+            <field name="active" invisible="1" />
+            <div class="oe_title">
+              <h1>
+                <field name="name" placeholder="Name" />
+              </h1>
+            </div>
+            <group>
+              <field name="parent_id" />
+            </group>
+            <notebook>
+              <page name="impact_materiality" string="Impact Materiality">
+                <group>
+                  <field name="impact_materiality" />
+                  <field name="impact_materiality_description" />
+                  <!-- widget="priority" -->
+                </group>
+              </page>
+              <page name="financial_materiality" string="Financial Materiality">
+                <group>
+                  <field name="financial_materiality" />
+                  <field name="financial_materiality_description" />
+                  <!-- widget="priority" -->
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" />
+            <field name="activity_ids" widget="mail_activity" />
+            <field name="message_ids" widget="mail_thread" />
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_esg_category_pivot" model="ir.ui.view">
+      <field name="name">document.csrd.pivot</field>
+      <field name="model">document.esg.category</field>
+      <field name="arch" type="xml">
+        <pivot>
+        </pivot>
+      </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_esg_category">
+      <field name="name">ESG Category</field>
+      <field name="res_model">document.esg.category</field>
+      <field name="view_mode">tree,form,pivot</field>
+      <field name="view_id" ref="document_csrd.view_esg_category_tree"/>
+      <field name="help">No ESG Categorys</field>
+    </record>
+
+    <record id="action_esg_category_tree" model="ir.actions.act_window.view">
+      <field name="sequence" eval="0" />
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="document_csrd.view_esg_category_tree" />
+      <field name="act_window_id" ref="action_esg_category" />
+    </record>
+
+    <record id="action_esg_category_form" model="ir.actions.act_window.view">
+      <field name="sequence" eval="5" />
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_esg_category_form" />
+      <field name="act_window_id" ref="action_esg_category" />
+    </record>
+
+    <record id="action_esg_category_pivot" model="ir.actions.act_window.view">
+      <field name="sequence" eval="5" />
+      <field name="view_mode">pivot</field>
+      <field name="view_id" ref="view_esg_category_pivot" />
+      <field name="act_window_id" ref="action_esg_category" />
+    </record>
+
+    <menuitem id="menu_document_esg_category" name="ESG Category" parent="document_page.menu_wiki" action="action_esg_category" sequence="20" />
+
+  </data>
+</odoo>

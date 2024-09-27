@@ -39,7 +39,7 @@
      "external_dependencies": {
        "python": ["openpyxl"],
      },
-    'data': ['security/ir.model.access.csv', 'wizard/import_esg_wizard.xml', 'views/document_csrd_views.xml', 'data/document.csrd.csv'],
+    'data': ['security/ir.model.access.csv', 'wizard/import_esg_wizard.xml', 'views/document_csrd_views.xml','views/document_esg_category_views.xml', 'data/document.csrd.csv'],
     'demo': [],
     'application': False,
     'installable': True,    

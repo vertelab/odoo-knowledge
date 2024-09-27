@@ -40,6 +40,8 @@ class DocumentCSRD(models.Model):
     implementation_percent = fields.Float(string="Percentage")  
     implementation_date = fields.Date(string="Date")
 
+    category_id = fields.Many2one(comodel_name="document.esg.category", string="ESG Category", compute="_compute_category_id", store=True)
+
     csrd_sheet_name = fields.Selection(
         string="CSRD Category", 
         selection=[
@@ -78,3 +80,14 @@ class DocumentCSRD(models.Model):
 
             if rec.csrd_name:
                 rec.name = rec.csrd_name
+
+    @api.depends("csrd_sheet_name")
+    def _compute_category_id(self):
+
+        for rec in self:
+
+            category_id = self.env["document.esg.category"].search([("esg_category", '=', rec.csrd_sheet_name)])
+
+            if category_id:
+
+                rec.category_id = category_id

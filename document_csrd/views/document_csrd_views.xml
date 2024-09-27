@@ -1,10 +1,11 @@
 <odoo>
   <data>
+
     <record id="view_csrd_tree" model="ir.ui.view">
       <field name="name">document.csrd.list</field>
       <field name="model">document.csrd</field>
       <field name="arch" type="xml">
-        <tree> 
+        <tree>
           <field name="csrd_id" />
           <field name="csrd_name" />
           <field name="stage" />
@@ -56,6 +57,7 @@
                     <field name="csrd_appendix_b" readonly="1" attrs="{'invisible': [('csrd_appendix_b', '=', False)]}"/>
                     <field name="csrd_appendix_c_less_then_750" readonly="1" attrs="{'invisible': [('csrd_appendix_c_less_then_750', '=', False)]}"/>
                     <field name="csrd_appendix_c_more_then_750" readonly="1" attrs="{'invisible': [('csrd_appendix_c_more_then_750', '=', False)]}"/>
+                    <field name="category_id"/>
                   </group>
                 </group>
               </page>
