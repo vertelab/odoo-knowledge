@@ -50,22 +50,9 @@ class DocumentESGCategory(models.Model):
             default=None,
             group_operator="max"
             )
-
-
-    impact_materiality_value = fields.Integer(compute="compute_materiality_value", store=True)
-    financial_materiality_value = fields.Integer(compute="compute_materiality_value", store=True)
-
-    @api.depends("impact_materiality", "financial_materiality")
-    def compute_materiality_value(self):
-
-        for rec in self:
-
-            rec.impact_materiality_value = int(rec.impact_materiality)
-            rec.financial_materiality_value = int(rec.financial_materiality)
+    
+    priority = fields.Selection(selection=[("0","0"),("1","1")])
             
-
-
-
     def set_materiality_downward(self):
 
         children = self.search([("parent_id", "child_of", self.id)])
