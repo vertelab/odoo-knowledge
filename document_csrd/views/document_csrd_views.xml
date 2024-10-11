@@ -71,6 +71,12 @@
                     <field name="implementation_integer" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'integer')]}"/>
                     <field name="implementation_percent" widget='percentage' attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'percent')]}"/>
                     <field name="implementation_date" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'date')]}"/>
+                    <field name="survey_id" />
+                    <field name="document_page_manual_ids">
+                      <tree editable="bottom">
+                        <field name="document_page_id"/>
+                      </tree>
+                    </field>
                   </group>
                 </group>
               </page>
@@ -94,7 +100,6 @@
           <field name="implementation_decimal" type="measure"/>
           <field name="implementation_integer" type="measure"/>
           <field name="implementation_percent" type="measure"/>
-          <!-- <field name="implementation_date" type="measure"/> -->
         </pivot>
       </field>
     </record>

@@ -30,7 +30,8 @@ class DocumentESGCategory(models.Model):
             ('10','10'),
             ], 
             string="Impact Materiality",
-            default=None
+            default=None,
+            group_operator="max"
             )
 
     financial_materiality = fields.Selection([
@@ -46,12 +47,13 @@ class DocumentESGCategory(models.Model):
             ('10','10'),
             ], 
             string="Financial Materiality",
-            default=None
+            default=None,
+            group_operator="max"
             )
 
 
-    impact_materiality_value = fields.Integer(compute="compute_materiality_value")
-    financial_materiality_value = fields.Integer(compute="compute_materiality_value")
+    impact_materiality_value = fields.Integer(compute="compute_materiality_value", store=True)
+    financial_materiality_value = fields.Integer(compute="compute_materiality_value", store=True)
 
     @api.depends("impact_materiality", "financial_materiality")
     def compute_materiality_value(self):

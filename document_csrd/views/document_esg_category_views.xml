@@ -63,10 +63,10 @@
       <field name="name">document.csrd.pivot</field>
       <field name="model">document.esg.category</field>
       <field name="arch" type="xml">
-        <pivot default_order="impact_materiality_value asc">
-          <field name="impact_materiality_value" type="measure"/>
-          <field name="impact_materiality" type="row"/>
-          <field name="financial_materiality" type="col"/>
+        <pivot string="ESG Category Pivot">
+          <field name="impact_materiality" type="measure"/>
+          <field name="financial_materiality" type="measure"/>
+          <field name="name" type="col"/>
         </pivot>
       </field>
     </record>

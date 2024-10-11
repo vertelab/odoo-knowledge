@@ -22,7 +22,11 @@ class DocumentCSRD(models.Model):
         default=fields.Date.today()
     )
 
+    survey_id = fields.Many2one(comodel_name='survey.survey')
+
     active = fields.Boolean(default=True)
+
+    document_page_manual_ids = fields.One2many(comodel_name="document.page.csrd", inverse_name="document_csrd_id")
 
     currency_id = fields.Many2one('res.currency', string="Currency",
                                  related='company_id.currency_id')
