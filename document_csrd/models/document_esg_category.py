@@ -13,7 +13,9 @@ class DocumentESGCategory(models.Model):
     active = fields.Boolean(default=True)
     parent_id = fields.Many2one(comodel_name='document.esg.category', string='Parent Category', index=True)
     csrd_ids = fields.One2many(comodel_name="document.csrd", inverse_name="category_id")
-    
+
+    number_of_children = fields.Integer(compute="compute_number_of_children")
+
     impact_materiality_description = fields.Text(string="Impact Materiality Description")
     financial_materiality_description = fields.Text(string="Financial Materiality Description")
 
@@ -52,7 +54,28 @@ class DocumentESGCategory(models.Model):
             )
     
     priority = fields.Selection(selection=[("0","0"),("1","1")])
-            
+
+    
+    def compute_number_of_children(self):
+
+        self.number_of_children = self.search_count([("parent_id", "child_of", self.id),("id", "!=", self.id)])
+
+    def get_subcategorys(self):
+        
+        return {
+            "name": "Subcategorys",
+            "type": "ir.actions.act_window",
+            "res_model": "document.esg.category",
+            "views": [[False, "tree"]],
+            "domain": [("parent_id", "child_of", self.id), ("id", "!=", self.id)],
+        }
+
+        # action = self.env.ref('document_csrd.action_esg_subcategory')
+        # action["domain"] = [("parent_id", "child_of", self.id)]
+        # # action["target"] = "new"
+        # return action
+
+    
     def set_materiality_downward(self):
 
         children = self.search([("parent_id", "child_of", self.id)])

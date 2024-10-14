@@ -22,7 +22,11 @@
             <!-- <button name="set_materiality_upward" type="object" string="Update Parents"/> -->
           </header>
           <sheet>
-            <div name="button_box" id="button_box" class="oe_button_box" />
+            <div name="button_box" id="button_box" class="oe_button_box">
+              <button class="oe_stat_button" type="object" name="get_subcategorys" icon="fa-list" attrs="{'invisible': [('number_of_children', '=', 0)]}">
+                <field string="Subcategories" name="number_of_children" widget="statinfo"/>
+              </button>
+            </div>
             <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
             <field name="active" invisible="1" />
             <div class="oe_title">
