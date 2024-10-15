@@ -74,7 +74,7 @@
                     <field name="survey_id" />
                     <field name="document_page_manual_ids">
                       <tree editable="bottom">
-                        <field name="document_page_id"/>
+                        <field name="document_page_id" domain="[('parent_id','=',%(mgmtsystem_manual.manuals)d)]"/>
                       </tree>
                     </field>
                   </group>
