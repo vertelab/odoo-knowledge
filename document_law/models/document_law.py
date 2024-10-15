@@ -29,7 +29,7 @@ class DocumentLaw(models.Model):
         ondelete="cascade",
         default=lambda self: self.env.company,
     )
-
+ 
     active = fields.Boolean(default=True)
     stage = fields.Selection(selection=[
        ('cancel', 'Cancelled'),
