@@ -53,6 +53,13 @@
                   <!-- widget="priority" -->
                 </group>
               </page>
+              <page name="survey" string="Survey">
+                <group>
+                  <group>
+                    <field name="survey_id" />
+                  </group>
+                </group>
+              </page>
             </notebook>
           </sheet>
           <div class="oe_chatter">

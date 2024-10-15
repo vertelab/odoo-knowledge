@@ -19,6 +19,8 @@ class DocumentESGCategory(models.Model):
     impact_materiality_description = fields.Text(string="Impact Materiality Description")
     financial_materiality_description = fields.Text(string="Financial Materiality Description")
 
+    survey_id = fields.Many2one(comodel_name='survey.survey')
+
     impact_materiality = fields.Selection([
             ('1','1'), 
             ('2','2'),
