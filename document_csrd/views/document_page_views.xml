@@ -17,5 +17,16 @@
                 </page>
             </field>
         </record>
+        <record id="view_wiki_tree" model="ir.ui.view">
+            <field name="name">document.page.tree.inherrit</field>
+            <field name="model">document.page</field>
+            <field name="inherit_id" ref="document_page.view_wiki_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="content_date" position="after">
+                    <field name="document_csrd_ids" widget="many2many_tags" optional="hide"/>
+                </field>
+            </field>
+        </record>
     </data>
 </odoo>
