@@ -21,7 +21,6 @@
         <tree>
           <field name="rss_titel" />
           <field name="stage" />
-          <field name="category_id" />
           <field name="company_id" groups="base.group_multi_company" />
           <field name="creation_date"/>
           <field name="rss_dok_id" />
@@ -56,7 +55,6 @@
               <page name="info" string="Information">
                 <group>
                   <group>
-                    <field name="category_id" string="Category" />
                     <field name="stage" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" />
                     <field name="creation_date" />
@@ -97,7 +95,6 @@
           <field name="company_id" />
           <field name="rss_titel" />
           <group expand="0" string="Group By...">
-            <filter name="group_by_category" string="Category" context="{'group_by':'category_id'}" />
             <filter name="group_by_stage" string="Stage" context="{'group_by':'stage'}" />
           </group>
           <searchpanel>

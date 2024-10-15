@@ -69,12 +69,6 @@ class DocumentESGCategory(models.Model):
             "views": [[False, "tree"]],
             "domain": [("parent_id", "child_of", self.id), ("id", "!=", self.id)],
         }
-
-        # action = self.env.ref('document_csrd.action_esg_subcategory')
-        # action["domain"] = [("parent_id", "child_of", self.id)]
-        # # action["target"] = "new"
-        # return action
-
     
     def set_materiality_downward(self):
 

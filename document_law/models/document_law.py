@@ -29,9 +29,7 @@ class DocumentLaw(models.Model):
         ondelete="cascade",
         default=lambda self: self.env.company,
     )
-    category_id = fields.Many2one(
-        comodel_name="document.page", string="Category", domain=[("type", "=", "category")]
-    )
+
     active = fields.Boolean(default=True)
     stage = fields.Selection(selection=[
        ('cancel', 'Cancelled'),
