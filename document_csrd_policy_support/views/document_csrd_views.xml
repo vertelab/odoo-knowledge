@@ -1,0 +1,38 @@
+<odoo>
+  <data>
+
+    <record model="ir.actions.server" id="action_document_csrd_policy">
+      <field name="name">Create Policy</field>
+      <field name="model_id" ref="model_document_csrd"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+                "type": "ir.actions.act_window",
+                "view_mode": "form",
+                "views": [[env.ref("document_csrd_policy_support.view_document_csrd_policy_form").id,"form"]],
+                "res_model": record._name,
+                "res_id": record.id,
+                "target": "new"
+            }
+      </field>
+      <field name="binding_model_id" ref="model_document_csrd"/>
+    </record>
+
+    <record model="ir.ui.view" id="view_document_csrd_policy_form">
+      <field name="name">view.document.csrd.policy.form</field>
+      <field name="model">document.csrd</field>
+      <field name="arch" type="xml">
+        <form>
+          <group>
+            <field name="ai_question" />
+          </group>
+          <footer>
+            <button string="OK" type="object" name="create_ai_policy" class="oe_highlight"/>
+            <button string="Chancel" name="chancel" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</odoo>
