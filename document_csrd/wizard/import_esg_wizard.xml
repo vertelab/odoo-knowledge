@@ -26,7 +26,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_import_esg_wizard" name="CSRD Wizard" parent="document_page.menu_wiki" action="import_esg_action" sequence="20" />
+        <menuitem id="menu_import_esg_wizard" name="CSRD Wizard" parent="document_knowledge.menu_document_configuration" action="import_esg_action" sequence="20" />
 
     </data>
 </odoo>
