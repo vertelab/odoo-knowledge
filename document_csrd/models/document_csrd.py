@@ -43,11 +43,12 @@ class DocumentCSRD(models.Model):
     implementation_integer = fields.Integer(string="Integer Value")
     implementation_percent = fields.Float(string="Percentage")  
     implementation_date = fields.Date(string="Date")
-
-    category_id = fields.Many2one(comodel_name="document.esg.category", string="ESG Category", compute="_compute_category_id", store=True)
-
-    csrd_sheet_name = fields.Selection(
-        string="CSRD Category", 
+    implementation_area = fields.Integer(string="Area Value")
+    implementation_volume = fields.Integer(string="Area Value")
+    implementation_energy = fields.Integer(string="Energy Value")
+    implementation_ghgemissions = fields.Integer(string="Green House Gas Emissions")
+    implementation_ghgemissions = fields.Integer(string="Green House Gas Emissions")
+    implementation_ghgemissions = fields.Integer(string="Green House Gas Emissions")
         selection=[
             ('ESRS 2','ESRS 2'),
             ('ESRS 2 MDR','ESRS 2 MDR'),
