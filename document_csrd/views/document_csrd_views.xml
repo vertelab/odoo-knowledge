@@ -67,11 +67,20 @@
                   <group>
                     <field name="currency_id" invisible="1"/>
                     <field name="implementation_narrative" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'narrative')]}"/>
-                    <field name="implementation_monetary" widget="monetary" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'monetary')]}"/>
+                    <!-- <field name="implementation_monetary" widget="monetary" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'monetary')]}"/>
                     <field name="implementation_decimal" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'decimal')]}"/>
                     <field name="implementation_integer" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'integer')]}"/>
                     <field name="implementation_percent" widget='percentage' attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'percent')]}"/>
                     <field name="implementation_date" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'date')]}"/>
+                    <field name="implementation_area" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'area')]}"/>
+                    <field name="implementation_volume" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'volume')]}"/>
+                    <field name="implementation_energy" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'energy')]}"/>
+                    <field name="implementation_ghgemissions" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'ghgemissions')]}"/>
+                    <field name="implementation_gyear" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'gyear')]}"/>
+                    <field name="implementation_intensity" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'intensity')]}"/>
+                    <field name="implementation_mass" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'mass')]}"/> -->
+                    <field name="implementation_numerical" attrs="{'invisible': ['|',('csrd_data_type', '=', 'narrative'),('csrd_data_type', '=', 'semi-narrative')]}"/>
+
                     <field name="document_page_manual_ids">
                       <tree editable="bottom">
                         <field name="document_page_id" domain="[('parent_id','=',%(mgmtsystem_manual.manuals)d)]"/>

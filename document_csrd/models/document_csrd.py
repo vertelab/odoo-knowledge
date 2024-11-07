@@ -34,22 +34,35 @@ class DocumentCSRD(models.Model):
     stage = fields.Selection(selection=[
        ('draft', 'Draft'),
        ('done', 'Done'),
-   ], string='Status', required=True, copy=False,
-   tracking=True, default='draft')
+    ], string='Status', required=True, copy=False,
+    tracking=True, default='draft')
 
     implementation_narrative = fields.Text(string="Implementation Text")
+    implementation_numerical = fields.Float(string="Numerical Value")
+
     implementation_monetary = fields.Monetary(string="Monetary Value")
     implementation_decimal = fields.Float(string="Decimal Value")
     implementation_integer = fields.Integer(string="Integer Value")
     implementation_percent = fields.Float(string="Percentage")  
     implementation_date = fields.Date(string="Date")
-    implementation_area = fields.Integer(string="Area Value")
-    implementation_volume = fields.Integer(string="Area Value")
-    implementation_energy = fields.Integer(string="Energy Value")
-    implementation_ghgemissions = fields.Integer(string="Green House Gas Emissions")
-    implementation_ghgemissions = fields.Integer(string="Green House Gas Emissions")
-    implementation_ghgemissions = fields.Integer(string="Green House Gas Emissions")
-        selection=[
+    implementation_area = fields.Float(string="Area Value")
+    implementation_volume = fields.Float(string="Volume Value")
+    implementation_energy = fields.Float(string="Energy Value")
+    implementation_ghgemissions = fields.Integer(string="Green House Gas Emissions Value")
+    implementation_gyear = fields.Date(string="Annual Greenhouse Gas Emissions Value") #???
+    
+    implementation_intensity = fields.Float(string="Ratio Value")   #Example: Carbon Intensity in Manufacturing
+                                                                    #Let's say we're looking at a car manufacturing company:
+                                                                    #Numerator: Annual CO2 emissions (in tons)
+                                                                    #Denominator: Number of cars produced
+                                                                    #Carbon Intensity = Annual CO2 emissions / Number of cars produced
+
+    implementation_mass = fields.Float(string="Mass Value")
+
+    category_id = fields.Many2one(comodel_name="document.esg.category", string="ESG Category", compute="_compute_category_id", store=True)
+
+    csrd_sheet_name = fields.Selection(
+            selection=[
             ('ESRS 2','ESRS 2'),
             ('ESRS 2 MDR','ESRS 2 MDR'),
             ('ESRS E1','ESRS E1'),
@@ -61,9 +74,9 @@ class DocumentCSRD(models.Model):
             ('ESRS S2','ESRS S2'),
             ('ESRS S3','ESRS S3'),
             ('ESRS S4','ESRS S4'),
-            ('ESRS G1','ESRS G1')
+            ('ESRS G1','ESRS G1'),
             ], 
-        default=None )
+            default=None)
 
     csrd_id = fields.Char(string="CSRD ID")
     csrd_esrs = fields.Char(string="CSRD ESRS")
