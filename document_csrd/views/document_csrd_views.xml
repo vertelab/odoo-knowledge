@@ -6,8 +6,8 @@
       <field name="model">document.csrd</field>
       <field name="arch" type="xml">
         <tree>
-          <field name="csrd_id" />
           <field name="csrd_name" />
+          <field name="csrd_id" />
           <field name="stage" />
           <field name="csrd_esrs" optional="hide"/>
           <field name="csrd_dr" optional="hide"/>
@@ -66,7 +66,7 @@
                 <group>
                   <group>
                     <field name="currency_id" invisible="1"/>
-                    <field name="implementation_narrative" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'narrative')]}"/>
+                    <field name="description" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'narrative')]}"/>
                     <!-- <field name="implementation_monetary" widget="monetary" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'monetary')]}"/>
                     <field name="implementation_decimal" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'decimal')]}"/>
                     <field name="implementation_integer" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'integer')]}"/>
@@ -79,15 +79,15 @@
                     <field name="implementation_gyear" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'gyear')]}"/>
                     <field name="implementation_intensity" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'intensity')]}"/>
                     <field name="implementation_mass" attrs="{'invisible': ['!',('csrd_data_type', 'ilike', 'mass')]}"/> -->
-                    <field name="implementation_numerical" attrs="{'invisible': ['|',('csrd_data_type', '=', 'narrative'),('csrd_data_type', '=', 'semi-narrative')]}"/>
-
-                    <field name="document_page_manual_ids">
-                      <tree editable="bottom">
-                        <field name="document_page_id" domain="[('parent_id','=',%(mgmtsystem_manual.manuals)d)]"/>
-                      </tree>
-                    </field>
+                    <field name="estimated_value" attrs="{'invisible': ['|',('csrd_data_type', '=', 'narrative'),('csrd_data_type', '=', 'semi-narrative')]}"/>
                   </group>
                 </group>
+                <field name="document_page_manual_ids">
+                  <tree editable="bottom">
+                    <field name="document_page_id" domain="[('parent_id','=',%(mgmtsystem_manual.manuals)d)]"/>
+                  </tree>
+                </field>
+
               </page>
               <page name="survey" string="Survey">
                 <group>
@@ -125,7 +125,7 @@
       <field name="model">document.csrd</field>
       <field name="arch" type="xml">
         <search string="Document csrd">
-          <field name="csrd_name" string="Content" filter_domain="['|', ('name','ilike',self), ('csrd_name','ilike',self)]" />
+          <field name="csrd_name" string="CSRD Name" />
           <field name="csrd_id" />
           <field name="company_id" />
           <group expand="0" string="Group By...">
@@ -149,8 +149,8 @@
       <field name="view_mode">tree,form,pivot</field>
       <field name="view_id" ref="document_csrd.view_csrd_tree"/>
       <field name="search_view_id" ref="document_csrd.view_csrd_filter" />
-      <field name="help">No laws at the moment.</field>
-      <field name="domain" eval="[('csrd_id','!=',False)]" />
+      <field name="help">No ESRS Datapoints at the moment.</field>
+      <!-- <field name="domain" eval="[('csrd_id','!=',False)]" /> -->
     </record>
 
     <record id="action_csrd_tree" model="ir.actions.act_window.view">

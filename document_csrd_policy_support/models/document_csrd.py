@@ -55,7 +55,7 @@ class DocumentCSRD(models.Model):
 
                 _logger.error(f"{ai_answer=}")
 
-                rec.implementation_narrative = parser.invoke(ai_answer)
+                rec.description = parser.invoke(ai_answer)
 
     def get_llm(self,company_id):
 

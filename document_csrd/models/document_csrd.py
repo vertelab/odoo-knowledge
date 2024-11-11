@@ -5,7 +5,7 @@ class DocumentCSRD(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = 'Creates ESRS datapoints'
 
-    name = fields.Char(compute='_compute_name')
+    name = fields.Char(compute='_compute_name', store=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
@@ -31,14 +31,15 @@ class DocumentCSRD(models.Model):
     currency_id = fields.Many2one('res.currency', string="Currency",
                                  related='company_id.currency_id')
 
+
     stage = fields.Selection(selection=[
        ('draft', 'Draft'),
        ('done', 'Done'),
     ], string='Status', required=True, copy=False,
     tracking=True, default='draft')
 
-    implementation_narrative = fields.Text(string="Implementation Text")
-    implementation_numerical = fields.Float(string="Numerical Value")
+    description = fields.Text(string="Description")
+    estimated_value = fields.Float(string="Estimated Value")
 
     implementation_monetary = fields.Monetary(string="Monetary Value")
     implementation_decimal = fields.Float(string="Decimal Value")
@@ -93,15 +94,12 @@ class DocumentCSRD(models.Model):
 
     @api.depends("csrd_name")
     def _compute_name(self):
-
         for rec in self:
-
             if rec.csrd_name:
                 rec.name = rec.csrd_name
 
     @api.depends("csrd_sheet_name")
     def _compute_category_id(self):
-
         for rec in self:
 
             category_id = self.env["document.esg.category"].search([("name", '=', rec.csrd_sheet_name)])
@@ -109,3 +107,4 @@ class DocumentCSRD(models.Model):
             if category_id:
 
                 rec.category_id = category_id
+
