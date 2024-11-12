@@ -38,7 +38,7 @@ class DocumentCSRD(models.Model):
     ], string='Status', required=True, copy=False,
     tracking=True, default='draft')
 
-    description = fields.Text(string="Description")
+    description = fields.Html(string="Description")
     estimated_value = fields.Float(string="Estimated Value")
 
     implementation_monetary = fields.Monetary(string="Monetary Value")
