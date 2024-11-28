@@ -1,0 +1,449 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* document_law
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0-20241127\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-28 13:59+0000\n"
+"PO-Revision-Date: 2024-11-28 16:11+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_needaction
+msgid "Action Needed"
+msgstr "Åtgärder krävs"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_ids
+msgid "Activities"
+msgstr "Aktiviteter"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Aktivitet Undantag Dekoration"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_state
+msgid "Activity State"
+msgstr "Aktivitet Stat"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Aktivitetstyp Ikon"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_form
+msgid "Archived"
+msgstr "Arkiverad"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_attachment_count
+msgid "Attachment Count"
+msgstr "Antal bifogade filer"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_form
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: document_law
+#: model:ir.model.fields.selection,name:document_law.selection__document_law__stage__cancel
+msgid "Cancelled"
+msgstr "Avbruten"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__company_id
+msgid "Company"
+msgstr "Företag"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
+msgid "Content"
+msgstr "Innehåll"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__create_date
+msgid "Created on"
+msgstr "Skapad på"
+
+#. module: document_law
+#: model:ir.actions.server,name:document_law.create_law_records_cron_ir_actions_server
+#: model:ir.cron,cron_name:document_law.create_law_records_cron
+msgid "Creates RSS Law Records"
+msgstr "Skapar RSS Law Records"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__creation_date
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_datum
+msgid "Date"
+msgstr "Datum"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_organ
+msgid "Departement"
+msgstr "Avdelning"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_avdelningar
+msgid "Departments"
+msgstr "Avdelningar"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_beteckning
+msgid "Designation"
+msgstr "Beteckning"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__display_name
+msgid "Display Name"
+msgstr "Visa namn"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_form
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_menu_form
+msgid "Document Law"
+msgstr "Dokumenträtt"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_dokumentnamn
+msgid "Document Name"
+msgstr "Dokumentets namn"
+
+#. module: document_law
+#: model:ir.model.fields.selection,name:document_law.selection__document_law__stage__done
+msgid "Done"
+msgstr "Klar"
+
+#. module: document_law
+#: model:ir.model.fields.selection,name:document_law.selection__document_law__stage__draft
+msgid "Draft"
+msgstr "Utkast"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_slutnummer
+msgid "End Number"
+msgstr "Slutnummer"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_follower_ids
+msgid "Followers"
+msgstr "Följare"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Följare (Partners)"
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome-ikon, t.ex. fa-tasks"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
+msgid "Group By..."
+msgstr "Gruppera genom..."
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_html
+msgid "HTML"
+msgstr "HTML"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_hangar_id
+msgid "Hangar ID"
+msgstr "Hangar-ID"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__has_message
+msgid "Has Message"
+msgstr "Har meddelande"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__id
+msgid "ID"
+msgstr "ID"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon för att indikera en undantagsaktivitet."
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Om den är markerad kräver nya meddelanden din uppmärksamhet."
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Om kryssrutan är markerad får vissa meddelanden ett leveransfel."
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__company_id
+msgid "If set, page is accessible only from this company"
+msgstr "Om den är inställd är sidan endast tillgänglig från detta företag"
+
+#. module: document_law
+#: model:ir.model.fields.selection,name:document_law.selection__document_law__stage__in_progress
+msgid "In Progress"
+msgstr "Pågående"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_form
+msgid "Information"
+msgstr "Information om"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_is_follower
+msgid "Is Follower"
+msgstr "Är följare"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law____last_update
+msgid "Last Modified on"
+msgstr "Senast ändrad den"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_dok_id
+msgid "Law Document ID"
+msgstr "ID för lagdokument"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_company_form
+msgid "Law RSS"
+msgstr "Juridik RSS"
+
+#. module: document_law
+#: model:ir.actions.act_window,name:document_law.action_laws
+#: model:ir.ui.menu,name:document_law.menu_document_law
+msgid "Laws"
+msgstr "Lagar"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Huvudfäste"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_has_error
+msgid "Message Delivery error"
+msgstr "Fel vid leverans av meddelande"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_ids
+msgid "Messages"
+msgstr "Meddelanden"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Min aktivitet Deadline"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_form
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_menu_form
+msgid "Name"
+msgstr "Namn"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nästa aktivitet i aktivitetskalendern"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Deadline för nästa aktivitet"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_summary
+msgid "Next Activity Summary"
+msgstr "Nästa Aktivitet Sammanfattning"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nästa aktivitetstyp"
+
+#. module: document_law
+#: model_terms:ir.actions.act_window,help:document_law.action_laws
+msgid "No laws at the moment."
+msgstr "Inga lagar för närvarande."
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_nummer
+msgid "Number"
+msgstr "Antal"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Antal åtgärder"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__message_has_error_counter
+msgid "Number of errors"
+msgstr "Antal fel"
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärder"
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Antal meddelanden med leveransfel"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_publicerad
+msgid "Published"
+msgstr "Publicerad"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_company_form
+msgid "RSS URL"
+msgstr "RSS URL"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_res_company__law_rss_url
+msgid "RSS_URL"
+msgstr "RSS_URL"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_rm
+msgid "Reform Year"
+msgstr "Reformår"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__activity_user_id
+msgid "Responsible User"
+msgstr "Ansvarig användare"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_form
+msgid "Set To Done"
+msgstr "Ställ in till klart"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_form
+msgid "Set To In Progress"
+msgstr "Ställ in till Pågående"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
+msgid "Stage"
+msgstr "Etapp"
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
+msgid "Stages"
+msgstr "Stadier"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_status
+#: model:ir.model.fields,field_description:document_law.field_document_law__stage
+msgid "Status"
+msgstr "Status"
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status baserad på aktiviteter\n"
+"Försenad: Förfallodatumet har redan passerats\n"
+"Idag: Aktivitetsdatumet är idag\n"
+"Planerad: Framtida aktiviteter."
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_subtitel
+msgid "Subtitle"
+msgstr "Undertitel"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_subtyp
+msgid "Subtype"
+msgstr "Subtyp"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_systemdatum
+msgid "System Date"
+msgstr "Systemdatum"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_tempbeteckning
+msgid "Temporary Designation"
+msgstr "Tillfällig beteckning"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_text
+msgid "Text"
+msgstr "Text"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_titel
+msgid "Title"
+msgstr "Titel"
+
+#. module: document_law
+#: model:ir.model.fields,field_description:document_law.field_document_law__rss_typ
+msgid "Type"
+msgstr "Typ"
+
+#. module: document_law
+#: model:ir.model.fields,help:document_law.field_document_law__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ av undantagsaktivitet som registreras."
+
+#. module: document_law
+#: model_terms:ir.ui.view,arch_db:document_law.view_law_form
+msgid "e.g. Once upon a time..."
+msgstr "t.ex. En gång i tiden..."
+
+#. module: document_law
+#: model:ir.model,name:document_law.model_document_law
+#: model:ir.model,name:document_law.model_res_company
+msgid "scaffold_test.scaffold_test"
+msgstr "ställnings_test.ställnings_test"
