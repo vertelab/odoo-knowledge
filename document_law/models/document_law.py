@@ -12,8 +12,8 @@ class DocumentLaw(models.Model):
     _name = 'document.law'
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = 'Gets the latest laws and changes from a RSS URL'
+    _rec_name = "rss_titel"
 
-    name = fields.Char(string="Name", compute='_compute_name')
     creation_date = fields.Date(
         string="Date",
         index=True,
@@ -121,15 +121,6 @@ class DocumentLaw(models.Model):
             else:
 
                 raise UserError(f"The RSS URL is empty on company {company.display_name}")
-    
-
-    @api.depends("rss_titel")
-    def _compute_name(self):
-
-        for rec in self:
-
-            if rec.rss_titel:
-                rec.name = rec.rss_titel
 
 
     def set_stage_to_in_progres(self):
