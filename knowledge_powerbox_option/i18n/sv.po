@@ -1,0 +1,299 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* knowledge_powerbox_option
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0-20241127\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-28 10:22+0000\n"
+"PO-Revision-Date: 2024-11-28 11:24+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Add a table of content."
+msgstr "Lägg till en innehållsförteckning."
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/table_of_content_behavior/table_of_content_behavior.xml:0
+#, python-format
+msgid "Add headings in this Article to create a Table of Content"
+msgstr ""
+"Lägg till rubriker i den här artikeln för att skapa en innehållsförteckning"
+
+#. module: knowledge_powerbox_option
+#: model:ir.model,name:knowledge_powerbox_option.model_document_page
+msgid "Adds One2many connection to document.law from document.page."
+msgstr "Lägger till One2many-anslutning till document.law från document.page."
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Article"
+msgstr "Artikel"
+
+#. module: knowledge_powerbox_option
+#: model:ir.actions.act_window,name:knowledge_powerbox_option.document_article_item_action
+msgid "Article Items"
+msgstr "Artiklar"
+
+#. module: knowledge_powerbox_option
+#: model:ir.actions.server,name:knowledge_powerbox_option.ir_actions_server_knowledge_home_page
+msgid "Articles"
+msgstr "Artiklar"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg/knowledge_article_link.js:0
+#, python-format
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/xml/knowledge_editor.xml:0
+#, python-format
+msgid "Choose an Article"
+msgstr "Välj en artikel"
+
+#. module: knowledge_powerbox_option
+#: model_terms:ir.actions.act_window,help:knowledge_powerbox_option.document_article_item_action
+msgid "Create a new article item"
+msgstr "Skapa en ny artikel"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.xml:0
+#, python-format
+msgid "Discard"
+msgstr "Kassera"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/file_behavior/file_behavior.xml:0
+#, python-format
+msgid "Download"
+msgstr "Nedladdningar"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js:0
+#, python-format
+msgid "Embed a View"
+msgstr "Bädda in en vy"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/article_behavior/article_behavior.js:0
+#, python-format
+msgid "Error"
+msgstr "Fel"
+
+#. module: knowledge_powerbox_option
+#. odoo-python
+#: code:addons/knowledge_powerbox_option/models/knowledge_article.py:0
+#, python-format
+msgid ""
+"Error: The given action is not an act_window. This action can not be used to"
+" create an embedded view or a view link"
+msgstr ""
+"Felmeddelande: Den angivna åtgärden är inte ett act_window. Denna åtgärd kan"
+" inte användas för att skapa en inbäddad vy eller en vy-länk"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Index"
+msgstr "Index"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.xml:0
+#, python-format
+msgid "Insert"
+msgstr "Infoga"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg/knowledge_article_link.js:0
+#, python-format
+msgid "Insert Link"
+msgstr "Infoga länk"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js:0
+#, python-format
+msgid "Insert a Kanban View"
+msgstr "Infoga en Kanban-vy"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js:0
+#, python-format
+msgid "Insert a List View"
+msgstr "Infoga en listvy"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg/knowledge_article_link.js:0
+#, python-format
+msgid "Link an Article"
+msgstr "Länka till en artikel"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Link an article."
+msgstr "Länka till en artikel."
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/file_behavior/file_behavior.js:0
+#, python-format
+msgid "Missing File"
+msgstr "Saknad fil"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/xml/knowledge_editor.xml:0
+#, python-format
+msgid "Nest articles under this one to generate a structure"
+msgstr "Lägg in artiklar under denna för att skapa en struktur"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/article_behavior/article_behavior.js:0
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/file_behavior/file_behavior.js:0
+#, python-format
+msgid "Ok"
+msgstr "Ok"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/file_behavior/file_behavior.js:0
+#, python-format
+msgid ""
+"Oops, the file %s could not be found. Please replace this file box by a new "
+"one to re-upload the file."
+msgstr ""
+"Oj, filen %s kunde inte hittas. Ersätt den här filboxen med en ny för att "
+"ladda upp filen på nytt."
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Outline"
+msgstr "Översikt"
+
+#. module: knowledge_powerbox_option
+#: model:ir.actions.act_window,name:knowledge_powerbox_option.document_knowledge_article_action_form
+msgid "Pages"
+msgstr "Sidor"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/articles_structure_behavior/articles_structure_behavior.xml:0
+#, python-format
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.xml:0
+#, python-format
+msgid "Rename"
+msgstr "Byt namn på"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/file_behavior/file_behavior.xml:0
+#, python-format
+msgid "Send as Message"
+msgstr "Skicka som meddelande"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Show all nested articles."
+msgstr "Visa alla nästlade artiklar."
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Show the first level of nested articles."
+msgstr "Visa den första nivån av nästlade artiklar."
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Table Of Content"
+msgstr "Innehållsförteckning"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/article_behavior/article_behavior.js:0
+#, python-format
+msgid "This article was deleted or you don't have the rights to access it."
+msgstr "Den här artikeln har raderats eller så har du inte rätt att läsa den."
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/articles_structure_behavior/articles_structure_behavior.xml:0
+#, python-format
+msgid "Update"
+msgstr "Uppdatering"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/file_behavior/file_behavior.xml:0
+#, python-format
+msgid "Use as Attachment"
+msgstr "Använd som bilaga"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.xml:0
+#, python-format
+msgid "What do you want to manage?"
+msgstr "Vad vill du hantera?"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js:0
+#, python-format
+msgid "e.g. Buildings"
+msgstr "t.ex. Byggnader"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/prompt_embedded_view_name_dialog/prompt_embedded_view_name_dialog.js:0
+#, python-format
+msgid "e.g. Todos"
+msgstr "t.ex. Todos"
+
+#. module: knowledge_powerbox_option
+#. odoo-javascript
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/abstract_behavior/abstract_behavior.xml:0
+#: code:addons/knowledge_powerbox_option/static/src/components/behaviors/articles_structure_behavior/articles_structure_behavior.xml:0
+#, python-format
+msgid "loader"
+msgstr "lastare"
