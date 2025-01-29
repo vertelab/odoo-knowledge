@@ -20,7 +20,7 @@
 ##############################################################################
 #
 # https://www.odoo.com/documentation/16.0/reference/module.html
-#
+
 {
     'name': 'Knowledge: Forum Website',
     'version': '1.0',
@@ -31,7 +31,7 @@
     'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_forum_website',
     'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'AGPL-3',
-    
+   
     'depends': ['website_forum', 'document_knowledge', 'document_page'],
     'data': [
         'security/document_knowledge_security.xml',
