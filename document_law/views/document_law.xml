@@ -4,7 +4,6 @@
     <record id="view_law_tree_children" model="ir.ui.view">
       <field name="name">document.law.tree</field>
       <field name="model">document.law</field>
-      <!-- <field name="field_parent">child_ids</field> -->
       <field name="priority">100</field>
       <field name="arch" type="xml">
         <list>
@@ -39,12 +38,12 @@
             <button name="set_stage_to_done" type="object" string="Set To Done" class="oe_highlight" invisible="stage != 'in_progress'"/>
             <button name="set_stage_to_cancel" type="object" string="Cancel" invisible="stage == 'done' or stage == 'cancel'"/>
             <button name="set_stage_to_cancel" type="object" string="Cancel" class="oe_highlight" invisible="stage != 'done'"/>
-            <field name="stage" widget="statusbar" statusbar_visible="draft,in_progress,done" options="{'clickable': '1', 'fold_field': 'fold'}"/>
+            <field name="stage" widget="statusbar" statusbar_visible="draft,in_progress,done" options="{'clickable': '1', 'fold_field': 'fold'}" />
           </header>
           <sheet>
-            <div name="button_box" id="button_box" class="oe_button_box"/>
+            <div name="button_box" id="button_box" class="oe_button_box" />
             <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
-            <field name="active" invisible="1"/>
+            <field name="active" invisible="1" />
             <div class="oe_title">
               <h1>
                 <field name="rss_titel" placeholder="Name"/>
@@ -76,7 +75,7 @@
           <h1>
             <field name="rss_titel" placeholder="Name"/>
           </h1>
-          <field name="rss_html" widget="html" class="oe_view_only" required="1" options="{&quot;safe&quot;: True}"/>
+          <field name="rss_html" widget="html" class="oe_view_only" required="1" options='{"safe": True}'/>
         </form>
       </field>
     </record>
@@ -112,8 +111,8 @@
 
     <record id="action_laws_tree" model="ir.actions.act_window.view">
       <field name="sequence" eval="0"/>
-      <field name="view_mode">list</field>
       <field name="view_id" ref="document_law.view_law_tree"/>
+      <field name="view_mode">list</field>
       <field name="act_window_id" ref="action_laws"/>
     </record>
 
