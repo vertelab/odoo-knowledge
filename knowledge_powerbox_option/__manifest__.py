@@ -23,7 +23,7 @@
 #
 {
     'name': 'Knowledge Powerbox Option',
-    'version': '16.0.0.0',
+    'version': '1.0',
     'summary': 'Knowledge Powerbox Option',
     'category': 'Knowledge',
     'description': """ Knowledge Powerbox Option """,
