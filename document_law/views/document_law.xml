@@ -85,11 +85,15 @@
       <field name="model">document.law</field>
       <field name="arch" type="xml">
         <search string="Document Law">
-          <field name="rss_titel" string="Content" filter_domain="['|', ('name','ilike',self), ('rss_html','ilike',self)]"/>
-          <field name="rss_dok_id"/>
+          <field name="rss_titel" string="Title" filter_domain="['|', ('rss_titel','ilike',self), ('rss_subtitel','ilike',self)]"/>
+          <field name="rss_titel" string="Content" filter_domain="['|', ('rss_titel','ilike',self), ('rss_text','ilike',self)]"/>
+          <field name="rss_dok_id" string="Document ID"/>
           <field name="company_id"/>
-          <field name="rss_titel"/>
           <group expand="0" string="Group By...">
+            <filter name="group_by_rss_rm" string="Reform Year" context="{'group_by':'rss_rm'}"/>
+            <filter name="group_by_rss_organ" string="Department" context="{'group_by':'rss_organ'}"/>
+            <filter name="group_by_company_id" context="{'group_by':'company_id'}"/>
+            <filter name="group_by_rss_publicerad" string="Updated" context="{'group_by':'rss_publicerad'}"/>
             <filter name="group_by_stage" string="Stage" context="{'group_by':'stage'}"/>
           </group>
           <searchpanel>
@@ -106,7 +110,11 @@
       <field name="view_id" ref="document_law.view_law_tree"/>
       <field name="search_view_id" ref="document_law.view_law_filter"/>
       <field name="help">No laws at the moment.</field>
-      <field name="domain" eval="[('rss_dok_id','!=',False)]"/>
+      <field name="domain">[('rss_dok_id','!=',False)]</field>
+      <!-- <field name="domain">[('rss_dok_id','!=',False),('company_id', '=', user.company_id.id)]</field> -->
+<!-- 
+    <field name="context">{'default_company_id': user.company_id.id}</field>
+    <field name="domain">[('rss_dok_id','!=',False),('company_id', '=', user.company_id.id)]</field> -->
     </record>
 
     <record id="action_laws_tree" model="ir.actions.act_window.view">
