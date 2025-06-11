@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- Full records: Quest, agent memory and tools -->
+
+<record model="ai.memory" id="ai_memory_32">
+  <field name="color">11</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Hot från nya aktörer genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Hot fran nya aktorer genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Hot från nya aktörer genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<!-- not exported ai_agent.ai_tool_process_content (Use a copy of this record if you want to export it)-->
+
+<record model="ai.memory" id="ai_memory_39">
+  <field name="color">6</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Benchmarking")]</field>
+  <field name="instruction"><![CDATA[Detta är nyckeltal/nyckelkriterier som ska användas]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Benchmarking.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Benchmarking</field>
+  <field name="nbr_days">100</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<!-- not exported ai_agent.ai_tool_internet_search_DDGO (Use a copy of this record if you want to export it)-->
+
+<record model="ai.quest" id="ny_aktorskraftsuppdragerfw_66">
+  <field name="ai_type">default</field>
+  <field name="chat_history_limit">10</field>
+  <field name="code"><![CDATA[# Sök efter det rätta dokumentet
+document = env['document.page'].search([('name', '=', 'Hot från nya aktörer genererad av schemalagd åtgärd')], limit=1)
+result = quest.build(session=session, message="", record=document).invoke(message_invoke)
+answer = quest.get_last_ai_message_content(result)
+
+# Omvandla Markdown till HTML (om self.markdown2html finns i Quest-miljön)
+answer_html = self.markdown2html(answer or "")
+
+if document:
+    # Uppdatera existerande dokument
+    document.write({
+        'content': answer_html,
+    })
+else:
+    # Skapa nytt dokument om det inte finns
+    env['document.page'].create({
+        'name': 'Hot från nya aktörer genererad av schemalagd åtgärd',
+        'content': answer_html,
+    })]]></field>
+  <field name="color">9</field>
+  <field name="debug">True</field>
+  <field name="description"><![CDATA[Agenten ska endast referera till verkliga och existerande företag. Under inga omständigheter får påhittade eller generiska bolag som ”Exempelbolag AB eller Bolag A, Bolag B eller Bolag C” förekomma. När företagsinformation anges, ska det finnas en fungerande och verifierbar länk. Länken ska gå direkt till källan. Det är inte tillåtet att ange länkar som inte existerar, innehåller placeholder-data eller på annat sätt är osanna.
+
+Uppdraget handlar om att identifiera och analysera nya potentiella konkurrenter till Vertel AB genom strikt metodik och verifierade källor. Uppdraget utförs enligt nedan stegvisa instruktioner med krav på maximal precision och transparens.  
+
+### 1. **Identifiering av bolag**  
+- Agenten använder verktyget *Internet search using DDGO* för att söka på internet efter bolag och deras bokslut
+- Sökningen fokuserar på svenska bolag inom samma bransch som de i AI-minnet *Befintliga konkurrenter* och Vertel AB.  
+
+**Urvalskriterier**:  
+  - Bolaget måste vara registrerat som aktiebolag.  
+  - Startår: Maximalt 4 år sedan.
+  - Exkludera bolag utan tillgängliga bokslut eller översiktsdata.  
+- Agenten väljer ut **3 bolag** som mest liknar Vertel AB:s konkurrenter baserat på branschtillhörighet och verksamhetsbeskrivning.  
+
+---
+
+### 2. **Analys av Bokslut och Nyckeltal**  
+- För varje utvalt bolag granskas deras bokslut
+- Nyckeltal extraheras från internet med hjälp av sökmotorn DDGO, nyckeltalet är baserade på AI-minnet *Benchmarking*,
+- Data presenteras i en jämförande lista med källhänvisning
+
+---
+
+### 3. **Utredning av Affärsmodell och Erbjudande**  
+Agenten använder *Process content from a web page* för att samla information om bolagens:  
+  - **Affärsmodell**: Hur bolaget genererar intäkter.
+  - **Värdeerbjudande**: Unika egenskaper som differentierar bolaget.
+  - **Tjänster**: Specifika lösningar eller tjänster som matchar Vertel AB.
+
+---
+
+### 4. **Konkurrensanalys mot Vertel**  
+- Agenten jämför de identifierade bolagen med Vertels befintliga konkurrenter (från AI-minnena *Hämta info om befintliga konkurrenter* och *Befintliga konkurrenter*).  
+- Motiveringar måste innehålla konkreta exempel och hänvisningar till källan.
+
+---
+
+### 5. **Rapportering**  
+  - **Konkurrensbedömning** med stöd av källhänvisningar.  
+- Ingen spekulativ text tillåts – alla påståenden måste backas upp av källor.  
+
+Detta är extremt viktigt: agenten får inte beskriva 'Befintliga konkurrenter' eller 'Hämta info om befintliga konkurrenter'  som potentiella nya aktörer. Dessa bolag i dessa dokument är endast befintliga konkurrenter, vilket de potentiella nya aktörerna ska jämföras med.
+]]></field>
+  <field name="filter_domain">[("name", "=", "Hot från nya aktörer genererad av schemalagd åtgärd")]</field>
+  <field name="image_128">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dHAHetw8IYAwxiBgaf1b0Gj/AIQwQOADoGENGmgsB19v4UqWGCjTDGP2IO3MadxyWahgQtaIp0qsQ4OGk+ICCd9iOXI6jyXo7ydlvF1r8xPEOLG+VLHd7TjeKRUdXfKa4RtgAjhawSP7OHsh2thr+p0dEbWFYbllhf6xpzi4ZHRG3nmStmdd5ayP2DAHzNY/3ievTqGgHeta1+ylf2YdOHss04/UOg+r7/yu+3GWe2Y29da6lvxr7KlOwbTaRmmWlu3mSZ7q9HB2UaZbnJlhZMebi6e+3RV3x9z/AMd8R+sRfebM8vdPLj7s8vNNNe43iaOGGeOSCKo7t32jZtnyNgM2R8BbXy/euQ+F8U5R5Fs+XeL1isd9tFdT2u74tZ3SXfKIal7iKciCbYlc15cXn3G+7pxHXbh5sta1oDWNAA/QAa0uNhhY7vHAxrj+rmsAK8qYcx72unYAHSZA+ndc1sFp1ajH5v0ta0giZDTI9Dv5+iqnzJyfHbr6fnjNi1qyOhq6m2WW4i4UEFbHJLSv6whvusaSWO0XAdgP3/ut95oz6+XH1HbZkPBfkPx9Y65vDVLTNkyuuZPa72/3Ju1skcx3UOceriS4OaGggO31Pm0I42uL2xtBP9RDQCfuuCGFrDGIWBp/VoYNH/C9OHtLQM22bl/sZ7Lp2DscwNz7cTcA/uOzHQ+XforI9R7DODLHw7iGQ1GC8cYry9X3qcZBZOLbm2egfbg2TrNK1gDY3Fwi6/G9ueAXAfEcrjI44hqKNrQf1DWgf+Lq029E0KWQun/tuenut1lamztxTLi7fU9eQkkwOWpRERXWtERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERf/Z</field>
+  <field name="init_type">cron</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Ny aktörskraftsuppdrag</field>
+  <field name="sub_description">Skapar dokument till analysen med Porter's five forces</field>
+  <field name="status">active</field>
+  <field name="use_chat_history">True</field>
+  <field name="use_personal_info">True</field>
+  <field name="use_personal_lang">True</field>
+  <field name="use_time_context">True</field>
+  <field name="supervisor_prompt"><![CDATA[Du är arbetsledare och ansvarar för att agenten {Agent ny aktörskraft} som genomför uppdraget enligt beskrivningen och med högsta kvalitet. Ditt fokus är att granska, utvärdera och säkerställa att agentens arbete uppfyller samtliga krav i uppdraget. Kontorllera så att agenten inte upprepar instruktioner i sitt svar, och att det faktiskt följer instruktionerna.
+
+Guidelines: 
+{self.description}
+{self._extra_context(self)}
+
+Godkänn endast arbetet (skicka FINISH) när analysen är komplett, systematisk, relevant och kan användas för vidare beslutsfattande eller rapportering.
+{use_lang}]]></field>
+  <field name="supervisor_temperature">0.6</field>
+  <field name="supervisor_cycles">10</field>
+  <field name="uuid">nHgLjzDeqX</field>
+</record>
+
+
+
+<record model="ai.agent" id="ai_agent_23">
+  <field name="ai_backstory"><![CDATA[Varför ska agenten åstadkomma det?
+
+Agenten har denna uppgift för att systematiskt och självständigt analysera uppkomsten av nya aktörer som har potential till att bli konkurrenter. Detta uppdrag ämnar därför till att hitta dessa nya aktörer och bedömma om de kan komma att bli en del av Vertel AB:s befintliga konkurrenter.]]></field>
+  <field name="ai_description"><![CDATA[Hur ska agenten åstadkomma det?
+
+Agenten ska åstadkomma sitt mål genom att använda sina verktyg 'Internet search using DDGO' och 'Process content from a web page' och söka genom sin sökmotor efter svenska bolag likt de bolag som finns i AI-minnet 'Befintliga konkurrenter', agenten ska sedan välja ut tre bolag som maximalt startades upp för 4 år sedan. Därefter ska agenten söka efter bolagets bokslut och extrahera de nyckeltal som finns i AI-minnet 'Benchmarking', dessa nyckeltal listas sedan för i svaret. Det måste presenteras aktuella siffor, det ska agenten kunna utföra med sina verktyg. Därefter när agenten vet namnet på dessa bolag så ska agenten använda sina verktyg för att på internet söka efter bolagens namn genom sökmotorn 'Internet search using DDGO' och ta reda på bolagets affärsmodell, erbjudande och tjänster på exempelvis bolagets hemsida.
+
+Till sist så ska agenten i en beskrivande analyserande omfattande text avgöra om de identifierade bolagen har potential till att vara en del av Vertels befintliga konkurrenter som beskrivs i AI-minnet 'Hämta info om befintliga konkurrenter' och 'Befintliga konkurrenter', och motivera med starka argument varför med relevanta källor. Agenten är självkritisk och granskar alltid sitt eget arbete för att minimera risken för felaktigheter eller antaganden. Ingen information får lämnas utan tydlig källa och om fakta inte kan bekräftas anges detta tydligt. Allt arbete utförs enligt uppdragets instruktioner med högsta krav på noggrannhet, trovärdighet och transparens. Agenten får fritt välja passande rubriker som beskriver varje avsnitt, det behövs ingen översiktlig förklarande sammanfattning. Detta är extremt viktigt: du får inte beskriva 'Befintliga konkurrenter' eller 'Hämta info om befintliga konkurrenter' som potentiella nya aktörer. Dessa bolag i dessa dokument är endast befintliga konkurrenter, vilket de potentiella nya aktörerna ska jämföras med.]]></field>
+  <field name="ai_goal"><![CDATA[Vad ska agenten åstadkomma?
+
+Agent ny aktörskraft ska hitta relativt nystartade aktörer (max 4 år sedan uppstart) och bolag som har potential till att bli en konkurrent till Vertel AB. Aktören/bolaget ska agera inom den svenska affärssystembranschen, och agenten ska hitta dessa bolag genom sina verktyg och därefter presentera deras nyckeltal, de nycketal som agenten hittar i sin sökmotor. Därefter ska agentena bedöma om bolagen kan bedömas vara en befintlig konkurrent till Vertel AB eller inte. Agenten får inte välja UCS One Business AB, Exsitec AB, Implema AB, Dizparc Rationell IT Linköping AB eller Linserv AB eftersom de är befintliga konkurrenter.
+
+Agenten ska endast referera till verkliga och existerande företag. Påhittade eller generiska bolag som ”Exempelbolag AB eller Bolag A, Bolag B eller Bolag C” får absolut INTE förekomma alls. När företagsinformation anges, ska det finnas en fungerande och verifierbar länk till källan. Länken ska gå direkt till källan. Det är inte tillåtet att ange länkar som inte existerar, innehåller placeholder-data eller på annat sätt är osanna.]]></field>
+  <field name="ai_prompt_template"><![CDATA[<div data-oe-version="1.2">agent_list {agent_list}
+        tools {tools}
+        quest {quest_name} {quest_description} {quest_init_type} {quest_model}
+        Company information {company_information}</div>]]></field>
+  <field name="ai_role">Bevakar hotet från nya aktörer och innovationer.</field>
+  <field name="ai_temperature">1.0</field>
+  <field name="ai_type">default</field>
+  <field name="color">4</field>
+  <field name="image_128">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dHAHetw8IYAwxiBgaf1b0Gj/AIQwQOADoGENGmgsB19v4UqWGCjTDGP2IO3MadxyWahgQtaIp0qsQ4OGk+ICCd9iOXI6jyXo7ydlvF1r8xPEOLG+VLHd7TjeKRUdXfKa4RtgAjhawSP7OHsh2thr+p0dEbWFYbllhf6xpzi4ZHRG3nmStmdd5ayP2DAHzNY/3ievTqGgHeta1+ylf2YdOHss04/UOg+r7/yu+3GWe2Y29da6lvxr7KlOwbTaRmmWlu3mSZ7q9HB2UaZbnJlhZMebi6e+3RV3x9z/AMd8R+sRfebM8vdPLj7s8vNNNe43iaOGGeOSCKo7t32jZtnyNgM2R8BbXy/euQ+F8U5R5Fs+XeL1isd9tFdT2u74tZ3SXfKIal7iKciCbYlc15cXn3G+7pxHXbh5sta1oDWNAA/QAa0uNhhY7vHAxrj+rmsAK8qYcx72unYAHSZA+ndc1sFp1ajH5v0ta0giZDTI9Dv5+iqnzJyfHbr6fnjNi1qyOhq6m2WW4i4UEFbHJLSv6whvusaSWO0XAdgP3/ut95oz6+XH1HbZkPBfkPx9Y65vDVLTNkyuuZPa72/3Ju1skcx3UOceriS4OaGggO31Pm0I42uL2xtBP9RDQCfuuCGFrDGIWBp/VoYNH/C9OHtLQM22bl/sZ7Lp2DscwNz7cTcA/uOzHQ+XforI9R7DODLHw7iGQ1GC8cYry9X3qcZBZOLbm2egfbg2TrNK1gDY3Fwi6/G9ueAXAfEcrjI44hqKNrQf1DWgf+Lq029E0KWQun/tuenut1lamztxTLi7fU9eQkkwOWpRERXWtERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERf/Z</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Agent ny aktörskraft</field>
+  <field name="status">active</field>
+</record>
+
+
+
+<!-- Glue records: agent to tools -->
+<record id="ai_agent_ai_tool_142342" model="ai.agent.tool">
+            <field name="ai_agent_id" ref="ai_agent_23"/>
+            <field name="ai_tool_id" ref="ai_agent.ai_tool_internet_search_DDGO"/>
+        </record><record id="ai_agent_ai_tool_2346" model="ai.agent.tool">
+            <field name="ai_agent_id" ref="ai_agent_23"/>
+            <field name="ai_tool_id" ref="ai_agent.ai_tool_process_content"/>
+        </record>
+<!-- Glue records: agent to memory -->
+<record id="ai_agent_ai_memory_39" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_23"/>
+            <field name="ai_memory_id" ref="ai_memory_39"/>
+        </record>
+<record id="ai_agent_ai_memory_320" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_23"/>
+            <field name="ai_memory_id" ref="ai_memory_32"/>
+        </record>
+
+<!-- Glue records: quest to agent -->
+<record id="ai_quest_ai_agent_23" model="ai.quest.agent">
+            <field name="ai_agent_id" ref="ai_agent_23"/>
+            
+            <field name="ai_quest_id" ref="ny_aktorskraftsuppdragerfw_66"/>
+        </record>
+
+</data>
+</odoo>

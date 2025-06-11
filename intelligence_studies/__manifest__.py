@@ -1,0 +1,30 @@
+{
+    'name': "Knowledge: Intelligence Studies",
+    'version': '1.0',
+    'depends': ['ai_agent','project_task_swot','document_page'],
+    'author': "Vertel AB",
+    'category': 'Tools',
+    'description': """Intelligence Studies offers a structured and automated approach to collecting, analyzing, and reporting critical information that supports strategic decision-making. By leveraging specialized AI agents, it continuously monitors external macro trends through PESTLE analysis, examines market dynamics and competitive forces using Porter’s Five Forces, and evaluates internal strengths, weaknesses, opportunities, and threats via SWOT analysis. This comprehensive process delivers regular, data-driven insights that reduce manual effort while providing a dynamic and up-to-date overview of both the external environment and the organization’s internal strategic position. The result is a powerful tool for proactive planning and informed decision-making based on relevant and timely intelligence."""
+Quest Intelligence Studies
+""",
+    'data': [
+        'data/quest_module_opportunities.xml', 
+        'data/quest_module_ekonomiska_trender.xml', 
+        'data/quest_module_invarldsbevakning_swot_analys.xml', 
+        'data/quest_module_juridiska_trender.xml', 
+        'data/quest_module_konkurrenskraftsuppdrag.xml', 
+        'data/quest_module_miljomassiga_trender.xml', 
+        'data/quest_module_narvarldsbevakning.xml', 
+        'data/quest_module_nulagesbeskrivning_swot_analys.xml', 
+        'data/quest_module_ny_aktorkraftsuppdrag.xml', 
+        'data/quest_module_omvarldsbevakning_av_aktuella trender.xml',
+        'data/quest_module_politiska_trender.xml', 
+        'data/quest_module_sociala_trender.xml', 
+        'data/quest_module_strenghts.xml', 
+        'data/quest_module_tekniska_teknologiska_trender.xml', 
+        'data/quest_module_threats.xml', 
+        'data/quest_module_weakness.xml'
+        ],
+    'installable': True,
+    'application': False,
+}
