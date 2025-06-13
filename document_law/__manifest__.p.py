@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) {year} {company} (<{mail}>)
+#    Copyright (C) 2025  Vertel AB  info@vertel.se
 #    All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 #
 ##############################################################################
 #
-# https://www.odoo.com/documentation/14.0/reference/module.html
+# https://www.odoo.com/documentation/18.0/reference/module.html
 #
 {
     'name': 'Knowledge: Document Law',
@@ -32,7 +32,7 @@
         Long description of module's purpose
     """,
     'author': 'Vertel AB',
-    'website': 'https://vertel.se/apps/odoo-',
+    'website': 'https://vertel.se/apps/odoo-knowledge/document_law',
     'images': ['static/description/banner.png'], # 560x280
     'license': 'AGPL-3',
     'depends': ['mail','document_page'],
