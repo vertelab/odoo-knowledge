@@ -1,0 +1,36 @@
+<odoo noupdate="0">
+              <!-- security rules for website slides -->
+    <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('module', '=', 'document_page_access_group'), ('name', '=', 'document_page_rule')]" />
+            </function>
+            <value eval="{'noupdate': False}" />
+    </function>    
+
+
+    <record id="document_page_access_group.document_page_rule" model="ir.rule">
+        <field name="name">Document Page Access</field>
+        <field name="model_id" ref="model_document_page" />
+        <field eval="False" name="global" />
+        <field
+            name="groups"
+            eval="[Command.link(ref('document_knowledge.group_document_user'))]"
+        />
+        <field
+            name="domain_force"
+        >['|', ('groups_id', 'in', [g.id for g in user.groups_id]), ('user_ids', 'in', [user.id])]</field>
+    </record>
+
+      <record id="document_page_rule_category" model="ir.rule">
+        <field name="name">Document Category Access</field>
+        <field name="model_id" ref="model_document_page" />
+        <field eval="False" name="global" />
+        <field
+            name="groups"
+            eval="[Command.link(ref('document_knowledge.group_document_user'))]"
+        />
+        <field
+            name="domain_force"
+        >['|', ('parent_groups_id', 'in', [g.id for g in user.groups_id]), ('parent_user_ids', 'in', [user.id])]</field>
+    </record>
+</odoo>

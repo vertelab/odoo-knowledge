@@ -1,0 +1,39 @@
+<odoo>
+<record id="view_category_form_inherit_access" model="ir.ui.view">
+    <field name="name">document.page.category.form.inherit.access</field>
+    <field name="model">document.page</field>
+    <field name="inherit_id" ref="document_page.view_category_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//notebook" position="inside">
+            <page name="security" string="Access" groups="document_page.group_document_manager">
+                <group name="groups" string="Groups" invisible="user_ids">
+                    <field name="groups_id" nolabel="1" colspan="2"/>
+                </group>
+                <group name="users" string="Users" invisible="groups_id">
+                    <field name="user_ids" widget="many2many_tags"/>
+                </group>
+            </page>
+        </xpath>
+    </field>
+</record>
+
+
+
+
+<record id="view_form_inherit_access" model="ir.ui.view">
+    <field name="name">document.page.category.form.inherit.access</field>
+    <field name="model">document.page</field>
+    <field name="inherit_id" ref="document_page_access_group.document_page_access_group_view_wiki_form"/>
+    <field name="arch" type="xml">
+            <page name="security" position="inside">
+                <group name="category_groups" string="Category Groups" invisible="parent_user_ids">
+                    <field name="parent_groups_id" nolabel="1" colspan="2"/>
+                </group>
+                <group name="category_users" string="Category Users" invisible="parent_groups_id">
+                    <field name="parent_user_ids" widget="many2many_tags"/>
+                </group>
+            </page>
+    </field>
+</record>
+
+</odoo>
