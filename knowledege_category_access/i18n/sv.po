@@ -1,0 +1,58 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* knowledege_category_access
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20250925\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-01 11:52+0000\n"
+"PO-Revision-Date: 2025-10-01 13:54+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#. module: knowledege_category_access
+#: model_terms:ir.ui.view,arch_db:knowledege_category_access.view_category_form_inherit_access
+msgid "Access"
+msgstr "Tillträde"
+
+#. module: knowledege_category_access
+#: model:ir.model,name:knowledege_category_access.model_document_page
+msgid "Adds One2many connection to document.law from document.page."
+msgstr "Lägger till One2many-koppling till document.law från document.page."
+
+#. module: knowledege_category_access
+#: model_terms:ir.ui.view,arch_db:knowledege_category_access.view_form_inherit_access
+msgid "Category Groups"
+msgstr "Kategori grupper"
+
+#. module: knowledege_category_access
+#: model_terms:ir.ui.view,arch_db:knowledege_category_access.view_form_inherit_access
+msgid "Category Users"
+msgstr "Kategori användare"
+
+#. module: knowledege_category_access
+#: model_terms:ir.ui.view,arch_db:knowledege_category_access.view_category_form_inherit_access
+msgid "Groups"
+msgstr "Grupper"
+
+#. module: knowledege_category_access
+#: model:ir.model.fields,field_description:knowledege_category_access.field_document_page__parent_groups_id
+msgid "Parent Groups"
+msgstr "Överliggande grupper"
+
+#. module: knowledege_category_access
+#: model:ir.model.fields,field_description:knowledege_category_access.field_document_page__parent_user_ids
+msgid "Parent Users"
+msgstr "Överliggande användare"
+
+#. module: knowledege_category_access
+#: model_terms:ir.ui.view,arch_db:knowledege_category_access.view_category_form_inherit_access
+msgid "Users"
+msgstr "Användare"
