@@ -70,7 +70,7 @@ msgstr "Avbruten"
 #. module: document_law
 #: model:ir.model.fields,field_description:document_law.field_document_law__company_id
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: document_law
 #: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
@@ -85,7 +85,7 @@ msgstr "Skapad av"
 #. module: document_law
 #: model:ir.model.fields,field_description:document_law.field_document_law__create_date
 msgid "Created on"
-msgstr "Skapad på"
+msgstr "Skapad den"
 
 #. module: document_law
 #: model:ir.actions.server,name:document_law.create_law_records_cron_ir_actions_server
@@ -117,7 +117,7 @@ msgstr "Beteckning"
 #. module: document_law
 #: model:ir.model.fields,field_description:document_law.field_document_law__display_name
 msgid "Display Name"
-msgstr "Visa namn"
+msgstr "Visningsnamn"
 
 #. module: document_law
 #: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
@@ -164,7 +164,7 @@ msgstr "Font awesome-ikon, t.ex. fa-tasks"
 #. module: document_law
 #: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
 msgid "Group By..."
-msgstr "Gruppera genom..."
+msgstr "Gruppera efter..."
 
 #. module: document_law
 #: model:ir.model.fields,field_description:document_law.field_document_law__rss_html
@@ -219,7 +219,7 @@ msgstr "Pågående"
 #. module: document_law
 #: model_terms:ir.ui.view,arch_db:document_law.view_law_form
 msgid "Information"
-msgstr "Information om"
+msgstr "Information"
 
 #. module: document_law
 #: model:ir.model.fields,field_description:document_law.field_document_law__message_is_follower
@@ -275,7 +275,7 @@ msgstr "Meddelanden"
 #. module: document_law
 #: model:ir.model.fields,field_description:document_law.field_document_law__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Min aktivitet Deadline"
+msgstr "Min aktivitets tidsfrist"
 
 #. module: document_law
 #: model_terms:ir.ui.view,arch_db:document_law.view_law_form
@@ -361,12 +361,12 @@ msgstr "Ansvarig användare"
 #. module: document_law
 #: model_terms:ir.ui.view,arch_db:document_law.view_law_form
 msgid "Set To Done"
-msgstr "Ställ in till klart"
+msgstr "Ställ till Klart"
 
 #. module: document_law
 #: model_terms:ir.ui.view,arch_db:document_law.view_law_form
 msgid "Set To In Progress"
-msgstr "Ställ in till Pågående"
+msgstr "Ställ till Pågående"
 
 #. module: document_law
 #: model_terms:ir.ui.view,arch_db:document_law.view_law_filter
@@ -405,7 +405,7 @@ msgstr "Undertitel"
 #. module: document_law
 #: model:ir.model.fields,field_description:document_law.field_document_law__rss_subtyp
 msgid "Subtype"
-msgstr "Subtyp"
+msgstr "Undertyp"
 
 #. module: document_law
 #: model:ir.model.fields,field_description:document_law.field_document_law__rss_systemdatum
@@ -446,4 +446,4 @@ msgstr "t.ex. En gång i tiden..."
 #: model:ir.model,name:document_law.model_document_law
 #: model:ir.model,name:document_law.model_res_company
 msgid "scaffold_test.scaffold_test"
-msgstr "ställnings_test.ställnings_test"
+msgstr "scaffold_test.scaffold_test"
