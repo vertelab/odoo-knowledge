@@ -12,11 +12,17 @@ from datetime import datetime
 
 from odoo import http, tools, _
 from odoo.exceptions import AccessError
+# #if VERSION <= "16.0"
 from odoo.addons.http_routing.models.ir_http import slug
+# #endif
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.addons.portal.controllers.portal import _build_url_w_params
+# # if VERSION <= "16.0"
 from odoo.addons.website_forum.controllers.main import WebsiteForum
+# #elif VERSION >= "17.0"
+from odoo.addons.website_forum.controllers.website_forum import WebsiteForum
+# #endif
 
 from odoo.exceptions import UserError
 from odoo.http import request
@@ -33,12 +39,17 @@ class WebsiteForumExtended(WebsiteForum):
                  ], type='http', auth="public", website=True, sitemap=WebsiteForum.sitemap_forum)
     def questions(self, forum, tag=None, page=1, filters='all', my=None, sorting=None, search='', **post):
         Post = request.env['forum.post']
+        # #if VERSION >= "17.0"
+        slug = request.env['ir.http']._slug
+        # #endif
         if sorting:
             # check that sorting is valid
             # retro-compatibily for V8 and google links
             try:
                 sorting = werkzeug.urls.url_unquote_plus(sorting)
+                # #if VERSION <= "17.0"
                 Post._generate_order_by(sorting, None)
+                # #endif
             except (UserError, ValueError):
                 sorting = False
 
