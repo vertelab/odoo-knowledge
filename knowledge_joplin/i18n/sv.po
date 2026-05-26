@@ -1,0 +1,205 @@
+# Swedish translation for knowledge_joplin
+# Copyright (C) 2025 Vertel AB
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: knowledge_joplin 18.0\n"
+"Report-Msgid-Bugs-To: info@vertel.se\n"
+"POT-Creation-Date: 2025-01-01 00:00+0000\n"
+"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"Last-Translator: Vertel AB <info@vertel.se>\n"
+"Language-Team: Swedish\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_joplin_note
+msgid "joplin.note"
+msgstr "Anteckning"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_joplin_folder
+msgid "joplin.folder"
+msgstr "Anteckningsbok"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_joplin_tag
+msgid "joplin.tag"
+msgstr "Etikett"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_joplin_resource
+msgid "joplin.resource"
+msgstr "Bilaga"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_joplin_revision
+msgid "joplin.revision"
+msgstr "Version"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_joplin_event
+msgid "joplin.event"
+msgstr "Händelse"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_joplin_api_token
+msgid "joplin.api.token"
+msgstr "API-token"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_joplin_note_tag
+msgid "joplin.note.tag"
+msgstr "Anteckningsetikett"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__title
+msgid "Title"
+msgstr "Rubrik"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__body
+msgid "Body (Markdown)"
+msgstr "Innehåll (Markdown)"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__body_html
+msgid "Body (HTML)"
+msgstr "Innehåll (HTML)"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__folder_id
+msgid "Folder"
+msgstr "Anteckningsbok"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__tag_ids
+msgid "Tags"
+msgstr "Etiketter"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__is_todo
+msgid "Is To-Do"
+msgstr "Är att-göra"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__source_url
+msgid "Source URL"
+msgstr "Käll-URL"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_folder__name
+msgid "Name"
+msgstr "Namn"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_tag__name
+msgid "Name"
+msgstr "Namn"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__user_id
+msgid "User"
+msgstr "Användare"
+
+#. module: knowledge_joplin
+#: model:ir.actions.act_window,name:knowledge_joplin.action_joplin_note
+msgid "Notes"
+msgstr "Anteckningar"
+
+#. module: knowledge_joplin
+#: model:ir.actions.act_window,name:knowledge_joplin.action_joplin_folder
+msgid "Folders"
+msgstr "Anteckningsböcker"
+
+#. module: knowledge_joplin
+#: model:ir.actions.act_window,name:knowledge_joplin.action_joplin_tag
+msgid "Tags"
+msgstr "Etiketter"
+
+#. module: knowledge_joplin
+#: model:ir.actions.act_window,name:knowledge_joplin.action_joplin_resource
+msgid "Resources"
+msgstr "Bilagor"
+
+#. module: knowledge_joplin
+#: model:ir.ui.menu,name:knowledge_joplin.menu_joplin_root
+msgid "Joplin Notes"
+msgstr "Joplin Anteckningar"
+
+#. module: knowledge_joplin
+#: model:ir.ui.menu,name:knowledge_joplin.menu_joplin_notes
+msgid "Notes"
+msgstr "Anteckningar"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_note_search
+msgid "Search Notes"
+msgstr "Sök anteckningar"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_note_form
+msgid "Note"
+msgstr "Anteckning"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_folder_form
+msgid "Folder"
+msgstr "Anteckningsbok"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_tag_form
+msgid "Tag"
+msgstr "Etikett"
+
+#. module: knowledge_joplin
+#: model:ir.actions.act_window,help:knowledge_joplin.action_joplin_note
+msgid "Create your first note"
+msgstr "Skapa din första anteckning"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_note_form
+msgid "Content"
+msgstr "Innehåll"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_note_form
+msgid "Markdown"
+msgstr "Markdown"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_note_form
+msgid "Properties"
+msgstr "Egenskaper"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_note_form
+msgid "Resources"
+msgstr "Bilagor"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_joplin_note_form
+msgid "Revisions"
+msgstr "Versioner"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__joplin_id
+msgid "Joplin ID"
+msgstr "Joplin-ID"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__created_time
+msgid "Created Time"
+msgstr "Skapad tid"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__updated_time
+msgid "Updated Time"
+msgstr "Uppdaterad tid"

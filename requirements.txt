@@ -1,3 +1,5 @@
 xmltodict
 rss_parser
 openpyxl
+markdown>=3.0
+diff-match-patch>=20200713

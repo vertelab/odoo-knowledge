@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_joplin_folder_user,joplin.folder.user,model_joplin_folder,group_joplin_user,1,1,1,1
+access_joplin_folder_manager,joplin.folder.manager,model_joplin_folder,group_joplin_manager,1,1,1,1
+access_joplin_note_user,joplin.note.user,model_joplin_note,group_joplin_user,1,1,1,1
+access_joplin_note_manager,joplin.note.manager,model_joplin_note,group_joplin_manager,1,1,1,1
+access_joplin_tag_user,joplin.tag.user,model_joplin_tag,group_joplin_user,1,1,1,1
+access_joplin_tag_manager,joplin.tag.manager,model_joplin_tag,group_joplin_manager,1,1,1,1
+access_joplin_note_tag_user,joplin.note.tag.user,model_joplin_note_tag,group_joplin_user,1,1,1,1
+access_joplin_note_tag_manager,joplin.note.tag.manager,model_joplin_note_tag,group_joplin_manager,1,1,1,1
+access_joplin_resource_user,joplin.resource.user,model_joplin_resource,group_joplin_user,1,1,1,1
+access_joplin_resource_manager,joplin.resource.manager,model_joplin_resource,group_joplin_manager,1,1,1,1
+access_joplin_revision_user,joplin.revision.user,model_joplin_revision,group_joplin_user,1,1,1,1
+access_joplin_revision_manager,joplin.revision.manager,model_joplin_revision,group_joplin_manager,1,1,1,1
+access_joplin_event_user,joplin.event.user,model_joplin_event,group_joplin_user,1,1,1,1
+access_joplin_event_manager,joplin.event.manager,model_joplin_event,group_joplin_manager,1,1,1,1
+access_joplin_api_token_user,joplin.api.token.user,model_joplin_api_token,base.group_user,1,1,1,1
+access_joplin_api_token_manager,joplin.api.token.manager,model_joplin_api_token,base.group_system,1,1,1,1

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Search View -->
+        <record id="view_joplin_note_search" model="ir.ui.view">
+            <field name="name">joplin.note.search</field>
+            <field name="model">joplin.note</field>
+            <field name="arch" type="xml">
+                <search string="Search Notes">
+                    <field name="title"/>
+                    <field name="body"/>
+                    <field name="author"/>
+                    <field name="source_url"/>
+                    <filter name="my_notes" string="My Notes"
+                            domain="[('user_id', '=', uid)]"/>
+                    <filter name="my_todos" string="My To-Dos"
+                            domain="[('user_id', '=', uid), ('is_todo', '=', True)]"/>
+                    <filter name="shared_with_me" string="Shared with Me"
+                            domain="[('message_follower_ids.partner_id', '!=', False), ('user_id', '!=', uid)]"/>
+                    <separator/>
+                    <filter name="todos" string="To-Dos"
+                            domain="[('is_todo', '=', True)]"/>
+                    <filter name="conflicts" string="Conflicts"
+                            domain="[('is_conflict', '=', True)]"/>
+                    <filter name="trashed" string="Trashed"
+                            domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter name="this_week" string="This Week"
+                            date="updated_time"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_folder" string="Folder"
+                                context="{'group_by': 'folder_id'}"/>
+                        <filter name="group_user" string="User"
+                                context="{'group_by': 'user_id'}"/>
+                        <filter name="group_tag" string="Tag"
+                                context="{'group_by': 'tag_ids'}"/>
+                        <filter name="group_todo" string="To-Do Status"
+                                context="{'group_by': 'is_todo'}"/>
+                        <filter name="group_active" string="Active/Trashed"
+                                context="{'group_by': 'active'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_joplin_note_tree" model="ir.ui.view">
+            <field name="name">joplin.note.tree</field>
+            <field name="model">joplin.note</field>
+            <field name="arch" type="xml">
+                <list string="Notes" default_order="updated_time desc"
+                      decoration-muted="not active"
+                      decoration-info="is_todo and not todo_completed">
+                    <field name="active" invisible="1"/>
+                    <field name="title"/>
+                    <field name="folder_id" optional="show"/>
+                    <field name="tag_ids" widget="many2many_tags" optional="show"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="is_todo" optional="hide"/>
+                    <field name="todo_completed" optional="hide"/>
+                    <field name="updated_time" optional="show"/>
+                    <field name="active" widget="boolean_fa" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_joplin_note_kanban" model="ir.ui.view">
+            <field name="name">joplin.note.kanban</field>
+            <field name="model">joplin.note</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="title"/>
+                    <field name="tag_ids"/>
+                    <field name="folder_id"/>
+                    <field name="body"/>
+                    <field name="is_todo"/>
+                    <field name="todo_completed"/>
+                    <field name="user_id"/>
+                    <templates>
+                        <t t-name="card">
+                            <div t-att-class="kanban_color(record.color.raw_value) + ' oe_kanban_global_click'">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_title">
+                                        <field name="title"/>
+                                    </div>
+                                    <div class="o_kanban_tags_section">
+                                        <field name="tag_ids" widget="many2many_tags"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <field name="body" class="text-muted"/>
+                                    <div class="o_kanban_footer">
+                                        <field name="folder_id"/>
+                                        <field name="user_id" avatar="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_joplin_note_form" model="ir.ui.view">
+            <field name="name">joplin.note.form</field>
+            <field name="model">joplin.note</field>
+            <field name="arch" type="xml">
+                <form string="Note">
+                    <header>
+                        <button name="action_trash" string="Trash" type="object"
+                                class="btn-danger"
+                                confirm="Move this note to trash?"
+                                invisible="[('active', '=', False)]"/>
+                        <button name="action_restore" string="Restore" type="object"
+                                class="btn-success"
+                                invisible="[('active', '=', True)]"/>
+                        <button name="action_permanent_delete" string="Delete Permanently" type="object"
+                                class="btn-danger"
+                                confirm="Delete this note permanently?"
+                                invisible="[('active', '=', True)]"/>
+                        <field name="active" widget="statusbar" statusbar_visible="True"
+                               statusbar_colors='{"True": "success", "False": "danger"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_todo" type="object"
+                                    class="oe_stat_button" icon="fa-check">
+                                <div class="o_stat_info">
+                                    <field name="is_todo"/>
+                                </div>
+                            </button>
+                            <button name="action_open_tags" type="object"
+                                    class="oe_stat_button" icon="fa-tags">
+                                <div class="o_stat_info">
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                </div>
+                            </button>
+                            <button name="action_open_resources" type="object"
+                                    class="oe_stat_button" icon="fa-paperclip">
+                                <div class="o_stat_info">
+                                    <field name="resource_ids" widget="many2many_tags"/>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" placeholder="Note title..."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="folder_id"
+                                       options="{'no_create': True}"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group>
+                                <field name="is_todo"/>
+                                <field name="todo_due" invisible="[('is_todo', '=', False)]"/>
+                                <field name="todo_completed" invisible="[('is_todo', '=', False)]"/>
+                                <field name="joplin_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="content" string="Content">
+                                <field name="body_html" widget="html" sanitize="false"/>
+                            </page>
+                            <page name="markdown" string="Markdown">
+                                <field name="body" widget="ace" options="{'mode': 'markdown'}"/>
+                                <div class="alert alert-info" role="alert">
+                                    This is the raw Markdown as stored for Joplin compatibility.
+                                </div>
+                            </page>
+                            <page name="properties" string="Properties">
+                                <group>
+                                    <group string="Source">
+                                        <field name="author"/>
+                                        <field name="source_url"/>
+                                        <field name="source"/>
+                                        <field name="source_application"/>
+                                        <field name="application_data"/>
+                                    </group>
+                                    <group string="Location">
+                                        <field name="latitude"/>
+                                        <field name="longitude"/>
+                                        <field name="altitude"/>
+                                    </group>
+                                    <group string="Timestamps">
+                                        <field name="created_time"/>
+                                        <field name="updated_time"/>
+                                        <field name="user_created_time"/>
+                                        <field name="user_updated_time"/>
+                                        <field name="deleted_time"/>
+                                    </group>
+                                    <group string="Advanced">
+                                        <field name="order"/>
+                                        <field name="markup_language"/>
+                                        <field name="is_conflict"/>
+                                        <field name="conflict_original_id"/>
+                                        <field name="is_shared"/>
+                                        <field name="share_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="resources" string="Resources">
+                                <field name="resource_ids">
+                                    <list editable="bottom">
+                                        <field name="name"/>
+                                        <field name="mime"/>
+                                        <field name="filename"/>
+                                        <field name="file_size"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page name="revisions" string="Revisions">
+                                <field name="revision_ids" readonly="1">
+                                    <list>
+                                        <field name="created_time"/>
+                                        <field name="item_updated_time"/>
+                                        <field name="title_diff"/>
+                                        <field name="body_diff"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_joplin_note" model="ir.actions.act_window">
+            <field name="name">Notes</field>
+            <field name="res_model">joplin.note</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="view_joplin_note_search"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_my_notes': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Create your first note</p>
+                <p>Joplin-compatible notes with Markdown, tags, and versioning.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
