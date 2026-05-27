@@ -20,13 +20,13 @@ class TestJoplinModels(common.TransactionCase):
             cls.User1 = cls.env['res.users'].create({
                 'name': 'Test User 1',
                 'login': 'test_joplin1@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user').id)],
+                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
             })
         if not cls.User2:
             cls.User2 = cls.env['res.users'].create({
                 'name': 'Test User 2',
                 'login': 'test_joplin2@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user').id)],
+                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
             })
 
         cls.Folder = cls.env['joplin.folder']
@@ -299,13 +299,13 @@ class TestJoplinSecurity(common.TransactionCase):
             cls.User1 = cls.env['res.users'].create({
                 'name': 'Secure User 1',
                 'login': 'secure_joplin1@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user').id)],
+                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
             })
         if not cls.User2:
             cls.User2 = cls.env['res.users'].create({
                 'name': 'Secure User 2',
                 'login': 'secure_joplin2@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user').id)],
+                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
             })
         cls.Note = cls.env['joplin.note']
 
@@ -366,7 +366,7 @@ class TestJoplinApi(common.HttpCase):
             cls.User1 = cls.env['res.users'].create({
                 'name': 'API User',
                 'login': 'api_joplin@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user').id)],
+                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
             })
         cls.Token = cls.env['joplin.api.token'].sudo().create({
             'name': 'Test API Token',

@@ -14,7 +14,7 @@ versioning via diffs, and personal notes with user_id isolation.
     'license': 'AGPL-3',
     'depends': ['mail', 'web'],
     'external_dependencies': {
-        'python': ['markdown', 'diff-match-patch'],
+        'python': ['markdown', 'diff-match-patch', 'magic'],
     },
     'data': [
         'security/security.xml',
@@ -24,6 +24,7 @@ versioning via diffs, and personal notes with user_id isolation.
         'views/joplin_tag_views.xml',
         'views/joplin_resource_views.xml',
         'views/joplin_menus.xml',
+        'views/res_users_views.xml',
     ],
     'demo': ['demo/demo_data.xml'],
     'application': True,

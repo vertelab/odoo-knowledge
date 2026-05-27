@@ -2,7 +2,7 @@ import logging
 import json
 from datetime import datetime, timezone
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 from odoo.tools import html2plaintext
 
@@ -42,6 +42,11 @@ class JoplinNote(models.Model):
     resource_ids = fields.One2many('joplin.resource', 'note_id', string='Resources')
     revision_ids = fields.One2many('joplin.revision', 'note_id', string='Revisions')
 
+    object_ref = fields.Reference(
+        selection=lambda self: self._selection_object_ref(),
+        string='Object',
+    )
+
     is_todo = fields.Boolean(string='Is To-Do', default=False, tracking=True)
     todo_due = fields.Datetime(string='Due Date')
     todo_completed = fields.Datetime(string='Completed Date')
@@ -76,6 +81,16 @@ class JoplinNote(models.Model):
     _sql_constraints = [
         ('joplin_id_uniq', 'unique(joplin_id)', 'Joplin ID must be unique!'),
     ]
+
+    @api.model
+    def _selection_object_ref(self):
+        models = self.env['ir.model'].search([('transient', '=', False)])
+        excluded = ('ir.', 'joplin.', 'mail.', 'bus.', 'base.', 'web.', 'website.', '_')
+        return [
+            (m.model, m.name)
+            for m in models
+            if not m.model.startswith(excluded)
+        ]
 
     @api.depends('body', 'markup_language')
     def _compute_body_html(self):
@@ -193,18 +208,10 @@ class JoplinNote(models.Model):
     def toggle_todo(self):
         self.write({'is_todo': not self.is_todo})
 
-    def action_open_tags(self):
-        action = self.env.ref('knowledge_joplin.action_joplin_tag').read()[0]
-        return action
-
-    def action_open_resources(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Resources'),
-            'res_model': 'joplin.resource',
-            'view_mode': 'list,form',
-            'domain': [('note_id', '=', self.id)],
-        }
+    @api.onchange('is_todo')
+    def _onchange_is_todo(self):
+        if self.is_todo and not self.todo_due:
+            self.todo_due = fields.Datetime.now()
 
     def action_trash(self):
         self.write({'active': False})

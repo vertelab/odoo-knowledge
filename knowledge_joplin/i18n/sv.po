@@ -203,3 +203,23 @@ msgstr "Skapad tid"
 #: model:ir.model.fields,field_description:knowledge_joplin.field_joplin_note__updated_time
 msgid "Updated Time"
 msgstr "Uppdaterad tid"
+
+#. module: knowledge_joplin
+#: model:ir.model,name:knowledge_joplin.model_res_users
+msgid "res.users"
+msgstr "Användare"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_res_users__joplin_api_url
+msgid "Joplin API Connection"
+msgstr "Joplin API-anslutning"
+
+#. module: knowledge_joplin
+#: model:ir.model.fields,field_description:knowledge_joplin.field_res_users__joplin_instruction_html
+msgid "Instructions"
+msgstr "Instruktioner"
+
+#. module: knowledge_joplin
+#: model:ir.ui.view,field_description:knowledge_joplin.view_users_form_inherit_joplin
+msgid "Joplin"
+msgstr "Joplin"

@@ -1,30 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Security Groups -->
-        <record id="group_joplin_user" model="res.groups">
-            <field name="name">User</field>
+
+        <!--
+            Permission levels (3 groups):
+              - User: Only Own Document   — sees own notes + followed notes
+              - User: All Document        — sees all notes
+              - Administrator             — full access
+            Follower access is built into the "Only Own" rule via followers.
+        -->
+
+        <!-- ================================================================ -->
+        <!-- SECURITY GROUPS                                                    -->
+        <!-- ================================================================ -->
+
+        <record id="group_joplin_user_own" model="res.groups">
+            <field name="name">User: Only Own Document</field>
             <field name="category_id" ref="base.module_category_hidden"/>
         </record>
 
-        <!-- Auto-assign joplin access to all internal users -->
+        <record id="group_joplin_user_all" model="res.groups">
+            <field name="name">User: All Document</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('group_joplin_user_own'))]"/>
+        </record>
+
+        <record id="group_joplin_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('group_joplin_user_all'))]"/>
+        </record>
+
+        <!-- Auto-assign own+follower access to all internal users -->
         <record id="base.group_user" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('group_joplin_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_joplin_user_own'))]"/>
         </record>
 
-        <record id="group_joplin_manager" model="res.groups">
-            <field name="name">Manager</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
-            <field name="implied_ids" eval="[(4, ref('group_joplin_user'))]"/>
+        <!-- Auto-assign Administrator to all system users (admin etc.) -->
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('group_joplin_admin'))]"/>
         </record>
 
-        <!-- Record Rules -->
+        <!-- ================================================================ -->
+        <!-- RECORD RULES                                                       -->
+        <!-- ================================================================ -->
 
-        <!-- joplin.note: owner sees own notes, followers see shared notes, admins see all -->
-        <record id="rule_joplin_note_personal" model="ir.rule">
-            <field name="name">joplin.note: own notes + followers</field>
+        <!-- ── joplin.note ── -->
+
+        <record id="rule_joplin_note_own" model="ir.rule">
+            <field name="name">joplin.note: own + follower</field>
             <field name="model_id" ref="model_joplin_note"/>
-            <field name="groups" eval="[(4, ref('group_joplin_user'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_own'))]"/>
             <field name="domain_force">['|', ('user_id', '=', user.id), ('message_follower_ids.partner_id', '=', user.partner_id.id)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -32,10 +58,10 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <record id="rule_joplin_note_admin" model="ir.rule">
-            <field name="name">joplin.note: admin full access</field>
+        <record id="rule_joplin_note_all" model="ir.rule">
+            <field name="name">joplin.note: all documents</field>
             <field name="model_id" ref="model_joplin_note"/>
-            <field name="groups" eval="[(4, ref('group_joplin_manager'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_all'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -43,12 +69,35 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <!-- joplin.folder: owner sees own folders -->
-        <record id="rule_joplin_folder_personal" model="ir.rule">
-            <field name="name">joplin.folder: own folders</field>
+        <record id="rule_joplin_note_admin" model="ir.rule">
+            <field name="name">joplin.note: administrator</field>
+            <field name="model_id" ref="model_joplin_note"/>
+            <field name="groups" eval="[(4, ref('group_joplin_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!-- ── joplin.folder ── -->
+
+        <record id="rule_joplin_folder_own" model="ir.rule">
+            <field name="name">joplin.folder: own</field>
             <field name="model_id" ref="model_joplin_folder"/>
-            <field name="groups" eval="[(4, ref('group_joplin_user'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_own'))]"/>
             <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="rule_joplin_folder_all" model="ir.rule">
+            <field name="name">joplin.folder: all</field>
+            <field name="model_id" ref="model_joplin_folder"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_all'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
@@ -56,9 +105,9 @@
         </record>
 
         <record id="rule_joplin_folder_admin" model="ir.rule">
-            <field name="name">joplin.folder: admin full access</field>
+            <field name="name">joplin.folder: administrator</field>
             <field name="model_id" ref="model_joplin_folder"/>
-            <field name="groups" eval="[(4, ref('group_joplin_manager'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_admin'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -66,11 +115,12 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <!-- joplin.tag: owner sees own tags -->
-        <record id="rule_joplin_tag_personal" model="ir.rule">
-            <field name="name">joplin.tag: own tags</field>
+        <!-- ── joplin.tag ── -->
+
+        <record id="rule_joplin_tag_own" model="ir.rule">
+            <field name="name">joplin.tag: own</field>
             <field name="model_id" ref="model_joplin_tag"/>
-            <field name="groups" eval="[(4, ref('group_joplin_user'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_own'))]"/>
             <field name="domain_force">[('user_id', '=', user.id)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -78,10 +128,10 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <record id="rule_joplin_tag_admin" model="ir.rule">
-            <field name="name">joplin.tag: admin full access</field>
+        <record id="rule_joplin_tag_all" model="ir.rule">
+            <field name="name">joplin.tag: all</field>
             <field name="model_id" ref="model_joplin_tag"/>
-            <field name="groups" eval="[(4, ref('group_joplin_manager'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_all'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -89,11 +139,23 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <!-- joplin.resource: owner sees own resources -->
-        <record id="rule_joplin_resource_personal" model="ir.rule">
-            <field name="name">joplin.resource: own + note followers</field>
+        <record id="rule_joplin_tag_admin" model="ir.rule">
+            <field name="name">joplin.tag: administrator</field>
+            <field name="model_id" ref="model_joplin_tag"/>
+            <field name="groups" eval="[(4, ref('group_joplin_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!-- ── joplin.resource ── -->
+
+        <record id="rule_joplin_resource_own" model="ir.rule">
+            <field name="name">joplin.resource: own + note follower</field>
             <field name="model_id" ref="model_joplin_resource"/>
-            <field name="groups" eval="[(4, ref('group_joplin_user'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_own'))]"/>
             <field name="domain_force">['|', ('user_id', '=', user.id), ('note_id.message_follower_ids.partner_id', '=', user.partner_id.id)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -101,10 +163,10 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <record id="rule_joplin_resource_admin" model="ir.rule">
-            <field name="name">joplin.resource: admin full access</field>
+        <record id="rule_joplin_resource_all" model="ir.rule">
+            <field name="name">joplin.resource: all</field>
             <field name="model_id" ref="model_joplin_resource"/>
-            <field name="groups" eval="[(4, ref('group_joplin_manager'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_all'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -112,12 +174,35 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <!-- joplin.revision: same access as notes -->
-        <record id="rule_joplin_revision_personal" model="ir.rule">
-            <field name="name">joplin.revision: own notes + followers</field>
+        <record id="rule_joplin_resource_admin" model="ir.rule">
+            <field name="name">joplin.resource: administrator</field>
+            <field name="model_id" ref="model_joplin_resource"/>
+            <field name="groups" eval="[(4, ref('group_joplin_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!-- ── joplin.revision ── -->
+
+        <record id="rule_joplin_revision_own" model="ir.rule">
+            <field name="name">joplin.revision: own + follower + owner</field>
             <field name="model_id" ref="model_joplin_revision"/>
-            <field name="groups" eval="[(4, ref('group_joplin_user'))]"/>
-            <field name="domain_force">['|', ('note_id.user_id', '=', user.id), ('note_id.message_follower_ids.partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_joplin_user_own'))]"/>
+            <field name="domain_force">['|', '|', ('user_id', '=', user.id), ('note_id.user_id', '=', user.id), ('note_id.message_follower_ids.partner_id', '=', user.partner_id.id)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="rule_joplin_revision_all" model="ir.rule">
+            <field name="name">joplin.revision: all</field>
+            <field name="model_id" ref="model_joplin_revision"/>
+            <field name="groups" eval="[(4, ref('group_joplin_user_all'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
@@ -125,9 +210,9 @@
         </record>
 
         <record id="rule_joplin_revision_admin" model="ir.rule">
-            <field name="name">joplin.revision: admin full access</field>
+            <field name="name">joplin.revision: administrator</field>
             <field name="model_id" ref="model_joplin_revision"/>
-            <field name="groups" eval="[(4, ref('group_joplin_manager'))]"/>
+            <field name="groups" eval="[(4, ref('group_joplin_admin'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -135,8 +220,9 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <!-- joplin.api.token: each user sees own tokens -->
-        <record id="rule_joplin_api_token_personal" model="ir.rule">
+        <!-- ── joplin.api.token ── -->
+
+        <record id="rule_joplin_api_token_own" model="ir.rule">
             <field name="name">joplin.api.token: own tokens</field>
             <field name="model_id" ref="model_joplin_api_token"/>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
@@ -146,5 +232,6 @@
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
         </record>
+
     </data>
 </odoo>

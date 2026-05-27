@@ -13,7 +13,7 @@
                     <field name="color"/>
                     <templates>
                         <t t-name="card">
-                            <div t-att-class="kanban_color(record.color.raw_value) + ' oe_kanban_global_click'">
+                            <div class="oe_kanban_global_click">
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_title">
                                         <i class="fa fa-tag" title="Tag"/> <field name="name"/>

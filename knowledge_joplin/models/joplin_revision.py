@@ -24,6 +24,10 @@ class JoplinRevision(models.Model):
     body_diff = fields.Text(string='Body Diff')
     metadata_diff = fields.Text(string='Metadata Diff')
 
+    user_id = fields.Many2one('res.users', string='User', required=True,
+                               default=lambda self: self.env.user,
+                               index=True)
+
     created_time = fields.Datetime(string='Created Time', default=fields.Datetime.now)
     updated_time = fields.Datetime(string='Updated Time', default=fields.Datetime.now)
     encryption_cipher_text = fields.Text(string='Encryption Cipher Text')

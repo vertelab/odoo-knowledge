@@ -1,9 +1,15 @@
 import logging
 import base64
+import mimetypes
 from datetime import datetime, timezone
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+
+try:
+    import magic as pymagic
+except ImportError:
+    pymagic = None
 
 _logger = logging.getLogger(__name__)
 
@@ -24,7 +30,12 @@ class JoplinResource(models.Model):
     file_size = fields.Integer(string='File Size (bytes)')
 
     note_id = fields.Many2one('joplin.note', string='Note', index=True,
-                               ondelete='cascade')
+                               ondelete='cascade',
+                               default=lambda self:
+                                   self.env.context.get('default_note_id')
+                                   or (self.env.context.get('active_id')
+                                       if self.env.context.get('active_model') == 'joplin.note'
+                                       else False))
     user_id = fields.Many2one('res.users', string='User', required=True,
                                default=lambda self: self.env.user,
                                ondelete='cascade')
@@ -65,11 +76,27 @@ class JoplinResource(models.Model):
                 vals['created_time'] = now
             if not vals.get('updated_time'):
                 vals['updated_time'] = now
-            if vals.get('datas'):
-                vals['file_size'] = len(base64.b64decode(vals['datas']))
-                filename = vals.get('filename') or vals.get('datas_fname', '')
-                if filename and '.' in filename:
+            filename = vals.get('filename') or vals.get('datas_fname', '')
+            if filename:
+                if '.' in filename:
                     vals['file_extension'] = filename.rsplit('.', 1)[1]
+                if not vals.get('name'):
+                    vals['name'] = filename
+            if not vals.get('mime'):
+                if filename:
+                    guessed = mimetypes.guess_type(filename)[0]
+                    if guessed:
+                        vals['mime'] = guessed
+            if vals.get('datas'):
+                raw = base64.b64decode(vals['datas'])
+                vals['file_size'] = len(raw)
+                if not vals.get('mime') and pymagic:
+                    try:
+                        mime = pymagic.from_buffer(raw, mime=True)
+                        if mime:
+                            vals['mime'] = mime
+                    except Exception:
+                        pass
         records = super().create(vals_list)
         records._log_event(1)
         return records
@@ -78,7 +105,26 @@ class JoplinResource(models.Model):
         if 'name' in vals or 'datas' in vals or 'filename' in vals:
             vals['updated_time'] = datetime.utcnow()
             if vals.get('datas'):
-                vals['file_size'] = len(base64.b64decode(vals['datas']))
+                raw = base64.b64decode(vals['datas'])
+                vals['file_size'] = len(raw)
+                filename = vals.get('filename') or vals.get('datas_fname', '')
+                if filename:
+                    if '.' in filename:
+                        vals['file_extension'] = filename.rsplit('.', 1)[1]
+                    if not vals.get('name'):
+                        vals['name'] = filename
+                if 'mime' not in vals:
+                    if filename:
+                        guessed = mimetypes.guess_type(filename)[0]
+                        if guessed:
+                            vals['mime'] = guessed
+                    if 'mime' not in vals and pymagic:
+                        try:
+                            mime = pymagic.from_buffer(raw, mime=True)
+                            if mime:
+                                vals['mime'] = mime
+                        except Exception:
+                            pass
         res = super().write(vals)
         if vals.get('active') is False:
             self._log_event(3)

@@ -1,84 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
 
         <!-- ================================================================ -->
         <!-- DEMO USERS                                                        -->
         <!-- ================================================================ -->
-        <record id="demo_user_joplin_1" model="res.users">
-            <field name="name">Alice Joplin</field>
-            <field name="login">joplin_demo1@example.com</field>
-            <field name="email">joplin_demo1@example.com</field>
-            <field name="groups_id" eval="[(4, ref('knowledge_joplin.group_joplin_user'))]"/>
+
+        <!-- Demo: User: All Document (sees everything) -->
+        <record id="demo_user_joplin_demo" model="res.users">
+            <field name="name">Demo User</field>
+            <field name="login">demo@example.com</field>
+            <field name="email">demo@example.com</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="company_ids" eval="[(4, ref('base.main_company'))]"/>
+            <field name="groups_id" eval="[(4, ref('knowledge_joplin.group_joplin_user_all'))]"/>
         </record>
 
+        <!-- Alice: User: Only Own Document -->
+        <record id="demo_user_joplin_1" model="res.users">
+            <field name="name">Alice Joplin</field>
+            <field name="login">alice@example.com</field>
+            <field name="email">alice@example.com</field>
+            <field name="groups_id" eval="[(4, ref('knowledge_joplin.group_joplin_user_own'))]"/>
+        </record>
+
+        <!-- Bob: User: Only Own Document -->
         <record id="demo_user_joplin_2" model="res.users">
             <field name="name">Bob Joplin</field>
-            <field name="login">joplin_demo2@example.com</field>
-            <field name="email">joplin_demo2@example.com</field>
-            <field name="groups_id" eval="[(4, ref('knowledge_joplin.group_joplin_user'))]"/>
+            <field name="login">bob@example.com</field>
+            <field name="email">bob@example.com</field>
+            <field name="groups_id" eval="[(4, ref('knowledge_joplin.group_joplin_user_own'))]"/>
         </record>
 
         <!-- ================================================================ -->
-        <!-- FOLDERS (Alice)                                                   -->
+        <!-- FOLDERS                                                            -->
         <!-- ================================================================ -->
         <record id="demo_folder_personal" model="joplin.folder">
             <field name="joplin_id">a000000000000001a000000000000001</field>
             <field name="name">Personal</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_folder_journal" model="joplin.folder">
             <field name="joplin_id">a100000000000001a100000000000001</field>
             <field name="name">Journal</field>
             <field name="parent_id" ref="demo_folder_personal"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_folder_recipes" model="joplin.folder">
             <field name="joplin_id">a200000000000001a200000000000001</field>
             <field name="name">Recipes</field>
             <field name="parent_id" ref="demo_folder_personal"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_folder_work" model="joplin.folder">
             <field name="joplin_id">a000000000000002a000000000000002</field>
             <field name="name">Work</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_folder_projects" model="joplin.folder">
             <field name="joplin_id">a000000000000003a000000000000003</field>
             <field name="name">Projects</field>
             <field name="parent_id" ref="demo_folder_work"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_folder_meetings" model="joplin.folder">
             <field name="joplin_id">a300000000000001a300000000000001</field>
             <field name="name">Meeting Notes</field>
             <field name="parent_id" ref="demo_folder_work"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_folder_learning" model="joplin.folder">
             <field name="joplin_id">a400000000000001a400000000000001</field>
             <field name="name">Learning</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_folder_archive" model="joplin.folder">
             <field name="joplin_id">a000000000000004a000000000000004</field>
             <field name="name">Archive</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <!-- Folders (Bob) -->
         <record id="demo_folder_bob" model="joplin.folder">
             <field name="joplin_id">b000000000000001b000000000000001</field>
             <field name="name">Bob's Notes</field>
-            <field name="user_id" ref="demo_user_joplin_2"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <!-- ================================================================ -->
@@ -87,60 +100,62 @@
         <record id="demo_tag_important" model="joplin.tag">
             <field name="joplin_id">t000000000000001t000000000000001</field>
             <field name="name">important</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_tag_todo" model="joplin.tag">
             <field name="joplin_id">t000000000000002t000000000000002</field>
             <field name="name">todo</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_tag_idea" model="joplin.tag">
             <field name="joplin_id">t000000000000003t000000000000003</field>
             <field name="name">idea</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_tag_work" model="joplin.tag">
             <field name="joplin_id">t000000000000004t000000000000004</field>
             <field name="name">work</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_tag_personal" model="joplin.tag">
             <field name="joplin_id">t000000000000005t000000000000005</field>
             <field name="name">personal</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_tag_devops" model="joplin.tag">
             <field name="joplin_id">t000000000000006t000000000000006</field>
             <field name="name">devops</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_tag_python" model="joplin.tag">
             <field name="joplin_id">t000000000000007t000000000000007</field>
             <field name="name">python</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_tag_meeting" model="joplin.tag">
             <field name="joplin_id">t000000000000008t000000000000008</field>
             <field name="name">meeting</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="demo_tag_recipe" model="joplin.tag">
             <field name="joplin_id">t000000000000009t000000000000009</field>
             <field name="name">recipe</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <!-- ================================================================ -->
-        <!-- NOTES (Alice)                                                      -->
+        <!-- NOTES                                                               -->
         <!-- ================================================================ -->
+
+        <!-- ── Demo User's notes (visible to all via group_joplin_user_all) ── -->
 
         <!-- 1. Welcome / overview -->
         <record id="demo_note_welcome" model="joplin.note">
@@ -173,12 +188,12 @@ def hello():
 > Note: This is rendered from Markdown to HTML automatically.
 </field>
             <field name="folder_id" ref="demo_folder_personal"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_demo"/>
             <field name="markup_language">1</field>
             <field name="tag_ids" eval="[(4, ref('demo_tag_important')), (4, ref('demo_tag_personal'))]"/>
         </record>
 
-        <!-- 2. Mermaid diagram -->
+        <!-- 2. Mermaid diagram (Demo) -->
         <record id="demo_note_mermaid" model="joplin.note">
             <field name="joplin_id">n000000000000002n000000000000002</field>
             <field name="title">System Architecture — Mermaid Diagram</field>
@@ -220,12 +235,12 @@ sequenceDiagram
 ```
 </field>
             <field name="folder_id" ref="demo_folder_projects"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_demo"/>
             <field name="markup_language">1</field>
             <field name="tag_ids" eval="[(4, ref('demo_tag_work')), (4, ref('demo_tag_devops'))]"/>
         </record>
 
-        <!-- 3. Python code deep-dive -->
+        <!-- 3. Python code deep-dive (Alice) -->
         <record id="demo_note_python" model="joplin.note">
             <field name="joplin_id">n000000000000003n000000000000003</field>
             <field name="title">Python Async Patterns Reference</field>
@@ -282,12 +297,12 @@ async def main():
 ```
 </field>
             <field name="folder_id" ref="demo_folder_learning"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_1"/>
             <field name="markup_language">1</field>
             <field name="tag_ids" eval="[(4, ref('demo_tag_python')), (4, ref('demo_tag_work'))]"/>
         </record>
 
-        <!-- 4. Meeting notes -->
+        <!-- 4. Meeting notes (Alice) -->
         <record id="demo_note_meeting" model="joplin.note">
             <field name="joplin_id">n000000000000004n000000000000004</field>
             <field name="title">Sprint Planning — Week 42</field>
@@ -324,12 +339,12 @@ Improvements:
 - [ ] Diana: Set up Grafana dashboards for sprint tracking
 </field>
             <field name="folder_id" ref="demo_folder_meetings"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_1"/>
             <field name="markup_language">1</field>
             <field name="tag_ids" eval="[(4, ref('demo_tag_meeting')), (4, ref('demo_tag_work'))]"/>
         </record>
 
-        <!-- 5. To-do note -->
+        <!-- 5. To-do note (Alice) -->
         <record id="demo_note_todo" model="joplin.note">
             <field name="joplin_id">n000000000000005n000000000000005</field>
             <field name="title">Project Documentation Tasks</field>
@@ -344,12 +359,12 @@ Improvements:
 - [ ] Create onboarding guide for new devs
 </field>
             <field name="folder_id" ref="demo_folder_projects"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_1"/>
             <field name="is_todo">True</field>
             <field name="tag_ids" eval="[(4, ref('demo_tag_todo')), (4, ref('demo_tag_work'))]"/>
         </record>
 
-        <!-- 6. Recipe (personal) -->
+        <!-- 6. Recipe (Alice) -->
         <record id="demo_note_recipe" model="joplin.note">
             <field name="joplin_id">n000000000000006n000000000000006</field>
             <field name="title">Thai Green Curry</field>
@@ -384,12 +399,12 @@ Improvements:
 > **Tip:** Use *Mae Ploy* brand curry paste for authentic flavour.
 </field>
             <field name="folder_id" ref="demo_folder_recipes"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_1"/>
             <field name="markup_language">1</field>
             <field name="tag_ids" eval="[(4, ref('demo_tag_recipe')), (4, ref('demo_tag_personal'))]"/>
         </record>
 
-        <!-- 7. Journal entry -->
+        <!-- 7. Journal entry (Alice) -->
         <record id="demo_note_journal" model="joplin.note">
             <field name="joplin_id">n000000000000007n000000000000007</field>
             <field name="title">Journal — First Week at Vertel</field>
@@ -427,12 +442,12 @@ Goals for next week:
 - Write unit tests
 </field>
             <field name="folder_id" ref="demo_folder_journal"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_1"/>
             <field name="markup_language">1</field>
             <field name="tag_ids" eval="[(4, ref('demo_tag_personal'))]"/>
         </record>
 
-        <!-- 8. Trashed note -->
+        <!-- 8. Trashed note (Demo) -->
         <record id="demo_note_trashed" model="joplin.note">
             <field name="joplin_id">n000000000000008n000000000000008</field>
             <field name="title">Old Draft — Deprecated</field>
@@ -440,11 +455,11 @@ Goals for next week:
 in the default view. Use the *Trashed* filter to see it.
 </field>
             <field name="folder_id" ref="demo_folder_archive"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_demo"/>
             <field name="active">False</field>
         </record>
 
-        <!-- 9. Resource test note -->
+        <!-- 9. Resource test note (Demo) -->
         <record id="demo_note_resources" model="joplin.note">
             <field name="joplin_id">n000000000000009n000000000000009</field>
             <field name="title">Attachment Samples</field>
@@ -453,11 +468,11 @@ in the default view. Use the *Trashed* filter to see it.
 Check the **Resources** tab to view them.
 </field>
             <field name="folder_id" ref="demo_folder_personal"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_demo"/>
             <field name="tag_ids" eval="[(4, ref('demo_tag_important'))]"/>
         </record>
 
-        <!-- 10. Long-form article -->
+        <!-- 10. Long-form article (Demo) -->
         <record id="demo_note_article" model="joplin.note">
             <field name="joplin_id">n000000000000010n000000000000010</field>
             <field name="title">Odoo 18 Migration Guide — Notes</field>
@@ -547,13 +562,12 @@ class MyModel(models.Model):
 - DB constraint violations require `self.cr.savepoint()`
 ]]></field>
             <field name="folder_id" ref="demo_folder_learning"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_demo"/>
             <field name="markup_language">1</field>
             <field name="tag_ids" eval="[(4, ref('demo_tag_python')), (4, ref('demo_tag_work'))]"/>
         </record>
 
-        <!-- ================================================================ -->
-        <!-- NOTES (Bob)                                                        -->
+        <!-- ── Bob's notes (only visible to Bob via group_joplin_user_own) ── -->
         <!-- ================================================================ -->
         <record id="demo_note_bob_personal" model="joplin.note">
             <field name="joplin_id">n000000000000011n000000000000011</field>
@@ -563,7 +577,7 @@ class MyModel(models.Model):
 It should only be visible to Bob and administrators.
 </field>
             <field name="folder_id" ref="demo_folder_bob"/>
-            <field name="user_id" ref="demo_user_joplin_2"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_2"/>
         </record>
 
         <record id="demo_note_bob_shared" model="joplin.note">
@@ -576,7 +590,7 @@ This note is owned by **Bob** but can be shared with followers.
 When Alice subscribes to this note, she gains access.
 </field>
             <field name="folder_id" ref="demo_folder_bob"/>
-            <field name="user_id" ref="demo_user_joplin_2"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_2"/>
             <field name="tag_ids" eval="[(4, ref('demo_tag_important'))]"/>
         </record>
 
@@ -591,7 +605,7 @@ When Alice subscribes to this note, she gains access.
             <field name="file_extension">txt</field>
             <field name="file_size">13</field>
             <field name="note_id" ref="demo_note_resources"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_demo"/>
         </record>
 
         <record id="demo_resource_json" model="joplin.resource">
@@ -602,7 +616,7 @@ When Alice subscribes to this note, she gains access.
             <field name="file_extension">json</field>
             <field name="file_size">256</field>
             <field name="note_id" ref="demo_note_resources"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_demo"/>
         </record>
 
         <record id="demo_resource_image" model="joplin.resource">
@@ -613,7 +627,7 @@ When Alice subscribes to this note, she gains access.
             <field name="file_extension">png</field>
             <field name="file_size">14336</field>
             <field name="note_id" ref="demo_note_resources"/>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_demo"/>
         </record>
 
         <!-- ================================================================ -->
@@ -671,13 +685,13 @@ When Alice subscribes to this note, she gains access.
         <!-- ================================================================ -->
         <record id="demo_api_token" model="joplin.api.token">
             <field name="token">0123456789abcdef0123456789abcdef</field>
-            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_1"/>
             <field name="name">Alice's API Token</field>
         </record>
 
         <record id="demo_api_token_bob" model="joplin.api.token">
             <field name="token">fedcba9876543210fedcba9876543210</field>
-            <field name="user_id" ref="demo_user_joplin_2"/>
+            <field name="user_id" ref="knowledge_joplin.demo_user_joplin_2"/>
             <field name="name">Bob's API Token</field>
         </record>
 
