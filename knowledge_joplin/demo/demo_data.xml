@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ================================================================ -->
+        <!-- DEMO USERS                                                        -->
+        <!-- ================================================================ -->
+        <record id="demo_user_joplin_1" model="res.users">
+            <field name="name">Alice Joplin</field>
+            <field name="login">joplin_demo1@example.com</field>
+            <field name="email">joplin_demo1@example.com</field>
+            <field name="groups_id" eval="[(4, ref('knowledge_joplin.group_joplin_user'))]"/>
+        </record>
+
+        <record id="demo_user_joplin_2" model="res.users">
+            <field name="name">Bob Joplin</field>
+            <field name="login">joplin_demo2@example.com</field>
+            <field name="email">joplin_demo2@example.com</field>
+            <field name="groups_id" eval="[(4, ref('knowledge_joplin.group_joplin_user'))]"/>
+        </record>
+
+        <!-- ================================================================ -->
+        <!-- FOLDERS (Alice)                                                   -->
+        <!-- ================================================================ -->
+        <record id="demo_folder_personal" model="joplin.folder">
+            <field name="joplin_id">a000000000000001a000000000000001</field>
+            <field name="name">Personal</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_folder_journal" model="joplin.folder">
+            <field name="joplin_id">a100000000000001a100000000000001</field>
+            <field name="name">Journal</field>
+            <field name="parent_id" ref="demo_folder_personal"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_folder_recipes" model="joplin.folder">
+            <field name="joplin_id">a200000000000001a200000000000001</field>
+            <field name="name">Recipes</field>
+            <field name="parent_id" ref="demo_folder_personal"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_folder_work" model="joplin.folder">
+            <field name="joplin_id">a000000000000002a000000000000002</field>
+            <field name="name">Work</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_folder_projects" model="joplin.folder">
+            <field name="joplin_id">a000000000000003a000000000000003</field>
+            <field name="name">Projects</field>
+            <field name="parent_id" ref="demo_folder_work"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_folder_meetings" model="joplin.folder">
+            <field name="joplin_id">a300000000000001a300000000000001</field>
+            <field name="name">Meeting Notes</field>
+            <field name="parent_id" ref="demo_folder_work"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_folder_learning" model="joplin.folder">
+            <field name="joplin_id">a400000000000001a400000000000001</field>
+            <field name="name">Learning</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_folder_archive" model="joplin.folder">
+            <field name="joplin_id">a000000000000004a000000000000004</field>
+            <field name="name">Archive</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <!-- Folders (Bob) -->
+        <record id="demo_folder_bob" model="joplin.folder">
+            <field name="joplin_id">b000000000000001b000000000000001</field>
+            <field name="name">Bob's Notes</field>
+            <field name="user_id" ref="demo_user_joplin_2"/>
+        </record>
+
+        <!-- ================================================================ -->
+        <!-- TAGS                                                               -->
+        <!-- ================================================================ -->
+        <record id="demo_tag_important" model="joplin.tag">
+            <field name="joplin_id">t000000000000001t000000000000001</field>
+            <field name="name">important</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_tag_todo" model="joplin.tag">
+            <field name="joplin_id">t000000000000002t000000000000002</field>
+            <field name="name">todo</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_tag_idea" model="joplin.tag">
+            <field name="joplin_id">t000000000000003t000000000000003</field>
+            <field name="name">idea</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_tag_work" model="joplin.tag">
+            <field name="joplin_id">t000000000000004t000000000000004</field>
+            <field name="name">work</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_tag_personal" model="joplin.tag">
+            <field name="joplin_id">t000000000000005t000000000000005</field>
+            <field name="name">personal</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_tag_devops" model="joplin.tag">
+            <field name="joplin_id">t000000000000006t000000000000006</field>
+            <field name="name">devops</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_tag_python" model="joplin.tag">
+            <field name="joplin_id">t000000000000007t000000000000007</field>
+            <field name="name">python</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_tag_meeting" model="joplin.tag">
+            <field name="joplin_id">t000000000000008t000000000000008</field>
+            <field name="name">meeting</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_tag_recipe" model="joplin.tag">
+            <field name="joplin_id">t000000000000009t000000000000009</field>
+            <field name="name">recipe</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <!-- ================================================================ -->
+        <!-- NOTES (Alice)                                                      -->
+        <!-- ================================================================ -->
+
+        <!-- 1. Welcome / overview -->
+        <record id="demo_note_welcome" model="joplin.note">
+            <field name="joplin_id">n000000000000001n000000000000001</field>
+            <field name="title">Welcome to Joplin Notes</field>
+            <field name="body"># Welcome to Joplin Notes
+
+This is a **demo note** showing Markdown support.
+
+## Features
+
+- Markdown rendering with code blocks
+- Tag support
+- Folder organization
+- Version history via revisions
+
+### Code Example
+
+```python
+def hello():
+    print("Hello from Joplin!")
+```
+
+| Feature | Status |
+|---------|--------|
+| Markdown | ✅ |
+| Tags | ✅ |
+| Revisions | ✅ |
+
+> Note: This is rendered from Markdown to HTML automatically.
+</field>
+            <field name="folder_id" ref="demo_folder_personal"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="markup_language">1</field>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_important')), (4, ref('demo_tag_personal'))]"/>
+        </record>
+
+        <!-- 2. Mermaid diagram -->
+        <record id="demo_note_mermaid" model="joplin.note">
+            <field name="joplin_id">n000000000000002n000000000000002</field>
+            <field name="title">System Architecture — Mermaid Diagram</field>
+            <field name="body"># System Architecture
+
+Below is a Mermaid flowchart describing the microservice architecture:
+
+```mermaid
+graph TD
+    A[Web Client] --> B[API Gateway]
+    B --> C[Auth Service]
+    B --> D[Note Service]
+    B --> E[Sync Service]
+    C --> F[(User DB)]
+    D --> G[(Note DB)]
+    E --> H[(Event Store)]
+    D --> I[Search Index]
+    E --> I
+```
+
+This diagram is rendered client-side by Mermaid in Joplin desktop/mobile.
+In the Odoo web client the raw source is shown — supported via the Markdown code block fence.
+
+## Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as API
+    participant N as Note Service
+    participant R as Revision Store
+
+    C->>A: PUT /notes/:id
+    A->>N: update note
+    N->>R: create revision diff
+    R-->>N: revision saved
+    N-->>A: note updated
+    A-->>C: 200 OK
+```
+</field>
+            <field name="folder_id" ref="demo_folder_projects"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="markup_language">1</field>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_work')), (4, ref('demo_tag_devops'))]"/>
+        </record>
+
+        <!-- 3. Python code deep-dive -->
+        <record id="demo_note_python" model="joplin.note">
+            <field name="joplin_id">n000000000000003n000000000000003</field>
+            <field name="title">Python Async Patterns Reference</field>
+            <field name="body"># Python Async Patterns
+
+## asyncio.gather
+
+Run multiple coroutines **concurrently**:
+
+```python
+import asyncio
+
+async def fetch(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            return await resp.json()
+
+async def main():
+    urls = [
+        "https://api.example.com/users",
+        "https://api.example.com/posts",
+        "https://api.example.com/comments",
+    ]
+    results = await asyncio.gather(*[fetch(u) for u in urls])
+    return results
+```
+
+## Async Context Manager
+
+```python
+class DatabaseConnection:
+    async def __aenter__(self):
+        self.conn = await create_connection()
+        return self.conn
+
+    async def __aexit__(self, exc_type, exc, tb):
+        await self.conn.close()
+
+async def query():
+    async with DatabaseConnection() as db:
+        return await db.execute("SELECT 1")
+```
+
+## TaskGroup (3.11+)
+
+```python
+async def main():
+    async with asyncio.TaskGroup() as tg:
+        task1 = tg.create_task(fetch("https://api.example.com/1"))
+        task2 = tg.create_task(fetch("https://api.example.com/2"))
+        task3 = tg.create_task(fetch("https://api.example.com/3"))
+    # All tasks complete here
+    return [task1.result(), task2.result(), task3.result()]
+```
+</field>
+            <field name="folder_id" ref="demo_folder_learning"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="markup_language">1</field>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_python')), (4, ref('demo_tag_work'))]"/>
+        </record>
+
+        <!-- 4. Meeting notes -->
+        <record id="demo_note_meeting" model="joplin.note">
+            <field name="joplin_id">n000000000000004n000000000000004</field>
+            <field name="title">Sprint Planning — Week 42</field>
+            <field name="body">## Sprint Planning
+
+**Date:** 2026-05-20
+**Attendees:** Alice, Bob, Charlie, Diana
+
+### Previous Sprint Retro
+
+What went well:
+- Deployed search indexing ahead of schedule
+- Zero production incidents
+- Good code review participation
+
+Improvements:
+- More granular task breakdown
+- Reduce WIP limit from 5 → 3
+
+### Sprint Backlog
+
+| Story | Points | Owner | Status |
+|-------|--------|-------|--------|
+| Elasticsearch integration | 8 | Alice | In Progress |
+| API rate limiting | 5 | Bob | To Do |
+| Webhook notifications | 3 | Charlie | To Do |
+| Performance dashboard | 5 | Diana | To Do |
+
+### Action Items
+
+- [ ] Alice: Draft Elasticsearch migration plan
+- [ ] Bob: Research rate-limiting strategies (Redis vs in-memory)
+- [ ] Charlie: Design webhook event schema
+- [ ] Diana: Set up Grafana dashboards for sprint tracking
+</field>
+            <field name="folder_id" ref="demo_folder_meetings"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="markup_language">1</field>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_meeting')), (4, ref('demo_tag_work'))]"/>
+        </record>
+
+        <!-- 5. To-do note -->
+        <record id="demo_note_todo" model="joplin.note">
+            <field name="joplin_id">n000000000000005n000000000000005</field>
+            <field name="title">Project Documentation Tasks</field>
+            <field name="body">## Documentation Tasks
+
+- [ ] Write API reference
+- [ ] Add OpenAPI/Swagger specs
+- [ ] Review architecture decision records
+- [x] Set up Sphinx for auto-docs
+- [x] Configure ReadTheDocs integration
+- [ ] Document deployment procedure
+- [ ] Create onboarding guide for new devs
+</field>
+            <field name="folder_id" ref="demo_folder_projects"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="is_todo">True</field>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_todo')), (4, ref('demo_tag_work'))]"/>
+        </record>
+
+        <!-- 6. Recipe (personal) -->
+        <record id="demo_note_recipe" model="joplin.note">
+            <field name="joplin_id">n000000000000006n000000000000006</field>
+            <field name="title">Thai Green Curry</field>
+            <field name="body"># Thai Green Curry
+
+## Ingredients
+
+| Ingredient | Amount |
+|-----------|--------|
+| Chicken thighs | 500g |
+| Green curry paste | 3 tbsp |
+| Coconut milk | 400ml |
+| Bamboo shoots | 200g |
+| Thai basil | 1 cup |
+| Fish sauce | 2 tbsp |
+| Palm sugar | 1 tbsp |
+| Kaffir lime leaves | 4 |
+
+## Instructions
+
+1. Slice chicken into bite-sized pieces
+2. Heat wok on high, add 1 tbsp oil
+3. Fry curry paste for 1 minute until fragrant
+4. Add chicken, cook until sealed
+5. Pour in coconut milk, bring to simmer
+6. Add bamboo shoots and torn lime leaves
+7. Cook 10 minutes
+8. Season with fish sauce and sugar
+9. Remove from heat, stir in basil
+10. Serve over jasmine rice
+
+> **Tip:** Use *Mae Ploy* brand curry paste for authentic flavour.
+</field>
+            <field name="folder_id" ref="demo_folder_recipes"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="markup_language">1</field>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_recipe')), (4, ref('demo_tag_personal'))]"/>
+        </record>
+
+        <!-- 7. Journal entry -->
+        <record id="demo_note_journal" model="joplin.note">
+            <field name="joplin_id">n000000000000007n000000000000007</field>
+            <field name="title">Journal — First Week at Vertel</field>
+            <field name="body"># Journal: First Week
+
+**2026-05-03**
+
+Started at Vertel today! Met the team, got my workstation set up.
+The office has a great view of the city.
+
+**2026-05-04**
+
+Set up the development environment. We're using Odoo 18 with
+a custom module structure. The team uses SaltStack for
+infrastructure — interesting approach.
+
+**2026-05-05**
+
+First code review. Working on the knowledge_joplin module.
+Learned about the Joplin sync protocol today.
+The existing REST API is already quite comprehensive.
+
+**2026-05-06**
+
+Implemented the ping endpoint and basic note CRUD.
+Tested with curl — works great.
+Need to add authentication next week.
+
+**2026-05-07**
+
+Friday! Wrapped up the week with a team lunch.
+Goals for next week:
+- Complete API token auth
+- Start on sync protocol endpoints
+- Write unit tests
+</field>
+            <field name="folder_id" ref="demo_folder_journal"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="markup_language">1</field>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_personal'))]"/>
+        </record>
+
+        <!-- 8. Trashed note -->
+        <record id="demo_note_trashed" model="joplin.note">
+            <field name="joplin_id">n000000000000008n000000000000008</field>
+            <field name="title">Old Draft — Deprecated</field>
+            <field name="body">This note has been **trashed** and is no longer visible
+in the default view. Use the *Trashed* filter to see it.
+</field>
+            <field name="folder_id" ref="demo_folder_archive"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="active">False</field>
+        </record>
+
+        <!-- 9. Resource test note -->
+        <record id="demo_note_resources" model="joplin.note">
+            <field name="joplin_id">n000000000000009n000000000000009</field>
+            <field name="title">Attachment Samples</field>
+            <field name="body">This note contains sample file attachments.
+
+Check the **Resources** tab to view them.
+</field>
+            <field name="folder_id" ref="demo_folder_personal"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_important'))]"/>
+        </record>
+
+        <!-- 10. Long-form article -->
+        <record id="demo_note_article" model="joplin.note">
+            <field name="joplin_id">n000000000000010n000000000000010</field>
+            <field name="title">Odoo 18 Migration Guide — Notes</field>
+            <field name="body"><![CDATA[# Odoo 18 Migration Notes
+
+## Breaking Changes
+
+### View Changes
+
+In Odoo 18, `<tree>` was replaced by `<list>`:
+
+```xml
+<!-- Odoo 17 -->
+<tree>
+    <field name="name"/>
+</tree>
+
+<!-- Odoo 18 -->
+<list>
+    <field name="name"/>
+</list>
+```
+
+The `<tree>` tag still works as an alias but emits a deprecation warning.
+
+### `states` and `attrs` Removed
+
+Since Odoo 17, these view attributes are no longer valid:
+
+```xml
+<!-- REMOVED -->
+<button name="confirm" states="draft"/>
+<field name="state" attrs="{'invisible': [('active', '=', False)]}"/>
+
+<!-- USE INSTEAD -->
+<button name="confirm" invisible="state != 'draft'"/>
+<field name="state" invisible="active == False"/>
+```
+
+### `.sudo(user)` → `.with_user(user)`
+
+```python
+# Odoo 17
+record.sudo(other_user).write(...)
+
+# Odoo 18
+record.with_user(other_user).write(...)
+```
+
+### Datetime Fields
+
+Odoo 18 rejects timezone-aware datetimes:
+
+```python
+# BROKEN in Odoo 18
+from datetime import datetime, timezone
+datetime.now(timezone.utc)
+
+# CORRECT
+from datetime import datetime
+datetime.utcnow()
+```
+
+## Property Fields (18.0+)
+
+New `fields.Property` type replaces manual `ir.property` usage:
+
+```python
+class MyModel(models.Model):
+    _name = 'my.model'
+
+    custom_value = fields.Property(
+        type=fields.Char,
+        string='Custom Value',
+        default='default',
+    )
+```
+
+## Database Schema Changes
+
+- `res_users_groups_rel` → `res_groups_users_rel`
+- `res_groups_implied_rel` columns: `group_id` → `gid`, `implied_id` → `hid`
+
+## Testing Changes
+
+- HttpCase: `resp.status` → `resp.status_code`
+- DB constraint violations require `self.cr.savepoint()`
+]]></field>
+            <field name="folder_id" ref="demo_folder_learning"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="markup_language">1</field>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_python')), (4, ref('demo_tag_work'))]"/>
+        </record>
+
+        <!-- ================================================================ -->
+        <!-- NOTES (Bob)                                                        -->
+        <!-- ================================================================ -->
+        <record id="demo_note_bob_personal" model="joplin.note">
+            <field name="joplin_id">n000000000000011n000000000000011</field>
+            <field name="title">Bob's Personal Notes</field>
+            <field name="body">This note belongs to **Bob**.
+
+It should only be visible to Bob and administrators.
+</field>
+            <field name="folder_id" ref="demo_folder_bob"/>
+            <field name="user_id" ref="demo_user_joplin_2"/>
+        </record>
+
+        <record id="demo_note_bob_shared" model="joplin.note">
+            <field name="joplin_id">n000000000000012n000000000000012</field>
+            <field name="title">Shared Planning Doc</field>
+            <field name="body"># Shared Planning Document
+
+This note is owned by **Bob** but can be shared with followers.
+
+When Alice subscribes to this note, she gains access.
+</field>
+            <field name="folder_id" ref="demo_folder_bob"/>
+            <field name="user_id" ref="demo_user_joplin_2"/>
+            <field name="tag_ids" eval="[(4, ref('demo_tag_important'))]"/>
+        </record>
+
+        <!-- ================================================================ -->
+        <!-- RESOURCES                                                          -->
+        <!-- ================================================================ -->
+        <record id="demo_resource_text" model="joplin.resource">
+            <field name="joplin_id">r000000000000001r000000000000001</field>
+            <field name="name">Sample Text File</field>
+            <field name="mime">text/plain</field>
+            <field name="filename">sample.txt</field>
+            <field name="file_extension">txt</field>
+            <field name="file_size">13</field>
+            <field name="note_id" ref="demo_note_resources"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_resource_json" model="joplin.resource">
+            <field name="joplin_id">r000000000000002r000000000000002</field>
+            <field name="name">Config File</field>
+            <field name="mime">application/json</field>
+            <field name="filename">config.json</field>
+            <field name="file_extension">json</field>
+            <field name="file_size">256</field>
+            <field name="note_id" ref="demo_note_resources"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <record id="demo_resource_image" model="joplin.resource">
+            <field name="joplin_id">r000000000000003r000000000000003</field>
+            <field name="name">Logo</field>
+            <field name="mime">image/png</field>
+            <field name="filename">logo.png</field>
+            <field name="file_extension">png</field>
+            <field name="file_size">14336</field>
+            <field name="note_id" ref="demo_note_resources"/>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+        </record>
+
+        <!-- ================================================================ -->
+        <!-- REVISIONS                                                          -->
+        <!-- ================================================================ -->
+        <!-- Welcome note: title and body edits -->
+        <record id="demo_revision_welcome_1" model="joplin.revision">
+            <field name="joplin_id">v000000000000001v000000000000001</field>
+            <field name="note_id" ref="demo_note_welcome"/>
+            <field name="item_id">n000000000000001n000000000000001</field>
+            <field name="item_type">1</field>
+            <field name="title_diff">@@ -1,7 +1,21 @@\n-Welcome\n+Welcome to Joplin Notes</field>
+            <field name="body_diff">@@ -1,21 +1,105 @@\n-# Welcome to Joplin Notes\n+# Welcome\n \n-This is a **demo note** showing Markdown support.\n+Initial draft</field>
+        </record>
+
+        <record id="demo_revision_welcome_2" model="joplin.revision">
+            <field name="joplin_id">v000000000000002v000000000000002</field>
+            <field name="note_id" ref="demo_note_welcome"/>
+            <field name="item_id">n000000000000001n000000000000001</field>
+            <field name="item_type">1</field>
+            <field name="title_diff">@@ -1,21 +1,7 @@\n-Welcome to Joplin Notes\n+Welcome</field>
+            <field name="body_diff">@@ -1,105 +1,21 @@\n-# Welcome\n+This is a **demo note** showing Markdown support.\n \n-Initial draft</field>
+        </record>
+
+        <!-- Python note: created then expanded -->
+        <record id="demo_revision_python_1" model="joplin.revision">
+            <field name="joplin_id">v000000000000003v000000000000003</field>
+            <field name="note_id" ref="demo_note_python"/>
+            <field name="item_id">n000000000000003n000000000000003</field>
+            <field name="item_type">1</field>
+            <field name="title_diff">@@ -1,11 +1,30 @@\n-Python Async\n+Python Async Patterns Reference</field>
+            <field name="body_diff">@@ -1,5 +1,69 @@\n-# Python Async Patterns\n+## asyncio.gather</field>
+        </record>
+
+        <!-- Meeting note: title updated -->
+        <record id="demo_revision_meeting_1" model="joplin.revision">
+            <field name="joplin_id">v000000000000004v000000000000004</field>
+            <field name="note_id" ref="demo_note_meeting"/>
+            <field name="item_id">n000000000000004n000000000000004</field>
+            <field name="item_type">1</field>
+            <field name="title_diff">@@ -1,16 +1,23 @@\n-Sprint Planning\n+Sprint Planning — Week 42</field>
+        </record>
+
+        <!-- Todo note: tasks progressed -->
+        <record id="demo_revision_todo_1" model="joplin.revision">
+            <field name="joplin_id">v000000000000005v000000000000005</field>
+            <field name="note_id" ref="demo_note_todo"/>
+            <field name="item_id">n000000000000005n000000000000005</field>
+            <field name="item_type">1</field>
+            <field name="body_diff">@@ -1,7 +1,9 @@\n - [ ] Write API reference\n - [ ] Add OpenAPI/Swagger specs\n - [ ] Review architecture decision records\n-- [ ] Set up Sphinx for auto-docs\n-- [ ] Configure ReadTheDocs\n+- [x] Set up Sphinx for auto-docs\n+- [x] Configure ReadTheDocs integration\n + [ ] Document deployment procedure\n + [ ] Create onboarding guide</field>
+        </record>
+
+        <!-- ================================================================ -->
+        <!-- API TOKENS                                                         -->
+        <!-- ================================================================ -->
+        <record id="demo_api_token" model="joplin.api.token">
+            <field name="token">0123456789abcdef0123456789abcdef</field>
+            <field name="user_id" ref="demo_user_joplin_1"/>
+            <field name="name">Alice's API Token</field>
+        </record>
+
+        <record id="demo_api_token_bob" model="joplin.api.token">
+            <field name="token">fedcba9876543210fedcba9876543210</field>
+            <field name="user_id" ref="demo_user_joplin_2"/>
+            <field name="name">Bob's API Token</field>
+        </record>
+
+    </data>
+</odoo>

@@ -110,6 +110,9 @@
             <field name="arch" type="xml">
                 <form string="Note">
                     <header>
+                        <button name="toggle_todo" string="Toggle To-Do"
+                                type="object" class="btn-secondary"
+                                invisible="[('active', '=', False)]"/>
                         <button name="action_trash" string="Trash" type="object"
                                 class="btn-danger"
                                 confirm="Move this note to trash?"
@@ -121,8 +124,7 @@
                                 class="btn-danger"
                                 confirm="Delete this note permanently?"
                                 invisible="[('active', '=', True)]"/>
-                        <field name="active" widget="statusbar" statusbar_visible="True"
-                               statusbar_colors='{"True": "success", "False": "danger"}'/>
+                        <field name="active" invisible="1"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -150,60 +152,22 @@
                                 <field name="title" placeholder="Note title..."/>
                             </h1>
                         </div>
-                        <group>
-                            <group>
-                                <field name="folder_id"
-                                       options="{'no_create': True}"/>
-                                <field name="tag_ids" widget="many2many_tags"/>
-                                <field name="user_id"/>
-                            </group>
-                            <group>
-                                <field name="is_todo"/>
-                                <field name="todo_due" invisible="[('is_todo', '=', False)]"/>
-                                <field name="todo_completed" invisible="[('is_todo', '=', False)]"/>
-                                <field name="joplin_id" readonly="1"/>
-                            </group>
+                        <group col="4">
+                            <field name="folder_id" options="{'no_create': True}"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="user_id"/>
+                            <field name="updated_time"/>
                         </group>
+                        <group string="To-Do" col="4"
+                               invisible="[('is_todo', '=', False)]">
+                            <field name="todo_due"/>
+                            <field name="todo_completed"/>
+                        </group>
+                        <field name="body_html" widget="html" sanitize="false"
+                               placeholder="Write your note here..."/>
                         <notebook>
-                            <page name="content" string="Content">
-                                <field name="body_html" widget="html" sanitize="false"/>
-                            </page>
-                            <page name="markdown" string="Markdown">
-                                <field name="body" widget="ace" options="{'mode': 'markdown'}"/>
-                                <div class="alert alert-info" role="alert">
-                                    This is the raw Markdown as stored for Joplin compatibility.
-                                </div>
-                            </page>
-                            <page name="properties" string="Properties">
-                                <group>
-                                    <group string="Source">
-                                        <field name="author"/>
-                                        <field name="source_url"/>
-                                        <field name="source"/>
-                                        <field name="source_application"/>
-                                        <field name="application_data"/>
-                                    </group>
-                                    <group string="Location">
-                                        <field name="latitude"/>
-                                        <field name="longitude"/>
-                                        <field name="altitude"/>
-                                    </group>
-                                    <group string="Timestamps">
-                                        <field name="created_time"/>
-                                        <field name="updated_time"/>
-                                        <field name="user_created_time"/>
-                                        <field name="user_updated_time"/>
-                                        <field name="deleted_time"/>
-                                    </group>
-                                    <group string="Advanced">
-                                        <field name="order"/>
-                                        <field name="markup_language"/>
-                                        <field name="is_conflict"/>
-                                        <field name="conflict_original_id"/>
-                                        <field name="is_shared"/>
-                                        <field name="share_id"/>
-                                    </group>
-                                </group>
+                            <page name="text" string="Text">
+                                <field name="body" nolabel="1" colspan="2"/>
                             </page>
                             <page name="resources" string="Resources">
                                 <field name="resource_ids">
@@ -225,13 +189,35 @@
                                     </list>
                                 </field>
                             </page>
+                            <page name="technical" string="Technical">
+                                <group col="2">
+                                    <field name="joplin_id" readonly="1"/>
+                                    <field name="created_time"/>
+                                    <field name="updated_time"/>
+                                    <field name="user_created_time"/>
+                                    <field name="user_updated_time"/>
+                                    <field name="deleted_time"/>
+                                    <field name="author"/>
+                                    <field name="source_url"/>
+                                    <field name="source"/>
+                                    <field name="source_application"/>
+                                    <field name="application_data"/>
+                                    <field name="latitude"/>
+                                    <field name="longitude"/>
+                                    <field name="altitude"/>
+                                    <field name="order"/>
+                                    <field name="markup_language"/>
+                                    <field name="is_conflict"/>
+                                    <field name="conflict_original_id"/>
+                                    <field name="is_shared"/>
+                                    <field name="share_id"/>
+                                    <field name="encryption_cipher_text" readonly="1"/>
+                                    <field name="master_key_id" readonly="1"/>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>

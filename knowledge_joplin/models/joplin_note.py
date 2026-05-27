@@ -194,13 +194,8 @@ class JoplinNote(models.Model):
         self.write({'is_todo': not self.is_todo})
 
     def action_open_tags(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Tags'),
-            'res_model': 'joplin.note.tag',
-            'view_mode': 'kanban,list,form',
-            'domain': [('note_id', '=', self.id)],
-        }
+        action = self.env.ref('knowledge_joplin.action_joplin_tag').read()[0]
+        return action
 
     def action_open_resources(self):
         return {

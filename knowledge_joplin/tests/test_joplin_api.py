@@ -450,3 +450,115 @@ class TestJoplinApi(common.HttpCase):
         self.assertIn('items', data)
         self.assertIn('has_more', data)
         self.assertIn('cursor', data)
+
+
+@tagged('at_install', 'post_install')
+class TestDemoData(common.TransactionCase):
+    """Verify demo data integrity."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        try:
+            cls.demo_user = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
+            cls.has_demo = True
+        except ValueError:
+            cls.has_demo = False
+
+    def test_demo_users_exist(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        users = self.env['res.users'].search([
+            ('login', 'in', ['joplin_demo1@example.com', 'joplin_demo2@example.com']),
+        ])
+        self.assertEqual(len(users), 2)
+
+    def test_demo_folders_exist(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        folders = self.env['joplin.folder'].search([
+            ('joplin_id', 'like', 'a%'),
+        ])
+        self.assertGreaterEqual(len(folders), 8)
+
+    def test_demo_tags_exist(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        tags = self.env['joplin.tag'].search([
+            ('joplin_id', 'like', 't%'),
+        ])
+        self.assertGreaterEqual(len(tags), 9)
+
+    def test_demo_notes_exist(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        notes = self.env['joplin.note'].with_context(active_test=False).search([
+            ('joplin_id', 'like', 'n%'),
+        ])
+        self.assertGreaterEqual(len(notes), 12)
+
+    def test_demo_trashed_note(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        note = self.env.ref('knowledge_joplin.demo_note_trashed')
+        self.assertFalse(note.active)
+
+    def test_demo_mermaid_note(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        note = self.env.ref('knowledge_joplin.demo_note_mermaid')
+        self.assertIn('```mermaid', note.body)
+        self.assertIn('graph TD', note.body)
+        self.assertIn('sequenceDiagram', note.body)
+
+    def test_demo_python_note(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        note = self.env.ref('knowledge_joplin.demo_note_python')
+        self.assertIn('async def main', note.body)
+        self.assertIn('TaskGroup', note.body)
+
+    def test_demo_trashed_note(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        note = self.env.ref('knowledge_joplin.demo_note_trashed')
+        self.assertFalse(note.active)
+
+    def test_demo_revisions_exist(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        revisions = self.env['joplin.revision'].search([
+            ('joplin_id', 'like', 'v%'),
+        ])
+        self.assertGreaterEqual(len(revisions), 5)
+
+    def test_demo_resources_exist(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        resources = self.env['joplin.resource'].search([
+            ('joplin_id', 'like', 'r%'),
+        ])
+        self.assertGreaterEqual(len(resources), 3)
+
+    def test_demo_api_tokens_exist(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        tokens = self.env['joplin.api.token'].search([
+            ('name', 'like', '%API%'),
+        ])
+        self.assertGreaterEqual(len(tokens), 2)
+
+    def test_demo_folder_hierarchy(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        projects = self.env.ref('knowledge_joplin.demo_folder_projects')
+        self.assertTrue(projects.parent_id)
+        self.assertEqual(projects.parent_id.name, 'Work')
+
+    def test_demo_user2_notes_isolation(self):
+        if not self.has_demo:
+            self.skipTest('Demo data not loaded')
+        bob_notes = self.env['joplin.note'].with_context(active_test=False).search([
+            ('user_id', '=', self.env.ref('knowledge_joplin.demo_user_joplin_2').id),
+        ])
+        self.assertGreaterEqual(len(bob_notes), 2)

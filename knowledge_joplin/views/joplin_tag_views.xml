@@ -55,7 +55,7 @@
             <field name="name">Tags</field>
             <field name="res_model">joplin.tag</field>
             <field name="view_mode">kanban,list,form</field>
-            <field name="context">{'group_by': 'note_count'}</field>
+            <field name="context">{}</field>
         </record>
 
     </data>
