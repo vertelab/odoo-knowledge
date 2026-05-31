@@ -160,9 +160,11 @@
                             <field name="todo_due"/>
                             <field name="todo_completed"/>
                         </group>
-                        <field name="body_html" widget="html" sanitize="false"
-                               placeholder="Write your note here..."/>
                         <notebook>
+                            <page name="note" string="Note">
+                                <field name="body_html" widget="html" sanitize="false"
+                                       placeholder="Write your note here..."/>
+                            </page>
                             <page name="text" string="Text">
                                 <field name="body" nolabel="1" colspan="2"/>
                             </page>

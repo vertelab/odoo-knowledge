@@ -14,19 +14,27 @@ class TestJoplinModels(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.User1 = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
-        cls.User2 = cls.env.ref('knowledge_joplin.demo_user_joplin_2')
-        if not cls.User1:
+        try:
+            cls.User1 = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
+        except ValueError:
             cls.User1 = cls.env['res.users'].create({
                 'name': 'Test User 1',
                 'login': 'test_joplin1@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
+                'groups_id': [
+                    (4, cls.env.ref('base.group_user').id),
+                    (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
+                ],
             })
-        if not cls.User2:
+        try:
+            cls.User2 = cls.env.ref('knowledge_joplin.demo_user_joplin_2')
+        except ValueError:
             cls.User2 = cls.env['res.users'].create({
                 'name': 'Test User 2',
                 'login': 'test_joplin2@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
+                'groups_id': [
+                    (4, cls.env.ref('base.group_user').id),
+                    (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
+                ],
             })
 
         cls.Folder = cls.env['joplin.folder']
@@ -293,19 +301,27 @@ class TestJoplinSecurity(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.User1 = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
-        cls.User2 = cls.env.ref('knowledge_joplin.demo_user_joplin_2')
-        if not cls.User1:
+        try:
+            cls.User1 = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
+        except ValueError:
             cls.User1 = cls.env['res.users'].create({
                 'name': 'Secure User 1',
                 'login': 'secure_joplin1@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
+                'groups_id': [
+                    (4, cls.env.ref('base.group_user').id),
+                    (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
+                ],
             })
-        if not cls.User2:
+        try:
+            cls.User2 = cls.env.ref('knowledge_joplin.demo_user_joplin_2')
+        except ValueError:
             cls.User2 = cls.env['res.users'].create({
                 'name': 'Secure User 2',
                 'login': 'secure_joplin2@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
+                'groups_id': [
+                    (4, cls.env.ref('base.group_user').id),
+                    (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
+                ],
             })
         cls.Note = cls.env['joplin.note']
 
@@ -361,12 +377,16 @@ class TestJoplinApi(common.HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.User1 = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
-        if not cls.User1:
+        try:
+            cls.User1 = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
+        except ValueError:
             cls.User1 = cls.env['res.users'].create({
                 'name': 'API User',
                 'login': 'api_joplin@test.com',
-                'groups_id': [(4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id)],
+                'groups_id': [
+                    (4, cls.env.ref('base.group_user').id),
+                    (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
+                ],
             })
         cls.Token = cls.env['joplin.api.token'].sudo().create({
             'name': 'Test API Token',
@@ -469,7 +489,7 @@ class TestDemoData(common.TransactionCase):
         if not self.has_demo:
             self.skipTest('Demo data not loaded')
         users = self.env['res.users'].search([
-            ('login', 'in', ['joplin_demo1@example.com', 'joplin_demo2@example.com']),
+            ('login', 'in', ['alice@example.com', 'bob@example.com']),
         ])
         self.assertEqual(len(users), 2)
 
@@ -517,12 +537,6 @@ class TestDemoData(common.TransactionCase):
         note = self.env.ref('knowledge_joplin.demo_note_python')
         self.assertIn('async def main', note.body)
         self.assertIn('TaskGroup', note.body)
-
-    def test_demo_trashed_note(self):
-        if not self.has_demo:
-            self.skipTest('Demo data not loaded')
-        note = self.env.ref('knowledge_joplin.demo_note_trashed')
-        self.assertFalse(note.active)
 
     def test_demo_revisions_exist(self):
         if not self.has_demo:

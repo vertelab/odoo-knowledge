@@ -46,9 +46,10 @@ def _get_user():
     token = request.params.get('token')
     if token:
         user = request.env['joplin.api.token'].sudo().authenticate(token)
-        if user and user != request.env.user:
+        if user:
             request.update_env(user=user.id)
-    return request.env.user
+            return user
+    return request.env['res.users']
 
 
 def _paginate(Model, domain, params):
@@ -72,12 +73,13 @@ def _fields_filter(record, fields_param):
         return {f: record[f] for f in field_list if f in record}
     return {
         'id': record['joplin_id'],
-        'parent_id': record.get('parent_id', record.get('joplin_id')) if False else record.get('parent_id', False),
+        'parent_id': record.get('parent_id', ''),
         'title': record.get('name') or record.get('title', ''),
     }
 
 
 def _note_to_dict(note, fields_param=None):
+    note = note.sudo()
     data = {
         'id': note.joplin_id,
         'parent_id': note.folder_id.joplin_id if note.folder_id else '',
@@ -118,6 +120,7 @@ def _note_to_dict(note, fields_param=None):
 
 
 def _folder_to_dict(folder, fields_param=None, include_children=True):
+    folder = folder.sudo()
     data = {
         'id': folder.joplin_id,
         'title': folder.name,
@@ -146,6 +149,7 @@ def _folder_to_dict(folder, fields_param=None, include_children=True):
 
 
 def _tag_to_dict(tag, fields_param=None):
+    tag = tag.sudo()
     data = {
         'id': tag.joplin_id,
         'title': tag.name,
@@ -166,6 +170,7 @@ def _tag_to_dict(tag, fields_param=None):
 
 
 def _resource_to_dict(res, fields_param=None):
+    res = res.sudo()
     data = {
         'id': res.joplin_id,
         'title': res.name or '',
@@ -198,6 +203,7 @@ def _resource_to_dict(res, fields_param=None):
 
 
 def _revision_to_dict(rev, fields_param=None):
+    rev = rev.sudo()
     data = {
         'id': rev.joplin_id,
         'parent_id': rev.parent_id or '',
@@ -354,7 +360,7 @@ class JoplinApi(http.Controller):
             vals['source_application'] = data['source_application']
 
         try:
-            note = request.env['joplin.note'].sudo().create(vals)
+            note = request.env['joplin.note'].create(vals)
             return self._response(_note_to_dict(note), 201)
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -406,7 +412,7 @@ class JoplinApi(http.Controller):
             vals['is_conflict'] = bool(data['is_conflict'])
 
         try:
-            note.sudo().write(vals)
+            note.write(vals)
             return self._response(_note_to_dict(note))
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -420,9 +426,9 @@ class JoplinApi(http.Controller):
         if not note:
             return self._response({'error': 'Note not found'}, 404)
         if params.get('permanent') == '1':
-            note.sudo().unlink()
+            note.unlink()
         else:
-            note.sudo().write({'active': False})
+            note.write({'active': False})
         return self._response({'deleted': True})
 
     @http.route('/joplin/notes/<string:joplin_id>/revisions', type='http', auth='none', methods=['DELETE'], csrf=False)
@@ -433,7 +439,7 @@ class JoplinApi(http.Controller):
         note = request.env['joplin.note'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not note:
             return self._response({'error': 'Note not found'}, 404)
-        note.revision_ids.sudo().unlink()
+        note.revision_ids.unlink()
         return self._response({'deleted': True})
 
     # ---- FOLDERS ----
@@ -444,7 +450,7 @@ class JoplinApi(http.Controller):
         if auth_err:
             return auth_err
         Folder = request.env['joplin.folder']
-        all_folders = Folder.sudo().search([('active', '=', True), ('parent_id', '=', False)], order='name')
+        all_folders = Folder.search([('active', '=', True), ('parent_id', '=', False)], order='name')
         items = [_folder_to_dict(f, params.get('fields')) for f in all_folders]
         return self._paginated_response(items, False)
 
@@ -453,7 +459,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        folder = request.env['joplin.folder'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        folder = request.env['joplin.folder'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not folder:
             return self._response({'error': 'Folder not found'}, 404)
         return self._response(_folder_to_dict(folder, params.get('fields')))
@@ -463,7 +469,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        folder = request.env['joplin.folder'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        folder = request.env['joplin.folder'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not folder:
             return self._response({'error': 'Folder not found'}, 404)
         Note = request.env['joplin.note']
@@ -485,13 +491,13 @@ class JoplinApi(http.Controller):
         if data.get('id'):
             vals['joplin_id'] = data['id']
         if data.get('parent_id'):
-            parent = request.env['joplin.folder'].sudo().search([('joplin_id', '=', data['parent_id'])], limit=1)
+            parent = request.env['joplin.folder'].search([('joplin_id', '=', data['parent_id'])], limit=1)
             if parent:
                 vals['parent_id'] = parent.id
         if data.get('icon'):
             vals['icon'] = data['icon']
         try:
-            folder = request.env['joplin.folder'].sudo().create(vals)
+            folder = request.env['joplin.folder'].create(vals)
             return self._response(_folder_to_dict(folder), 201)
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -505,7 +511,7 @@ class JoplinApi(http.Controller):
             data = json.loads(request.httprequest.data)
         except Exception:
             data = params
-        folder = request.env['joplin.folder'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        folder = request.env['joplin.folder'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not folder:
             return self._response({'error': 'Folder not found'}, 404)
         vals = {}
@@ -513,14 +519,14 @@ class JoplinApi(http.Controller):
             vals['name'] = data['title']
         if 'parent_id' in data:
             if data['parent_id']:
-                parent = request.env['joplin.folder'].sudo().search([('joplin_id', '=', data['parent_id'])], limit=1)
+                parent = request.env['joplin.folder'].search([('joplin_id', '=', data['parent_id'])], limit=1)
                 vals['parent_id'] = parent.id if parent else False
             else:
                 vals['parent_id'] = False
         if 'icon' in data:
             vals['icon'] = data['icon']
         try:
-            folder.sudo().write(vals)
+            folder.write(vals)
             return self._response(_folder_to_dict(folder))
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -530,13 +536,13 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        folder = request.env['joplin.folder'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        folder = request.env['joplin.folder'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not folder:
             return self._response({'error': 'Folder not found'}, 404)
         if params.get('permanent') == '1':
-            folder.sudo().unlink()
+            folder.unlink()
         else:
-            folder.sudo().write({'active': False})
+            folder.write({'active': False})
         return self._response({'deleted': True})
 
     # ---- TAGS ----
@@ -557,7 +563,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        tag = request.env['joplin.tag'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        tag = request.env['joplin.tag'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not tag:
             return self._response({'error': 'Tag not found'}, 404)
         return self._response(_tag_to_dict(tag, params.get('fields')))
@@ -567,7 +573,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        tag = request.env['joplin.tag'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        tag = request.env['joplin.tag'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not tag:
             return self._response({'error': 'Tag not found'}, 404)
         records, has_more = _paginate(request.env['joplin.note'], [('tag_ids', 'in', tag.id), ('active', '=', True)], params)
@@ -583,13 +589,13 @@ class JoplinApi(http.Controller):
             data = json.loads(request.httprequest.data)
         except Exception:
             data = params
-        tag = request.env['joplin.tag'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        tag = request.env['joplin.tag'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not tag:
             return self._response({'error': 'Tag not found'}, 404)
-        note = request.env['joplin.note'].sudo().search([('joplin_id', '=', data.get('id'))], limit=1)
+        note = request.env['joplin.note'].search([('joplin_id', '=', data.get('id'))], limit=1)
         if not note:
             return self._response({'error': 'Note not found'}, 404)
-        note.sudo().write({'tag_ids': [(4, tag.id)]})
+        note.write({'tag_ids': [(4, tag.id)]})
         return self._response({'added': True})
 
     @http.route('/joplin/tags', type='http', auth='none', methods=['POST'], csrf=False)
@@ -605,7 +611,7 @@ class JoplinApi(http.Controller):
         if data.get('id'):
             vals['joplin_id'] = data['id']
         try:
-            tag = request.env['joplin.tag'].sudo().create(vals)
+            tag = request.env['joplin.tag'].create(vals)
             return self._response(_tag_to_dict(tag), 201)
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -619,11 +625,11 @@ class JoplinApi(http.Controller):
             data = json.loads(request.httprequest.data)
         except Exception:
             data = params
-        tag = request.env['joplin.tag'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        tag = request.env['joplin.tag'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not tag:
             return self._response({'error': 'Tag not found'}, 404)
         if 'title' in data:
-            tag.sudo().write({'name': data['title']})
+            tag.write({'name': data['title']})
         return self._response(_tag_to_dict(tag))
 
     @http.route('/joplin/tags/<string:joplin_id>', type='http', auth='none', methods=['DELETE'], csrf=False)
@@ -631,10 +637,10 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        tag = request.env['joplin.tag'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        tag = request.env['joplin.tag'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not tag:
             return self._response({'error': 'Tag not found'}, 404)
-        tag.sudo().unlink()
+        tag.unlink()
         return self._response({'deleted': True})
 
     @http.route('/joplin/tags/<string:joplin_id>/notes/<string:note_joplin_id>', type='http', auth='none', methods=['DELETE'], csrf=False)
@@ -642,13 +648,13 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        tag = request.env['joplin.tag'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        tag = request.env['joplin.tag'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not tag:
             return self._response({'error': 'Tag not found'}, 404)
-        note = request.env['joplin.note'].sudo().search([('joplin_id', '=', note_joplin_id)], limit=1)
+        note = request.env['joplin.note'].search([('joplin_id', '=', note_joplin_id)], limit=1)
         if not note:
             return self._response({'error': 'Note not found'}, 404)
-        note.sudo().write({'tag_ids': [(3, tag.id)]})
+        note.write({'tag_ids': [(3, tag.id)]})
         return self._response({'removed': True})
 
     # ---- RESOURCES ----
@@ -669,7 +675,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        res = request.env['joplin.resource'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        res = request.env['joplin.resource'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not res:
             return self._response({'error': 'Resource not found'}, 404)
         return self._response(_resource_to_dict(res, params.get('fields')))
@@ -679,7 +685,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        res = request.env['joplin.resource'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        res = request.env['joplin.resource'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not res or not res.datas:
             return self._response({'error': 'Resource not found'}, 404)
         import base64
@@ -693,7 +699,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        res = request.env['joplin.resource'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        res = request.env['joplin.resource'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not res:
             return self._response({'error': 'Resource not found'}, 404)
         if not res.note_id:
@@ -737,11 +743,11 @@ class JoplinApi(http.Controller):
             if data.get('id'):
                 vals['joplin_id'] = data['id']
             if data.get('note_id'):
-                note = request.env['joplin.note'].sudo().search([('joplin_id', '=', data['note_id'])], limit=1)
+                note = request.env['joplin.note'].search([('joplin_id', '=', data['note_id'])], limit=1)
                 if note:
                     vals['note_id'] = note.id
 
-            res = request.env['joplin.resource'].sudo().create(vals)
+            res = request.env['joplin.resource'].create(vals)
             return self._response(_resource_to_dict(res), 201)
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -755,7 +761,7 @@ class JoplinApi(http.Controller):
             data = json.loads(request.httprequest.data)
         except Exception:
             data = params
-        res = request.env['joplin.resource'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        res = request.env['joplin.resource'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not res:
             return self._response({'error': 'Resource not found'}, 404)
         vals = {}
@@ -766,7 +772,7 @@ class JoplinApi(http.Controller):
         if 'filename' in data:
             vals['filename'] = data['filename']
         try:
-            res.sudo().write(vals)
+            res.write(vals)
             return self._response(_resource_to_dict(res))
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -776,10 +782,10 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        res = request.env['joplin.resource'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        res = request.env['joplin.resource'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not res:
             return self._response({'error': 'Resource not found'}, 404)
-        res.sudo().unlink()
+        res.unlink()
         return self._response({'deleted': True})
 
     # ---- REVISIONS ----
@@ -800,7 +806,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        rev = request.env['joplin.revision'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        rev = request.env['joplin.revision'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not rev:
             return self._response({'error': 'Revision not found'}, 404)
         return self._response(_revision_to_dict(rev, params.get('fields')))
@@ -819,7 +825,7 @@ class JoplinApi(http.Controller):
             vals['joplin_id'] = data['id']
         if data.get('item_id'):
             vals['item_id'] = data['item_id']
-            note = request.env['joplin.note'].sudo().search([('joplin_id', '=', data['item_id'])], limit=1)
+            note = request.env['joplin.note'].search([('joplin_id', '=', data['item_id'])], limit=1)
             if note:
                 vals['note_id'] = note.id
         if data.get('title_diff'):
@@ -831,7 +837,7 @@ class JoplinApi(http.Controller):
         if data.get('item_updated_time'):
             vals['item_updated_time'] = _from_ms_timestamp(data['item_updated_time'])
         try:
-            rev = request.env['joplin.revision'].sudo().create(vals)
+            rev = request.env['joplin.revision'].create(vals)
             return self._response(_revision_to_dict(rev), 201)
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -845,7 +851,7 @@ class JoplinApi(http.Controller):
             data = json.loads(request.httprequest.data)
         except Exception:
             data = params
-        rev = request.env['joplin.revision'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        rev = request.env['joplin.revision'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not rev:
             return self._response({'error': 'Revision not found'}, 404)
         vals = {}
@@ -856,7 +862,7 @@ class JoplinApi(http.Controller):
         if 'metadata_diff' in data:
             vals['metadata_diff'] = data['metadata_diff']
         try:
-            rev.sudo().write(vals)
+            rev.write(vals)
             return self._response(_revision_to_dict(rev))
         except Exception as e:
             return self._response({'error': str(e)}, 400)
@@ -866,10 +872,10 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        rev = request.env['joplin.revision'].sudo().search([('joplin_id', '=', joplin_id)], limit=1)
+        rev = request.env['joplin.revision'].search([('joplin_id', '=', joplin_id)], limit=1)
         if not rev:
             return self._response({'error': 'Revision not found'}, 404)
-        rev.sudo().unlink()
+        rev.unlink()
         return self._response({'deleted': True})
 
     # ---- EVENTS ----
@@ -885,7 +891,7 @@ class JoplinApi(http.Controller):
         if cursor:
             domain.append(('id', '>', int(cursor)))
         limit = min(int(params.get('limit', 100)), 100)
-        events = Event.sudo().search(domain, order='id asc', limit=limit + 1)
+        events = Event.search(domain, order='id asc', limit=limit + 1)
         has_more = len(events) > limit
         items = events[:limit]
         new_cursor = str(items[-1].id) if items else cursor
@@ -908,7 +914,7 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        event = request.env['joplin.event'].sudo().browse(event_id)
+        event = request.env['joplin.event'].browse(event_id)
         if not event.exists():
             return self._response({'error': 'Event not found'}, 404)
         return self._response({
@@ -936,7 +942,7 @@ class JoplinApi(http.Controller):
         fields = params.get('fields')
 
         if search_type == 'folder':
-            folders = request.env['joplin.folder'].sudo().search([
+            folders = request.env['joplin.folder'].search([
                 '|', ('name', 'ilike', query),
                 ('joplin_id', 'ilike', query),
                 ('active', '=', True),
@@ -944,7 +950,7 @@ class JoplinApi(http.Controller):
             items = [_folder_to_dict(f, fields) for f in folders]
             return self._paginated_response(items, False)
         elif search_type == 'tag':
-            tags = request.env['joplin.tag'].sudo().search([
+            tags = request.env['joplin.tag'].search([
                 '|', ('name', 'ilike', query),
                 ('joplin_id', 'ilike', query),
                 ('active', '=', True),

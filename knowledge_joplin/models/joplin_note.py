@@ -176,12 +176,11 @@ class JoplinNote(models.Model):
             'note_id': note.id,
             'joplin_id': self._generate_joplin_id(),
             'item_id': note.joplin_id,
-            'item_updated_time': now if 'now' in dir() else datetime.utcnow(),
+            'item_updated_time': datetime.utcnow(),
             'title_diff': title_diff_str,
             'body_diff': body_diff_str,
             'metadata_diff': old_metadata,
         })
-        return ''
 
     @api.model
     def _get_diff_lib(self):

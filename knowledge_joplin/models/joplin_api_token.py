@@ -31,6 +31,6 @@ class JoplinApiToken(models.Model):
     @api.model
     def authenticate(self, token):
         if not token or len(token) != 32:
-            return self.env.user
+            return self.env['res.users']
         record = self.search([('token', '=', token), ('active', '=', True)], limit=1)
-        return record.user_id if record else self.env.user
+        return record.user_id if record else self.env['res.users']
