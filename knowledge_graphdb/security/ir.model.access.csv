@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_graph_model_user,knowledge.graph.model.user,model_knowledge_graph_model,group_graph_user,1,1,1,1
+access_graph_model_admin,knowledge.graph.model.admin,model_knowledge_graph_model,group_graph_admin,1,1,1,1

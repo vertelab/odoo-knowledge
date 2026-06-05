@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Form View -->
+        <record id="view_graph_model_form" model="ir.ui.view">
+            <field name="name">knowledge.graph.model.form</field>
+            <field name="model">knowledge.graph.model</field>
+            <field name="arch" type="xml">
+                <form string="Graph Model Configuration">
+                    <header>
+                        <button name="action_sync_now" string="Sync Now"
+                                type="object" invisible="state != 'active'"
+                                class="btn-primary"/>
+                        <button name="action_update_graph_db" string="Update Graph DB"
+                                type="object" invisible="state != 'active'"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="active,inactive"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="model_id" placeholder="Select model..."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="user_id"
+                                       groups="knowledge_graphdb.group_graph_admin"
+                                       options="{'no_create': True}"/>
+                                <field name="target_queue"/>
+                                <field name="domain"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="record_count" widget="statinfo"/>
+                                <field name="graph_status"/>
+                                <field name="state"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Key Fields" name="key_fields">
+                                <field name="key_field_ids">
+                                    <list editable="bottom" multi_edit="1">
+                                        <field name="name"/>
+                                        <field name="field_description"/>
+                                        <field name="ttype"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- List View -->
+        <record id="view_graph_model_list" model="ir.ui.view">
+            <field name="name">knowledge.graph.model.list</field>
+            <field name="model">knowledge.graph.model</field>
+            <field name="arch" type="xml">
+                <list string="Graph Model Configurations"
+                      multi_edit="1"
+                      default_order="sequence, id desc"
+                      decoration-danger="state == 'inactive'"
+                      decoration-info="state == 'active'">
+                    <field name="sequence" widget="handle"/>
+                    <field name="model_id"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="target_queue"/>
+                    <field name="domain" optional="hide"/>
+                    <field name="record_count"/>
+                    <field name="state" widget="badge"
+                           decoration-success="state == 'active'"
+                           decoration-warning="state == 'inactive'"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_graph_model_search" model="ir.ui.view">
+            <field name="name">knowledge.graph.model.search</field>
+            <field name="model">knowledge.graph.model</field>
+            <field name="arch" type="xml">
+                <search string="Search Configurations">
+                    <field name="model_id"/>
+                    <field name="target_queue"/>
+                    <field name="user_id"/>
+                    <filter string="Active" name="filter_active"
+                            domain="[('state', '=', 'active')]"/>
+                    <filter string="Inactive" name="filter_inactive"
+                            domain="[('state', '=', 'inactive')]"/>
+                    <separator/>
+                    <filter string="My Configs" name="filter_mine"
+                            domain="[('user_id', '=', user.id)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Model" name="group_model"
+                                context="{'group_by': 'model_id'}"/>
+                        <filter string="State" name="group_state"
+                                context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_graph_model_kanban" model="ir.ui.view">
+            <field name="name">knowledge.graph.model.kanban</field>
+            <field name="model">knowledge.graph.model</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="color"/>
+                    <field name="model_id"/>
+                    <field name="target_queue"/>
+                    <field name="user_id"/>
+                    <field name="record_count"/>
+                    <field name="state"/>
+                    <field name="graph_status"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_global_click"
+                                 t-att-class="kanban_color(record.color.raw_value)">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_title">
+                                        <field name="model_id"/>
+                                    </div>
+                                    <div class="o_kanban_card_subtitle">
+                                        <field name="target_queue"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <div class="o_row">
+                                        <span class="o_stat_text">
+                                            <field name="record_count"/>
+                                        </span>
+                                        <span>records</span>
+                                    </div>
+                                    <div class="o_row" t-if="record.user_id.raw_value">
+                                        <field name="user_id"/>
+                                    </div>
+                                    <div class="o_row">
+                                        <field name="state" widget="badge"/>
+                                    </div>
+                                    <div class="o_row" t-if="record.graph_status.raw_value">
+                                        <field name="graph_status"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Window Action -->
+        <record id="action_graph_model" model="ir.actions.act_window">
+            <field name="name">Graph Configurations</field>
+            <field name="res_model">knowledge.graph.model</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="view_graph_model_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Graph Model Configuration
+                </p>
+            </field>
+        </record>
+
+        <!-- Server Actions -->
+        <record id="action_server_sync_graph_model" model="ir.actions.server">
+            <field name="name">Sync to Graph DB</field>
+            <field name="model_id" ref="model_knowledge_graph_model"/>
+            <field name="binding_model_id" ref="model_knowledge_graph_model"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+for config in records:
+    config.action_sync_now()
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_graph_root" name="Graph DB"
+                  sequence="90"
+                  groups="knowledge_graphdb.group_graph_admin"/>
+
+        <menuitem id="menu_graph_model"
+                  name="Configurations"
+                  parent="menu_graph_root"
+                  action="action_graph_model"
+                  sequence="10"/>
+
+    </data>
+</odoo>
