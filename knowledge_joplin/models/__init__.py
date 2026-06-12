@@ -6,3 +6,4 @@ from . import joplin_resource
 from . import joplin_revision
 from . import joplin_event
 from . import res_users
+from . import joplin_item

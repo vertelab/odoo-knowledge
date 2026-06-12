@@ -22,3 +22,5 @@ access_joplin_event_all,joplin.event.all,model_joplin_event,group_joplin_user_al
 access_joplin_event_admin,joplin.event.admin,model_joplin_event,group_joplin_admin,1,1,1,1
 access_joplin_api_token_user,joplin.api.token.user,model_joplin_api_token,base.group_user,1,1,1,1
 access_joplin_api_token_system,joplin.api.token.system,model_joplin_api_token,base.group_system,1,1,1,1
+access_joplin_item_user,joplin.item.user,model_joplin_item,base.group_user,1,1,1,1
+access_joplin_item_system,joplin.item.system,model_joplin_item,base.group_system,1,1,1,1
