@@ -21,6 +21,11 @@
         (Odoo Enterprise). Kunskapsmodellen här är `joplin.note` från
         knowledge_joplin. Bryggan indexerar den.
 
+        VERIFIERAD 2026-09-24 (okf_kn): installerar rent tillsammans med
+        knowledge_joplin (c9729f7). En anteckning blir ett koncept med
+        typen joplin_note, titeln som sammanfattning, kroppen ur body, och
+        joplin_tag_ids som taggar.
+
         Modellen äger sina KÄLLOR; mixinen i ai_agent_core äger fälten
         och flaggan. Ingen domän nämns i kärnan.
     """,
