@@ -24,7 +24,8 @@
 
 {
     'name': "Knowledge: Intelligence Studies",
-    'version': '1.0',
+    'summary': "Adds templates and articles for intelligence studies.",
+    'version': '18.0.1.0.0',
     'author': "Vertel AB",
     'category': 'Tools',
     'author': 'Vertel AB',
@@ -32,22 +33,29 @@
     'images': ['static/description/banner.png'], # 560x280
     'license': 'AGPL-3',
 
-    'description': """
-        Intelligence Studies offers a structured and automated approach to collecting, 
-        analyzing, and reporting critical information that supports strategic decision-making. 
-        
-        By leveraging specialized AI agents, it continuously monitors external macro trends 
-        through PESTLE analysis, examines market dynamics and competitive forces using Porter’s 
-        Five Forces, and evaluates internal strengths, weaknesses, opportunities, and 
-        threats via SWOT analysis. 
-        
-        This comprehensive process delivers regular, data-driven 
-        insights that reduce manual effort while providing a dynamic and up-to-date overview 
-        of both the external environment and the organization’s internal strategic position. 
-        
-        The result is a powerful tool for proactive planning and informed decision-making 
-        based on relevant and timely intelligence.
-        """,
+    'description': '''
+Intelligence Studies
+====================
+
+    Intelligence Studies offers a structured and automated approach to collecting, 
+            analyzing, and reporting critical information that supports strategic decision-making.
+
+    By leveraging specialized AI agents, it continuously monitors external macro trends 
+            through PESTLE analysis, examines market dynamics and competitive forces using Porter’s 
+            Five Forces, and evaluates internal strengths, weaknesses, opportunities, and 
+            threats via SWOT analysis.
+
+    This comprehensive process delivers regular, data-driven 
+            insights that reduce manual effort while providing a dynamic and up-to-date overview 
+            of both the external environment and the organization’s internal strategic position.
+
+    The result is a powerful tool for proactive planning and informed decision-making 
+            based on relevant and timely intelligence.
+
+    Features:
+
+        - Demo Data: Ships pre-configured demo data for the industry.
+    ''',
     'depends': ['ai_agent','project_task_swot','document_page'],
     'data': [
         'data/quest_module_opportunities.xml', 
