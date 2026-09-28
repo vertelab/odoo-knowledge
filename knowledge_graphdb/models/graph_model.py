@@ -13,7 +13,16 @@ class GraphModelConfig(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     user_id = fields.Many2one('res.users', string='User', index=True,
         help='Empty = global configuration for admin use')
+    # Odoo 18 forbids ondelete='restrict' when the comodel is an ir.* model
+    # (see fields.py: "the 'restrict' mode is not supported for this type of
+    # field as comodel"). Because the field is required=True, Odoo would
+    # otherwise default it to 'restrict' and abort the registry with:
+    #   ValueError: Field model_id of model knowledge.graph.model is defined
+    #   as ondelete='restrict' while having ir.model as comodel
+    # 'cascade' is the correct policy here: a graph config is meaningless
+    # without its model.
     model_id = fields.Many2one('ir.model', string='Model', required=True,
+        ondelete='cascade',
         domain="[('model', 'not in', ('knowledge.graph.model',))]")
     domain = fields.Char(string='Domain Filter', default='[]',
         help='Odoo domain expression to filter records for sync')

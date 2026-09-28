@@ -91,8 +91,18 @@
                     <filter string="Inactive" name="filter_inactive"
                             domain="[('state', '=', 'inactive')]"/>
                     <separator/>
+                    <!-- Odoo 18 validates search views for inconsistent access
+                         rights. A filter whose domain uses `user` (or `uid`)
+                         must be restricted with groups=, otherwise the view
+                         is rejected with:
+                           "Inkonsekventa åtkomsträttigheter ... elementen
+                           <filter> ... är beroende av fältet user som inte är
+                           tillgängligt"
+                         Both groups below can read the model, so the filter
+                         is safe for either. -->
                     <filter string="My Configs" name="filter_mine"
-                            domain="[('user_id', '=', user.id)]"/>
+                            domain="[('user_id', '=', uid)]"
+                            groups="knowledge_graphdb.group_graph_user"/>
                     <group expand="0" string="Group By">
                         <filter string="Model" name="group_model"
                                 context="{'group_by': 'model_id'}"/>
@@ -109,7 +119,12 @@
             <field name="model">knowledge.graph.model</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="color"/>
+                    <!-- No 'color' field on this model — referencing it made
+                         Odoo 18 reject the view with:
+                           ParseError: Fel vid validering av vy ...
+                           Fältet "color" finns inte i modellen
+                           "knowledge.graph.model"
+                         Use the state field for the visual cue instead. -->
                     <field name="model_id"/>
                     <field name="target_queue"/>
                     <field name="user_id"/>
@@ -119,7 +134,7 @@
                     <templates>
                         <t t-name="card">
                             <div class="oe_kanban_global_click"
-                                 t-att-class="kanban_color(record.color.raw_value)">
+                                 t-att-class="record.state.raw_value === 'inactive' ? 'o_kanban_record_inactive' : ''">
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_title">
                                         <field name="model_id"/>

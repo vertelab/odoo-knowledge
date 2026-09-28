@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <!-- Testdata: lektioner i kursen "Kunskap &amp;amp; anteckningar i Vertel".
+         Laddas ENDAST mot *_test-databaser (repo_apply: –without-demo=all
+         för produktion). Ersätts av riktigt innehåll i Fas 5. -->
+    <record id="slide_knowledge_0" model="slide.slide">
+        <field name="name">Översikt: kunskapsbasen</field>
+        <field name="channel_id" ref="slide_channel_knowledge"/>
+        <field name="slide_category">article</field>
+        <field name="is_published" eval="True"/>
+        <field name="description">&lt;p&gt;Joplin-anteckningar, dokument-pages och sökning.&lt;/p&gt;</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="slide_knowledge_1" model="slide.slide">
+        <field name="name">Skriva och strukturera</field>
+        <field name="channel_id" ref="slide_channel_knowledge"/>
+        <field name="slide_category">article</field>
+        <field name="is_published" eval="True"/>
+        <field name="description">&lt;p&gt;Mallar, kategorier, taggar och kopplingar.&lt;/p&gt;</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="slide_knowledge_2" model="slide.slide">
+        <field name="name">Kunskapsgraf och AI</field>
+        <field name="channel_id" ref="slide_channel_knowledge"/>
+        <field name="slide_category">article</field>
+        <field name="is_published" eval="True"/>
+        <field name="description">&lt;p&gt;Hur AI-assistenten använder er kunskap som källa.&lt;/p&gt;</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="slide_knowledge_3" model="slide.slide">
+        <field name="name">Publicera och granska</field>
+        <field name="channel_id" ref="slide_channel_knowledge"/>
+        <field name="slide_category">article</field>
+        <field name="is_published" eval="True"/>
+        <field name="description">&lt;p&gt;Godkännandeflöde, versioner och arkivering.&lt;/p&gt;</field>
+        <field name="sequence">40</field>
+    </record>
+
+</data></odoo>
