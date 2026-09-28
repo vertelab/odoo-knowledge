@@ -141,14 +141,14 @@
          y="-100.83463"
          style="fill:#000000;fill-opacity:1;stroke-width:1"></tspan></text><text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="520.44727"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="518.0"
        y="91.879654"
        id="text2035"
        inkscape:export-xdpi="92"
        inkscape:export-ydpi="92"><tspan
          sodipodi:role="line"
-         x="520.44727"
+         x="518.0"
          y="91.879654"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;writing-mode:lr-tb;text-anchor:end;stroke-width:1px"
          id="tspan18173">Document Publish</tspan></text><flowRoot
@@ -181,11 +181,4 @@
          y="-94.324753"
          x="178.43298"
          id="tspan843-0"
-         sodipodi:role="line"></tspan></text><image
-       width="20.737921"
-       height="30.692123"
-       preserveAspectRatio="none"
-       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAABKCAYAAAD5TgcdAAAABHNCSVQICAgIfAhkiAAAAqlJREFU aIHtm79u1EAQxr87LkkBDdIV6U6pKI4OJCiuSovEI0QpknR5iHRIKdNS0ECNREVBh6h5AJQiXZBI nT86nOJYsJzb2ZmdmbVx7idZOsmzM9/s7Nq7tg+wZwqgIo4LAGsOcdXsgBbOOTa1IgaKtpU2eIQs TTmNvBJoItImMS6VQJ3fAB5wDIcMmwO0kwSw0FdBNwUA5E/ecwDrS/w9Ufg8pYRSmUqrkNtrJnFi Q4vr/PUfx5rSh/ZfmPbXXMdXSJf5h0SpEM4wmzUbLevJVDXUE4+JSEdTVFeSCLD11OfId26jgqRi /tVfN6SybyOJOkltIaP9lKFSRPOQspcyCCK9qsERzfVPakwtUbTV4LTnVugZxyh2vfbgqyIWqfMs ZeCINB6pM3byualknrhlC82Ybf14T50sxUwQ9w0IvW0n0tRA8QoRvZyNVUlSu8GX1MlYRaYm0myJ af00AHAJYCPSsO2lSZPY0BsNATwtqcSJeWqJ8r9UJLlEKX31oiC1hERuCgjR8Jg4NwZ6uB/ROPKG in0SfvRyzw4AL5SOLVF3Kue5kjep+B+sHB1ZqhbGFndkG1WZ5MZNjbPSkz87nvbhwzxxXoKq0zj3 kbGyPYfY6jtgVnnv+UL5Pjbwzw6mYdvCt7RkHusxE59d27PXeecdIDYEkg+aBb6KLIUsg8f8fJQ6 sh7XVnNOrKvLc0REm4nsWjobWTpDizvJ3nwdJB1aJXuc9YYqYHln96AXd3YR9zaRhy4qluP2KWCg F1etb0L7YqyuWl2jN4mwvqmt8ROLV8Ql6MVV6xfox1B3KPWJq5TVxkrClrkKA1ZDq2vkJuLZAcX+ CFPHeohl67F8UZOblIkGyyEyyWjT9ocIUT6D9zKzAvDIMrBXj5R+9+jOW/yrwKFnoFthBGd20UMj MwAAAABJRU5ErkJggg== "
-       id="image307"
-       x="292.89343"
-       y="126.32227" /></g></svg>
+         sodipodi:role="line"></tspan></text></g></svg>
