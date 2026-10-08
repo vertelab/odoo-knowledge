@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2023 Vertel AB (<robin.calvin@vertel.se>)
+#    Copyright (C) 2023 Vertel Sverige AB (<robin.calvin@vertel.se>)
 #    All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -23,21 +23,11 @@
 
 {
     'name': 'Knowledge: Forum Website',
-    'version': '18.0.1.0.0',
-    'summary': 'Knowledge Forum Website.',
+    'version': '1.0',
+    'summary': 'Knowledge Forum Website',
     'category': 'Knowledge',
-    'description': '''
-Forum Website
-=============
-
-    Knowledge Forum Website.
-
-    Features:
-
-        - Web integration: Exposes HTTP endpoints for external systems.
-        - UI Integration: Extends 2 view(s) in the Odoo interface.
-    ''',
-    'author': 'Vertel AB',
+    'description': """ """,
+    'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_forum_website',
     'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'AGPL-3',
