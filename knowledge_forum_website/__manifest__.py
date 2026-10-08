@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2023 Vertel AB (<robin.calvin@vertel.se>)
+#    Copyright (C) 2023 Vertel Sverige AB (<robin.calvin@vertel.se>)
 #    All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@
     'summary': 'Knowledge Forum Website',
     'category': 'Knowledge',
     'description': """ """,
-    'author': 'Vertel AB',
+    'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_forum_website',
     'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'AGPL-3',
