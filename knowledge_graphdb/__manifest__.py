@@ -15,7 +15,7 @@ Graph Database Bridge
         - UI Integration: Extends 2 view(s) in the Odoo interface.
         - Extends Odoo: Builds on knowledge.graph.model, knowledge.graph.publisher.
     ''',
-    'author': 'Vertel AB',
+    'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_graphdb',
     'license': 'AGPL-3',
     # 'base_automation' (Odoo core) owns the base.automation model used by

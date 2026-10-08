@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2025  Vertel AB  info@vertel.se
+#    Copyright (C) 2025  Vertel Sverige AB  info@vertel.se
 #    All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ Document Law
         - UI Integration: Extends 4 view(s) in the Odoo interface.
         - Extends Odoo: Builds on document.law, mail.thread, rss_titel.
     ''',
-    'author': 'Vertel AB',
+    'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se/apps/odoo-knowledge/document_law',
     'images': ['static/description/banner.png'], # 560x280
     'license': 'AGPL-3',

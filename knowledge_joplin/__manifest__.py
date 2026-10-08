@@ -18,7 +18,7 @@ Joplin Backend
         - UI Integration: Extends 7 view(s) in the Odoo interface.
         - Extends Odoo: Builds on joplin.api.token, joplin.event, joplin.folder, joplin.item.
     ''',
-    'author': 'Vertel AB',
+    'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_joplin',
     'license': 'AGPL-3',
     'depends': ['mail', 'web'],

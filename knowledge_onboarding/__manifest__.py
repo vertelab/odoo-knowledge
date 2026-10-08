@@ -6,7 +6,7 @@
     'description': """
 Lär dig bygga en kunskapsbas, skriva anteckningar och hitta bland allt ni vet.
 """,
-    'author': 'Vertel AB',
+    'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se',
     'license': 'LGPL-3',
     'category': 'Website/eLearning',
