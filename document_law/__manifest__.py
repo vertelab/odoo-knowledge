@@ -23,21 +23,14 @@
 #
 {
     'name': 'Knowledge: Document Law',
-    'version': '18.0.1.0.0',
-    'summary': "Adds legal documents with revision control.",
+    'version': '1.0',
+    'summary': """
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.odoo.com""",
     'category': '', # Technical Settings|Localization|Payroll Localization|Account Charts|User types|Invoicing|Sales|Human Resources|Operations|Marketing|Manufacturing|Website|Theme|Administration|Appraisals|Sign|Helpdesk|Administration|Extra Rights|Other Extra Rights|
-    'description': '''
-Document Law
-============
-
-    Adds legal documents with revision control.
-
-    Features:
-
-        - Automation: Scheduled jobs: Creates RSS Law Records, Creates RSS Law Records.
-        - UI Integration: Extends 4 view(s) in the Odoo interface.
-        - Extends Odoo: Builds on document.law, mail.thread, rss_titel.
-    ''',
+    'description': """
+        Long description of module's purpose
+    """,
     'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se/apps/odoo-knowledge/document_law',
     'images': ['static/description/banner.png'], # 560x280
