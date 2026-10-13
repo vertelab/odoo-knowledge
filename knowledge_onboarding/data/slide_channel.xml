@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Kunskap & anteckningar i Vertel — onboardingskurs
+         4 sektioner, 12 slides (7 article, 1 infographic, 4 quiz)
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <record id="slide_channel_knowledge" model="slide.channel">
+        <field name="name">Kunskap &amp; anteckningar i Vertel</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="enroll">public</field>
+        <field name="channel_type">training</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">latest</field>
+        <field name="is_published" eval="True"/>
+        <field name="description">
+Kunskap som bara finns i någons huvud försvinner när personen slutar, byter
+roll eller är på semester. Den här kursen handlar om att skriva ner det ni vet
+— på ett sätt som går att hitta igen.
+
+Vi går igenom hur du strukturerar en kunskapsbas, hur du skriver anteckningar
+som är användbara om ett år, hur anteckningarna kan synkas mot mobilen, och hur
+kunskapen knyts ihop så att den blir sökbar.
+
+        </field>
+    </record>
+
+    </data>
+</odoo>
