@@ -132,7 +132,9 @@ def prop_to_joplin(key, value):
 
 def prop_to_odoo(key, raw):
     if key in _TIMESTAMP_KEYS:
-        return iso_to_ts(raw)
+        # Odoo Datetime fields take a datetime or False — never a raw ms int.
+        # Joplin sends 0 (or '') for unset timestamps.
+        return from_ms(iso_to_ts(raw))
     if key in _BOOL_KEYS:
         return raw in ('1', 'true', 'True', 1, True)
     if key in _FLOAT_KEYS:
@@ -340,12 +342,13 @@ def _apply_fields(record, item, field_map, special_parent=False):
         if special_parent and jkey == 'parent_id':
             continue  # handled by caller
         vals[okey] = prop_to_odoo(jkey, raw)
-    # timestamps must be naive datetimes for Odoo Datetime fields
+    # prop_to_odoo already normalizes timestamps to naive datetimes/False;
+    # guard again in case a caller bypasses it.
     for okey in ('created_time', 'updated_time', 'user_created_time',
                  'user_updated_time', 'deleted_time', 'todo_due',
                  'todo_completed', 'blob_updated_time'):
-        if okey in vals and vals[okey]:
-            vals[okey] = from_ms(vals[okey]) if isinstance(vals[okey], (int, float)) else vals[okey]
+        if okey in vals and isinstance(vals[okey], (int, float)):
+            vals[okey] = from_ms(vals[okey])
     return vals
 
 
