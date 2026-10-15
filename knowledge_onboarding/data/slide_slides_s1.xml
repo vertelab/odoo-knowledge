@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SEKTION 1: Varför en kunskapsbas
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <record id="slide_category_kb_s1" model="slide.slide">
+        <field name="name">1. Varför en kunskapsbas</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="sequence">0</field>
+    </record>
+
+    <record id="slide_kb_s1_01" model="slide.slide">
+        <field name="name">Kunskap som försvinner</field>
+        <field name="sequence">10</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.25</field>
+        <field name="html_content" type="html">
+<section class="s_cover parallax o_cc o_cc5 pt200 pb200" data-scroll-background-ratio="1">
+    <div class="container">
+        <h1 class="display-3-fs" style="text-align: center;">Kunskap som försvinner</h1>
+        <p class="lead" style="text-align: center;">Det du vet men inte skrivit ner finns bara så länge du minns det.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Problemet</h2>
+        <p>I de flesta verksamheter finns en stor mängd kunskap som aldrig skrivits ner. Hur man gör när systemet krånglar. Varför beslutet togs som det togs. Vilken kund som kräver en särskild rutin.</p>
+        <p>Det fungerar — så länge personen som vet är kvar. Men vid semester, sjukskrivning eller uppsägning försvinner kunskapen. Den som tar över får börja om från noll.</p>
+    </div>
+</section>
+
+<section class="s_features pt32 pb64">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-user-times mb-3 rounded bg-o-color-3"/>
+                <div class="overflow-hidden">
+                    <h3 class="h5-fs">När någon slutar</h3>
+                    <p>Kunskapen går inte att ersätta med en överlämning på två timmar.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-repeat mb-3 rounded bg-o-color-3"/>
+                <div class="overflow-hidden">
+                    <h3 class="h5-fs">När samma fel upprepas</h3>
+                    <p>Problemet löstes förra året — men ingen minns hur.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-clock-o mb-3 rounded bg-o-color-3"/>
+                <div class="overflow-hidden">
+                    <h3 class="h5-fs">När tiden inte räcker</h3>
+                    <p>Att lära upp någon från grunden tar veckor som ingen har.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="s_call_to_action o_cc o_cc5 pt48 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h3>Skriv ner det medan du minns</h3>
+                <p class="lead">Den bästa tiden att dokumentera är precis efter att du löst problemet — då har du detaljerna färska. Inte nästa kvartal, när du glömt hälften.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">Varför en kunskapsbas behövs: kunskap som bara finns i någons huvud försvinner vid semester, sjukskrivning eller uppsägning.</field>
+    </record>
+
+    <record id="slide_kb_s1_02" model="slide.slide">
+        <field name="name">Vad kunskapsbasen innehåller</field>
+        <field name="sequence">20</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.25</field>
+        <field name="html_content" type="html">
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Tre sorters innehåll</h2>
+        <p>En kunskapsbas blandar inte ihop allt. Det finns tre typer av innehåll, och de har olika syften.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb64">
+    <div class="container s_allow_columns">
+        <table class="table table-bordered">
+            <thead>
+                <tr><th>Typ</th><th>Syfte</th><th>Exempel</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Rutiner</strong></td>
+                    <td>Steg-för-steg som ska följas likadant varje gång</td>
+                    <td>”Så här lägger du upp en ny kund”</td>
+                </tr>
+                <tr>
+                    <td><strong>Referens</strong></td>
+                    <td>Fakta du slår upp när du behöver</td>
+                    <td>”Vilka portar används för IMAP”</td>
+                </tr>
+                <tr>
+                    <td><strong>Erfarenheter</strong></td>
+                    <td>Vad som hände och varför — kontext och lärdomar</td>
+                    <td>”Varför vi bytte backup-system 2026”</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="small text-muted">Den tredje typen är den mest försummade — och ofta den mest värdefulla. Den förklarar <em>varför</em>, inte bara <em>hur</em>.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb64">
+    <div class="container s_allow_columns">
+        <h2>Var det hör hemma</h2>
+        <p>Anteckningar och kunskapsartiklar hör i kunskapsbasen. Dokument — avtal, fakturor, ritningar — hör i dokumenthanteringen. Uppgifter och ärenden hör i projektmodulen.</p>
+        <p>Att hålla isär dem gör att varje system förblir sökbart. Lägger du allt på samma ställe blir ingenting lätt att hitta.</p>
+    </div>
+</section>
+        </field>
+        <field name="description">Kunskapsbasens tre innehållstyper — rutiner, referens och erfarenheter — och var gränsen går mot dokument och uppgifter.</field>
+    </record>
+
+    <record id="slide_kb_s1_03" model="slide.slide">
+        <field name="name">Översikt — kunskapens väg</field>
+        <field name="sequence">30</field>
+        <field name="slide_category">infographic</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.10</field>
+        <field name="description">Flödesschema: hur en anteckning går från mobilen via synkronisering in i kunskapsbasen, och hur den sedan hittas av kollegor och AI.</field>
+    </record>
+
+    <record id="slide_kb_s1_04" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Grunderna</field>
+        <field name="sequence">40</field>
+        <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Testa dina kunskaper om varför en kunskapsbas behövs och vad den innehåller.</field>
+    </record>
+
+    <record id="slide_kb_s1_04_q1" model="slide.question">
+        <field name="question">Varför är det viktigt att skriva ner kunskap?</field>
+        <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_kb_s1_04"/>
+    </record>
+    <record id="slide_kb_s1_04_q1_a1" model="slide.answer">
+        <field name="text_value">Annars försvinner den när personen är borta</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Semester, sjukskrivning eller uppsägning — kunskapen ska finnas kvar ändå.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q1"/>
+    </record>
+    <record id="slide_kb_s1_04_q1_a2" model="slide.answer">
+        <field name="text_value">För att det är ett krav från ledningen</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — poängen är praktisk, inte formell.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q1"/>
+    </record>
+    <record id="slide_kb_s1_04_q1_a3" model="slide.answer">
+        <field name="text_value">För att fylla ut systemet</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — mängden innehåll är inte målet.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q1"/>
+    </record>
+
+    <record id="slide_kb_s1_04_q2" model="slide.question">
+        <field name="question">Vilken typ av innehåll förklarar VARFÖR något gjordes?</field>
+        <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_kb_s1_04"/>
+    </record>
+    <record id="slide_kb_s1_04_q2_a1" model="slide.answer">
+        <field name="text_value">Rutiner</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — rutiner beskriver hur, inte varför.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q2"/>
+    </record>
+    <record id="slide_kb_s1_04_q2_a2" model="slide.answer">
+        <field name="text_value">Referens</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — referens är uppslagsfakta.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q2"/>
+    </record>
+    <record id="slide_kb_s1_04_q2_a3" model="slide.answer">
+        <field name="text_value">Erfarenheter</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Erfarenhetsanteckningar bevarar kontext och lärdomar — ofta det mest värdefulla.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q2"/>
+    </record>
+
+    <record id="slide_kb_s1_04_q3" model="slide.question">
+        <field name="question">Var hör ett signerat avtal hemma?</field>
+        <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_kb_s1_04"/>
+    </record>
+    <record id="slide_kb_s1_04_q3_a1" model="slide.answer">
+        <field name="text_value">I kunskapsbasen</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — kunskapsbasen är för anteckningar och artiklar.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q3"/>
+    </record>
+    <record id="slide_kb_s1_04_q3_a2" model="slide.answer">
+        <field name="text_value">I dokumenthanteringen</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Dokument hör i dokumenthanteringen — det håller båda systemen sökbara.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q3"/>
+    </record>
+    <record id="slide_kb_s1_04_q3_a3" model="slide.answer">
+        <field name="text_value">I projektmodulen</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — projektmodulen är för uppgifter och ärenden.</field>
+        <field name="question_id" ref="slide_kb_s1_04_q3"/>
+    </record>
+
+    </data>
+</odoo>
