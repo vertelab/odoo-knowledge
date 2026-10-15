@@ -40,6 +40,12 @@
                         <filter name="group_active" string="Active/Trashed"
                                 context="{'group_by': 'active'}"/>
                     </group>
+                    <searchpanel>
+                        <field name="folder_id" icon="fa-folder" limit="0" enable_counters="1"/>
+                        <field name="tag_ids" icon="fa-tags" limit="0" select="multi"
+                               enable_counters="1"/>
+                        <field name="user_id" icon="fa-user" limit="20" enable_counters="1"/>
+                    </searchpanel>
                 </search>
             </field>
         </record>

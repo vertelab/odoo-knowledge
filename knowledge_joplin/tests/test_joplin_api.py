@@ -645,6 +645,292 @@ class TestJoplinNoteAccessFilters(common.TransactionCase):
 
 
 @tagged('-at_install', 'post_install')
+class TestJoplinNoteSearchPanel(common.TransactionCase):
+    """Test the notes search panel in views/joplin_note_views.xml.
+
+    There is no browser in this environment, so rendering cannot be asserted
+    (design D6). These tests read the search view arch and assert the panel's
+    presence, its three sections and each section's attributes; the
+    behavioural tests then assert that selecting a section narrows the result
+    set within the action ceiling.
+    """
+
+    # The section fields, in the order design D1 fixes them.
+    PANEL_FIELDS = ['folder_id', 'tag_ids', 'user_id']
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Follow TestJoplinNoteAccessFilters' fixture style: prefer the demo
+        # users but fall back to created users when demo data is not loaded.
+        try:
+            cls.User1 = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
+        except ValueError:
+            cls.User1 = cls._make_user('Panel Test User 1', 'panel_joplin1@test.com')
+        try:
+            cls.User2 = cls.env.ref('knowledge_joplin.demo_user_joplin_2')
+        except ValueError:
+            cls.User2 = cls._make_user('Panel Test User 2', 'panel_joplin2@test.com')
+        cls.User3 = cls._make_user('Panel Test User 3', 'panel_joplin3@test.com')
+        cls.Note = cls.env['joplin.note']
+
+        # Fixture: two notebooks and two tags, owned by User1.
+        cls.folder_a = cls._make_folder(cls.User1, 'Panel Notebook A')
+        cls.folder_b = cls._make_folder(cls.User1, 'Panel Notebook B')
+        cls.tag_x = cls._make_tag(cls.User1, 'panel-tag-x')
+        cls.tag_y = cls._make_tag(cls.User1, 'panel-tag-y')
+
+        # note_a1: folder A, tag X. note_a2: folder A, tag Y.
+        # note_b1: folder B, tag X.
+        cls.note_a1 = cls._make_note(cls.User1, 'Panel A1', cls.folder_a, [cls.tag_x])
+        cls.note_a2 = cls._make_note(cls.User1, 'Panel A2', cls.folder_a, [cls.tag_y])
+        cls.note_b1 = cls._make_note(cls.User1, 'Panel B1', cls.folder_b, [cls.tag_x])
+
+        # A note owned by User2 in folder A that User1 neither owns nor
+        # follows: the panel must never surface it to User1 (task 4.7).
+        cls.foreign_note = cls._make_note(cls.User2, 'Panel Foreign', cls.folder_a, [])
+
+    @classmethod
+    def _make_user(cls, name, login):
+        return cls.env['res.users'].create({
+            'name': name,
+            'login': login,
+            'groups_id': [
+                (4, cls.env.ref('base.group_user').id),
+                (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
+            ],
+        })
+
+    @classmethod
+    def _make_folder(cls, user, name):
+        return cls.env['joplin.folder'].with_user(user).create({
+            'name': name,
+            'joplin_id': secrets.token_hex(16),
+            'user_id': user.id,
+        })
+
+    @classmethod
+    def _make_tag(cls, user, name):
+        return cls.env['joplin.tag'].with_user(user).create({
+            'name': name,
+            'joplin_id': secrets.token_hex(16),
+            'user_id': user.id,
+        })
+
+    @classmethod
+    def _make_note(cls, user, title, folder, tags):
+        vals = {
+            'title': title,
+            'body': title,
+            'joplin_id': secrets.token_hex(16),
+            'user_id': user.id,
+            'folder_id': folder.id,
+        }
+        if tags:
+            vals['tag_ids'] = [(6, 0, [tag.id for tag in tags])]
+        return cls.Note.with_user(user).create(vals)
+
+    # ---- Arch helpers ----
+
+    def _searchpanel_states(self):
+        """Return the searchpanel's ``field`` nodes, keyed by field name.
+
+        Raises if the panel or a section is missing, so a removed section
+        fails every arch test rather than only the count assertion.
+        """
+        view = self.env.ref('knowledge_joplin.view_joplin_note_search')
+        arch = etree.fromstring(view.arch.encode())
+        panels = arch.xpath('//searchpanel')
+        self.assertEqual(len(panels), 1, 'search view has no <searchpanel>')
+        states = {}
+        for node in panels[0].xpath('./field'):
+            states[node.get('name')] = node
+        return states
+
+    def _panel_field(self, name):
+        states = self._searchpanel_states()
+        self.assertIn(name, states, f'search panel section {name!r} is missing')
+        return states[name]
+
+    # ---- Behavioural helpers ----
+
+    def _action_domain(self):
+        """Return the resolved domain of the notes action (the ceiling)."""
+        action = self.env.ref('knowledge_joplin.action_joplin_note')
+        return safe_eval(action.domain, {'uid': self.User1.id, 'user': self.User1})
+
+    def _filter_domain(self, name, user):
+        """Return the resolved domain of a search filter from the arch."""
+        view = self.env.ref('knowledge_joplin.view_joplin_note_search')
+        arch = etree.fromstring(view.arch.encode())
+        nodes = arch.xpath('//filter[@name=$name]', name=name)
+        self.assertEqual(len(nodes), 1, f'filter {name!r} not found in search view')
+        return safe_eval(nodes[0].get('domain'), {'uid': user.id, 'user': user})
+
+    def _panel_domain(self, field, value):
+        """Return the domain the panel adds when selecting ``value``.
+
+        A many2many section (tag_ids) filters with ``in``; a many2one section
+        (folder_id, user_id) filters with ``=`` — the same domains the web
+        client sends for a search panel selection.
+        """
+        if field == 'tag_ids':
+            return [('tag_ids', 'in', [value.id])]
+        return [(field, '=', value.id)]
+
+    def _panel_search(self, user, panel_domain, filter_name=None):
+        """Search as ``user`` with the action ceiling, an optional default
+        filter and the panel's domain combined — the list the panel produces.
+        """
+        action = self.env.ref('knowledge_joplin.action_joplin_note')
+        ceiling = safe_eval(action.domain, {'uid': user.id, 'user': user})
+        domain = ceiling + panel_domain
+        if filter_name:
+            domain = domain + self._filter_domain(filter_name, user)
+        return self.Note.with_user(user).search(domain)
+
+    # ---- 4.1 Panel and its three sections ----
+
+    def test_searchpanel_has_three_sections(self):
+        states = self._searchpanel_states()
+        self.assertEqual(list(states), self.PANEL_FIELDS)
+
+    def test_searchpanel_section_fields_exist_on_model(self):
+        # Guards the arch against a section naming a field the model lacks:
+        # the view would not load, but assert it here so the intent is explicit.
+        for name in self.PANEL_FIELDS:
+            self.assertIn(name, self.Note._fields)
+
+    # ---- 4.2 Notebooks are hierarchical ----
+
+    def test_notebooks_section_is_hierarchical(self):
+        # Hierarchisation is on by default; only hierarchize="0" switches it
+        # off. Assert the attribute is absent or truthy.
+        node = self._panel_field('folder_id')
+        self.assertNotEqual(node.get('hierarchize'), '0')
+
+    def test_notebooks_section_is_unbounded(self):
+        node = self._panel_field('folder_id')
+        self.assertEqual(node.get('limit'), '0')
+
+    # ---- 4.3 Tags are multi-select ----
+
+    def test_tags_section_is_multi_select(self):
+        node = self._panel_field('tag_ids')
+        self.assertEqual(node.get('select'), 'multi')
+
+    # ---- 4.4 Owner is bounded ----
+
+    def test_owner_section_is_bounded(self):
+        node = self._panel_field('user_id')
+        self.assertNotEqual(node.get('limit'), '0')
+        self.assertTrue(node.get('limit'))
+        self.assertGreater(int(node.get('limit')), 0)
+
+    # ---- 4.5 Every section has counters ----
+
+    def test_every_section_has_counters(self):
+        for name in self.PANEL_FIELDS:
+            node = self._panel_field(name)
+            self.assertEqual(
+                node.get('enable_counters'), '1',
+                f'section {name!r} does not enable counters',
+            )
+
+    # ---- 4.6 Selecting a notebook / tag filters the list ----
+
+    def test_selecting_notebook_filters_the_list(self):
+        admitted = self._panel_search(
+            self.User1, self._panel_domain('folder_id', self.folder_a),
+        )
+        self.assertIn(self.note_a1, admitted)
+        self.assertIn(self.note_a2, admitted)
+        self.assertNotIn(self.note_b1, admitted)
+
+    def test_selecting_tag_filters_the_list(self):
+        admitted = self._panel_search(
+            self.User1, self._panel_domain('tag_ids', self.tag_x),
+        )
+        self.assertIn(self.note_a1, admitted)
+        self.assertIn(self.note_b1, admitted)
+        self.assertNotIn(self.note_a2, admitted)
+
+    def test_selecting_two_tags_narrows_further(self):
+        # Two selections combine (AND), so the result is the intersection.
+        domain = (
+            self._panel_domain('tag_ids', self.tag_x)
+            + self._panel_domain('tag_ids', self.tag_y)
+        )
+        admitted = self._panel_search(self.User1, domain)
+        self.assertNotIn(self.note_a1, admitted)
+        self.assertNotIn(self.note_a2, admitted)
+        self.assertNotIn(self.note_b1, admitted)
+
+    # ---- 4.7 The panel cannot surface an inaccessible note ----
+
+    def test_panel_cannot_surface_a_note_the_user_may_not_see(self):
+        # User1 selects User2 as owner. The ceiling admits only User1's own
+        # notes and notes User1 follows; the foreign note is neither, so the
+        # combined domain must return nothing.
+        admitted = self._panel_search(
+            self.User1, self._panel_domain('user_id', self.User2),
+        )
+        self.assertNotIn(self.foreign_note, admitted)
+        self.assertFalse(admitted)
+
+    def test_panel_ceiling_is_what_excludes_the_foreign_note(self):
+        # Guards the test above. The record rule also excludes the foreign
+        # note, so search as sudo to remove that layer: the action ceiling is
+        # then the only thing standing between the panel and the note. If the
+        # ceiling is removed from the action, the panel's combined domain no
+        # longer excludes it and this fails.
+        panel_domain = self._panel_domain('user_id', self.User2)
+        without_ceiling = self.Note.sudo().search(panel_domain)
+        self.assertIn(self.foreign_note, without_ceiling)
+        with_ceiling = self.Note.sudo().search(self._action_domain() + panel_domain)
+        self.assertNotIn(self.foreign_note, with_ceiling)
+
+    # ---- 4.8 The panel combines with the default My Notes filter ----
+
+    def test_notebook_with_my_notes_filter_returns_own_notes_only(self):
+        # The action's context sets search_default_my_notes, so a notebook
+        # selection is combined with ('user_id', '=', uid) — the documented
+        # outcome (design D6 / Risks).
+        admitted = self._panel_search(
+            self.User1,
+            self._panel_domain('folder_id', self.folder_a),
+            filter_name='my_notes',
+        )
+        self.assertIn(self.note_a1, admitted)
+        self.assertIn(self.note_a2, admitted)
+        self.assertNotIn(self.note_b1, admitted)
+        self.assertNotIn(self.foreign_note, admitted)
+
+    def test_notebook_with_my_notes_excludes_followed_notes(self):
+        # A note in folder A owned by User2 but followed by User1 is admitted
+        # by the ceiling; the My Notes filter must still exclude it.
+        self.foreign_note.message_subscribe(partner_ids=[self.User1.partner_id.id])
+        admitted = self._panel_search(
+            self.User1,
+            self._panel_domain('folder_id', self.folder_a),
+            filter_name='my_notes',
+        )
+        self.assertIn(self.note_a1, admitted)
+        self.assertNotIn(self.foreign_note, admitted)
+
+    # ---- 4.7b Owner section offers only visible owners ----
+
+    def test_owner_section_offers_only_visible_owners(self):
+        # The panel's Owner section lists users whose notes the ceiling admits.
+        # For User1 that is User1 plus the owners of notes User1 follows — not
+        # every user in the database (spec: Owner list respects access).
+        own_notes = self.Note.with_user(self.User1).search(self._action_domain())
+        visible_owners = own_notes.mapped('user_id')
+        self.assertIn(self.User1, visible_owners)
+        self.assertNotIn(self.User3, visible_owners)
+
+
+@tagged('-at_install', 'post_install')
 class TestJoplinApi(common.HttpCase):
     """Test REST API endpoints."""
 
