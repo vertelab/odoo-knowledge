@@ -28,6 +28,11 @@
         category is a folder, not a document). Archived pages keep their
         flag and are re-indexed if reactivated.
 
+        AUTOINSTALL: the module installs automatically as soon as both
+        ai_agent_core and document_page are present — the same pattern as
+        knowledge_joplin_ai. A knowledge page that cannot become knowledge
+        is a page nobody finds; the bridge should not be a choice.
+
         The model owns its SOURCES; the mixin in ai_agent_core owns the
         fields and the flag. No domain is named in the core.
     """,
@@ -42,5 +47,5 @@
     'demo': [],
     'application': False,
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }

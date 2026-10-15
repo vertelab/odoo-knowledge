@@ -36,11 +36,15 @@ Graph Database Bridge
         'data/data.xml',
     ],
     'application': False,
-    # Inte installerad i drift — RabbitMQ-bryggan är byggd och fungerande
-    # (pika 1.2.0 finns, tre buggfixar i historiken) men används inte.
-    # Modulen är avsiktligt icke-installerbar så ingen råkar dra in den i
-    # ett modulset. Koden, vyn, testerna och data.xml är kvar orörda.
-    # Sätt True för att göra den installerbar igen.
-    'installable': False,
+    # Installable so the module keeps loading: it is INSTALLED in production
+    # (ledningssystem, since 2026-10-12). `installable: False` does not just
+    # hide a module from the Apps list — Odoo skips loading its code entirely,
+    # so an installed module's models vanish from the registry and anything
+    # touching them raises KeyError. That regression was hit on 2026-10-15.
+    #
+    # The module is being uninstalled in production (decision 2026-10-15);
+    # once that is done this can go back to False to keep it out of module
+    # sets. Until then it must stay True.
+    'installable': True,
     'auto_install': False,
 }
