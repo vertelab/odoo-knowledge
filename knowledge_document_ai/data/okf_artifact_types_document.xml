@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Artifact type for the document bridge (okf-mixin D12).
+
+             `bridge_module` points at knowledge_document_ai, so the
+             taxonomy can be traced back to ONE bridge. -->
+        <record id="artifact_type_document_page" model="ai.artifact.type">
+            <field name="name">document_page</field>
+            <field name="kind">knowledge</field>
+            <field name="bridge_module">knowledge_document_ai</field>
+            <field name="model_id" ref="document_page.model_document_page"/>
+            <field name="okf_contract" eval="{'generated_by': 'process', 'stale_policy': 'source', 'stale_ttl_days': 0, 'retention_purpose': 'none', 'retention_days': 0}"/>
+        </record>
+    </data>
+</odoo>
