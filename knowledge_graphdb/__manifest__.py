@@ -36,6 +36,11 @@ Graph Database Bridge
         'data/data.xml',
     ],
     'application': False,
-    'installable': True,
+    # Inte installerad i drift — RabbitMQ-bryggan är byggd och fungerande
+    # (pika 1.2.0 finns, tre buggfixar i historiken) men används inte.
+    # Modulen är avsiktligt icke-installerbar så ingen råkar dra in den i
+    # ett modulset. Koden, vyn, testerna och data.xml är kvar orörda.
+    # Sätt True för att göra den installerbar igen.
+    'installable': False,
     'auto_install': False,
 }
