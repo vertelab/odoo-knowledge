@@ -2,9 +2,12 @@ import json
 import secrets
 from datetime import datetime, timezone, timedelta
 
+from lxml import etree
+
 from odoo.tests import common, tagged
 from odoo.exceptions import AccessError, ValidationError
 from odoo import fields
+from odoo.tools.safe_eval import safe_eval
 
 
 @tagged('-at_install', 'post_install')
@@ -368,6 +371,216 @@ class TestJoplinSecurity(common.TransactionCase):
         })
         self.assertTrue(note)
         self.assertEqual(note.user_id, self.User1)
+
+
+@tagged('-at_install', 'post_install')
+class TestJoplinNoteAccessFilters(common.TransactionCase):
+    """Test the note list filters and the action ceiling.
+
+    The record rules are covered by TestJoplinSecurity. These tests cover the
+    filter and action domains in views/joplin_note_views.xml, which the record
+    rules do not: a filter domain can contradict the rule without the rule's
+    tests noticing.
+
+    The domains are read from the search view arch and the action record, then
+    evaluated against a fixture of owned / followed / unrelated notes.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Follow TestJoplinSecurity's fixture style: prefer the demo users but
+        # fall back to created users when demo data is not loaded.
+        try:
+            cls.User1 = cls.env.ref('knowledge_joplin.demo_user_joplin_1')
+        except ValueError:
+            cls.User1 = cls._make_user('Filter Test User 1', 'filter_joplin1@test.com')
+        try:
+            cls.User2 = cls.env.ref('knowledge_joplin.demo_user_joplin_2')
+        except ValueError:
+            cls.User2 = cls._make_user('Filter Test User 2', 'filter_joplin2@test.com')
+        cls.User3 = cls._make_user('Filter Test User 3', 'filter_joplin3@test.com')
+        cls.Note = cls.env['joplin.note']
+
+        # Fixture: one note of each relationship to User1.
+        cls.own_note = cls._make_note(cls.User1, 'Owned by User1')
+        # Owned by User2, followed by User1: the "shared with me" case.
+        cls.followed_note = cls._make_note(cls.User2, 'Owned by User2, followed by User1')
+        cls.followed_note.message_subscribe(partner_ids=[cls.User1.partner_id.id])
+        # Owned by User2, followed by User3 only: not User1's business.
+        cls.other_followed_note = cls._make_note(cls.User2, 'Owned by User2, followed by User3')
+        cls.other_followed_note.message_subscribe(partner_ids=[cls.User3.partner_id.id])
+        # Owned by User2, followed by nobody: fully unrelated to User1.
+        cls.unrelated_note = cls._make_note(cls.User2, 'Owned by User2, no followers')
+
+    @classmethod
+    def _make_user(cls, name, login):
+        return cls.env['res.users'].create({
+            'name': name,
+            'login': login,
+            'groups_id': [
+                (4, cls.env.ref('base.group_user').id),
+                (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
+            ],
+        })
+
+    @classmethod
+    def _make_note(cls, user, title):
+        return cls.Note.with_user(user).create({
+            'title': title,
+            'body': title,
+            'joplin_id': secrets.token_hex(16),
+            'user_id': user.id,
+        })
+
+    def _filter_domain(self, name):
+        """Return the raw domain string of a search filter, from the arch."""
+        view = self.env.ref('knowledge_joplin.view_joplin_note_search')
+        arch = etree.fromstring(view.arch.encode())
+        nodes = arch.xpath('//filter[@name=$name]', name=name)
+        self.assertEqual(len(nodes), 1, f'filter {name!r} not found in search view')
+        return nodes[0].get('domain')
+
+    def _action_domain(self):
+        """Return the raw domain string of the notes action."""
+        action = self.env.ref('knowledge_joplin.action_joplin_note')
+        return action.domain
+
+    def _rule_domain(self, xmlid):
+        """Return the raw domain string of a record rule."""
+        rule = self.env.ref(xmlid)
+        return rule.domain_force
+
+    def _resolve(self, domain_str, user):
+        """Evaluate a domain string with the web client's context.
+
+        Search filters and action domains are evaluated with ``uid`` and
+        ``user`` in scope; ``user.partner_id.id`` is the follower partner.
+        """
+        return safe_eval(domain_str, {'uid': user.id, 'user': user})
+
+    def _admitted(self, domain_str, user):
+        """Return the fixture notes a domain admits for ``user``."""
+        domain = self._resolve(domain_str, user)
+        return self.Note.with_user(user).search(domain)
+
+    # ---- My Notes ----
+
+    def test_my_notes_domain_is_owned_only(self):
+        domain = self._resolve(self._filter_domain('my_notes'), self.User1)
+        self.assertEqual(domain, [('user_id', '=', self.User1.id)])
+
+    def test_my_notes_admits_own_and_excludes_followed(self):
+        admitted = self._admitted(self._filter_domain('my_notes'), self.User1)
+        self.assertIn(self.own_note, admitted)
+        self.assertNotIn(self.followed_note, admitted)
+
+    def test_my_notes_widened_to_union_would_include_followed(self):
+        # Guards test_my_notes_admits_own_and_excludes_followed: if the filter
+        # were widened to the union (the action ceiling), the followed note
+        # would be admitted and the exclusion above would fail.
+        union = self._action_domain()
+        admitted = self._admitted(union, self.User1)
+        self.assertIn(self.followed_note, admitted)
+
+    # ---- Shared with Me ----
+
+    def test_shared_with_me_domain_requires_current_follower(self):
+        # The follower clause must identify the current user, not merely
+        # "has any follower". Odoo 18's view validator rejects
+        # ``user.partner_id.id`` in a search-filter domain (``user`` is not an
+        # ignored expression name there), so the follower clause traverses the
+        # follower partner's users and compares with ``uid`` — the same idiom
+        # Odoo core uses for "My Meetings"
+        # (calendar: ``[('partner_ids.user_ids', 'in', [uid])]``).
+        domain = self._resolve(self._filter_domain('shared_with_me'), self.User1)
+        self.assertEqual(domain, [
+            ('message_follower_ids.partner_id.user_ids', 'in', [self.User1.id]),
+            ('user_id', '!=', self.User1.id),
+        ])
+
+    def test_shared_with_me_admits_followed_not_owned(self):
+        admitted = self._admitted(self._filter_domain('shared_with_me'), self.User1)
+        self.assertIn(self.followed_note, admitted)
+        self.assertNotIn(self.own_note, admitted)
+
+    def test_shared_with_me_excludes_note_followed_by_someone_else(self):
+        # The old broken domain ('message_follower_ids.partner_id', '!=', False)
+        # admitted this note because it has a follower, just not the current
+        # user. The corrected domain must not.
+        admitted = self._admitted(self._filter_domain('shared_with_me'), self.User1)
+        self.assertNotIn(self.other_followed_note, admitted)
+
+    def test_shared_with_me_excludes_unrelated_note(self):
+        admitted = self._admitted(self._filter_domain('shared_with_me'), self.User1)
+        self.assertNotIn(self.unrelated_note, admitted)
+
+    def test_filters_do_not_overlap(self):
+        my_notes = self._admitted(self._filter_domain('my_notes'), self.User1)
+        shared = self._admitted(self._filter_domain('shared_with_me'), self.User1)
+        self.assertFalse(set(my_notes.ids) & set(shared.ids))
+
+    # ---- Action ceiling ----
+
+    def test_action_domain_is_owned_or_followed(self):
+        domain = self._resolve(self._action_domain(), self.User1)
+        self.assertEqual(domain, [
+            '|',
+            ('user_id', '=', self.User1.id),
+            ('message_follower_ids.partner_id', '=', self.User1.partner_id.id),
+        ])
+
+    def test_action_admits_owned_and_followed_and_excludes_unrelated(self):
+        admitted = self._admitted(self._action_domain(), self.User1)
+        self.assertIn(self.own_note, admitted)
+        self.assertIn(self.followed_note, admitted)
+        self.assertNotIn(self.unrelated_note, admitted)
+        self.assertNotIn(self.other_followed_note, admitted)
+
+    def test_action_ceiling_matches_record_rule(self):
+        # The ceiling duplicates the record rule's domain (design D5). If the
+        # rule changes and the ceiling does not (or vice versa), this fails.
+        ceiling = self._resolve(self._action_domain(), self.User1)
+        rule = self._resolve(self._rule_domain('knowledge_joplin.rule_joplin_note_own'), self.User1)
+        self.assertEqual(ceiling, rule)
+        self.assertEqual(
+            set(self._admitted(self._action_domain(), self.User1).ids),
+            set(self._admitted(self._rule_domain('knowledge_joplin.rule_joplin_note_own'), self.User1).ids),
+        )
+
+    # ---- Kanban ----
+
+    def test_kanban_card_fields_are_declared(self):
+        # Every field the card template reads must be declared on the kanban
+        # (the <field> elements before <templates>), or the card has no data.
+        view = self.env.ref('knowledge_joplin.view_joplin_note_kanban')
+        arch = etree.fromstring(view.arch.encode())
+        card = arch.xpath('//t[@t-name="card"]')
+        self.assertEqual(len(card), 1, 'kanban card template not found')
+        declared = {
+            node.get('name')
+            for node in arch.xpath('//kanban/field')
+        }
+        used = {
+            node.get('name')
+            for node in card[0].xpath('.//field')
+        }
+        missing = used - declared
+        self.assertFalse(missing, f'card uses undeclared fields: {sorted(missing)}')
+
+    def test_kanban_renders_for_followed_note(self):
+        # A follower must be able to read every field the card depends on for a
+        # note they do not own. ``read`` raises AccessError if the template
+        # referenced a field the follower cannot read.
+        view = self.env.ref('knowledge_joplin.view_joplin_note_kanban')
+        arch = etree.fromstring(view.arch.encode())
+        card = arch.xpath('//t[@t-name="card"]')[0]
+        field_names = sorted({node.get('name') for node in card.xpath('.//field')})
+        self.assertTrue(field_names)
+        data = self.followed_note.with_user(self.User1).read(field_names)[0]
+        self.assertEqual(data['id'], self.followed_note.id)
+        self.assertEqual(data['title'], self.followed_note.title)
+        self.assertEqual(data['user_id'][0], self.User2.id)
 
 
 @tagged('-at_install', 'post_install')
