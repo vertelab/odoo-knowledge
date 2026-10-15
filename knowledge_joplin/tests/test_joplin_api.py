@@ -254,6 +254,67 @@ class TestJoplinModels(common.TransactionCase):
         self.assertEqual(rev.item_id, note.joplin_id)
         self.assertEqual(rev.item_type, 1)
 
+    def test_initial_revision_created_on_create(self):
+        note = self._create_note('Initial Title', 'Initial body')
+        self.assertEqual(len(note.revision_ids), 1)
+        rev = note.revision_ids[0]
+        self.assertEqual(rev.note_id, note)
+
+    def test_initial_revision_records_created_content(self):
+        note = self._create_note('Initial Title', 'Initial body')
+        rev = note.revision_ids[0]
+        self.assertTrue(rev.title_diff)
+        self.assertTrue(rev.body_diff)
+        # The initial revision records the content as an addition: the patch
+        # inserts the created text into an empty original.
+        self.assertIn('Initial Title', rev.title_diff)
+        self.assertIn('Initial body', rev.body_diff)
+
+    def test_initial_revision_shape_matches_write_revision(self):
+        note = self._create_note('Shape Title', 'Shape body')
+        initial = note.revision_ids[0]
+        note.sudo().write({'title': 'Shape Title 2', 'body': 'Shape body 2'})
+        edit_rev = note.revision_ids.filtered(lambda r: r != initial)[0]
+        for rev in (initial, edit_rev):
+            self.assertEqual(rev.note_id, note)
+            self.assertEqual(rev.item_id, note.joplin_id)
+            self.assertEqual(rev.item_type, 1)
+            self.assertTrue(rev.joplin_id)
+            self.assertTrue(rev.item_updated_time)
+
+    def test_initial_revision_title_only(self):
+        note = self._create_note('Title Only', '')
+        self.assertEqual(len(note.revision_ids), 1)
+        rev = note.revision_ids[0]
+        self.assertTrue(rev.title_diff)
+        self.assertIn('Title Only', rev.title_diff)
+
+    def test_initial_revision_joplin_id_uniqueness(self):
+        notes = self.Note.browse([
+            self._create_note('Unique %d' % i, 'Body %d' % i).id
+            for i in range(5)
+        ])
+        for note in notes:
+            self.assertEqual(len(note.revision_ids), 1)
+        revision_ids = notes.mapped('revision_ids.joplin_id')
+        self.assertEqual(len(revision_ids), len(set(revision_ids)))
+
+    def test_edit_after_create_yields_two_revisions(self):
+        note = self._create_note('Original Title', 'Original body')
+        initial = note.revision_ids[0]
+        initial_diffs = (initial.title_diff, initial.body_diff)
+        note.sudo().write({'title': 'Edited Title', 'body': 'Edited body'})
+        self.assertEqual(len(note.revision_ids), 2)
+        # The initial revision is preserved, not altered or duplicated.
+        self.assertEqual(note.revision_ids[0].title_diff, initial_diffs[0])
+        self.assertEqual(note.revision_ids[0].body_diff, initial_diffs[1])
+
+    def test_write_without_tracked_fields_adds_no_revision(self):
+        note = self._create_note('No Track', 'Body')
+        initial_count = len(note.revision_ids)
+        note.sudo().write({'author': 'Someone'})
+        self.assertEqual(len(note.revision_ids), initial_count)
+
     # ---- UNIQUENESS TESTS ----
 
     def test_joplin_id_uniqueness(self):

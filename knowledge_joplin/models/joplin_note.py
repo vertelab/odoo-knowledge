@@ -123,6 +123,12 @@ class JoplinNote(models.Model):
             if not vals.get('updated_time'):
                 vals['updated_time'] = now
         records = super().create(vals_list)
+        for record in records:
+            record._create_revision(
+                record,
+                {'title': record.title, 'body': record.body},
+                old_vals={'title': '', 'body': ''},
+            )
         records._log_event(1)
         return records
 
@@ -150,14 +156,15 @@ class JoplinNote(models.Model):
         self._log_event(3)
         return super().unlink()
 
-    def _create_revision(self, note, new_vals):
+    def _create_revision(self, note, new_vals, old_vals=None):
         diff_lib = self._get_diff_lib()
         if not diff_lib:
             return
 
         dmp = diff_lib.diff_match_patch()
-        old_title = note.title or ''
-        old_body = note.body or ''
+        old_vals = old_vals or {}
+        old_title = old_vals.get('title', note.title) or ''
+        old_body = old_vals.get('body', note.body) or ''
         new_title = new_vals.get('title', old_title) or ''
         new_body = new_vals.get('body', old_body) or ''
         old_metadata = '{}'
