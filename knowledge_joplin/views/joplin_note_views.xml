@@ -236,7 +236,21 @@
             <field name="res_model">joplin.note</field>
             <field name="view_mode">kanban,list,form</field>
             <field name="search_view_id" ref="view_joplin_note_search"/>
-            <field name="domain">['|', ('user_id', '=', user.id), ('message_follower_ids.partner_id', '=', user.partner_id.id)]</field>
+            <!-- Ceiling = the record rule for group_joplin_user_own: owned
+                 notes plus followed notes.
+
+                 The domain is evaluated in the WEB CLIENT
+                 (`action_service._preprocessAction` -> `evaluateExpr`),
+                 against `user.context`, which provides `uid` but NOT
+                 `user`. Writing `user.id` / `user.partner_id.id` here
+                 raises `EvalError: Name 'user' is not defined` and the
+                 action fails to open — the same trap as in the search
+                 view filter, and it cost a production incident on
+                 2026-10-16. Keep the `uid` form.
+
+                 `partner_id.user_ids in [uid]` is the idiom Odoo core
+                 uses for "My Meetings" (calendar/views/calendar_views.xml). -->
+            <field name="domain">['|', ('user_id', '=', uid), ('message_follower_ids.partner_id.user_ids', 'in', [uid])]</field>
             <field name="context">{'search_default_my_notes': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Create your first note</p>
