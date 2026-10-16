@@ -26,6 +26,12 @@
                     <filter name="trashed" string="Trashed"
                             domain="[('active', '=', False)]"/>
                     <separator/>
+                    <!-- Tags: a many2many cannot be a search panel section
+                         (`search_panel_select_range` supports many2one and
+                         selection only), so it is a filter. Selecting one or
+                         more tags narrows the list to notes carrying them. -->
+                    <field name="tag_ids" filter_domain="[('tag_ids', 'in', self)]"/>
+                    <separator/>
                     <filter name="this_week" string="This Week"
                             date="updated_time"/>
                     <group expand="0" string="Group By">
@@ -40,11 +46,27 @@
                         <filter name="group_active" string="Active/Trashed"
                                 context="{'group_by': 'active'}"/>
                     </group>
+                    <!-- Search panel: only many2one and selection fields are
+                         supported (`search_panel_select_range`: "of type
+                         many2one or selection"). A many2many raises
+                         "Endast typer many2one, val stöds för kategori".
+
+                         `user_id` needs hierarchize="0": res.users has
+                         `_inherits = {'res.partner': 'partner_id'}`, and the
+                         default hierarchical lookup walks the comodel's
+                         `_parent_name`, mixing res.partner and res.users
+                         records and raising
+                         "TypeError: inconsistent models in:
+                          res.partner(3263,) - res.users(140,)".
+
+                         Tags are a many2many and therefore cannot be a panel
+                         section; they are a filter instead (see the Tags
+                         filter above). Both defects reached production on
+                         2026-10-16 and made the notes list fail to open. -->
                     <searchpanel>
                         <field name="folder_id" icon="fa-folder" limit="0" enable_counters="1"/>
-                        <field name="tag_ids" icon="fa-tags" limit="0" select="multi"
-                               enable_counters="1"/>
-                        <field name="user_id" icon="fa-user" limit="20" enable_counters="1"/>
+                        <field name="user_id" icon="fa-user" limit="20"
+                               hierarchize="0" enable_counters="1"/>
                     </searchpanel>
                 </search>
             </field>
