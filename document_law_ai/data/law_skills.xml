@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Law-reading skill for the Lag-specialist (document-law-ai-capability,
+        design D6).
+
+        The skill owns the JUDGEMENT — when to search versus read versus
+        interpret, and where the no-legal-advice boundary lies. The tools
+        own the mechanics. No domain is named in ai_agent_core; this record
+        lives in the document_law bridge module.
+    -->
+    <record id="skill_law_reading" model="ai.skill">
+        <field name="name">Law — read and interpret Swedish statutes</field>
+        <field name="description">Find, read and interpret the Swedish statutes held in document.law. Covers when to search versus read versus interpret, the scope (Swedish SFS documents already in document.law), and the boundary between explaining what a law requires and determining whether the company complies.</field>
+        <field name="category">research</field>
+        <field name="source_type">odoo</field>
+        <field name="compatibility">odoo</field>
+        <field name="trigger_keywords">law, lag, statute, sfs, regulation, förordning, riksdagen, legal, juridik, compliance, efterlevnad, paragraf, beteckning</field>
+        <field name="recipe_text">
+# Law — read and interpret Swedish statutes
+
+The laws live in `document.law`: Swedish SFS documents refreshed daily
+from the Riksdag. Your job is to find the statute that applies to a
+question, read it, and explain what it means for *this* company.
+
+## Scope
+
+The records hold **Swedish SFS documents only** — acts, ordinances and
+regulations published by the Riksdag. A question about EU regulation,
+case law, or a foreign jurisdiction falls outside what the records hold.
+Say so rather than answering from general knowledge.
+
+## Which tool to use
+
+Work in three steps, and do not skip the middle one:
+
+1. **`law_search`** — find the relevant statute. Search by free text, by
+   designation ("SFS 2024:123"), by issuing department, or by publication
+   date range. The result is bounded; when the tool says the result set
+   was truncated, narrow the search rather than assume you saw
+   everything. When nothing matches, the tool says so plainly — do not
+   invent a law.
+2. **`law_get`** — read the one law you found, by its document id. It
+   returns the designation, department, dates and the law's text. A long
+   law is truncated; the tool reports it, so ask for the remainder rather
+   than assume you read all of it.
+3. **`law_interpret`** — get the law's text together with the company's
+   context. The tool returns *context plus law text*; **you** do the
+   interpreting. State what the law requires or permits in terms of this
+   company's business, and name the parts of the business it touches —
+   not a generic restatement of the statute.
+
+## Ground the interpretation in the law's text
+
+Derive the interpretation from the law's text and the company context the
+tool returns. Do not introduce obligations the text does not contain. If
+the tool reports that the company context came back empty, say that the
+interpretation is not company-specific rather than pretending it is.
+
+When the law's text is ambiguous or incomplete in the records, say the
+text is unclear. Do not fill the gap with an assumption.
+
+## You do not give legal advice
+
+You explain what a law requires and what it implies for the company. You
+do **not** determine whether the company complies. When the user asks
+whether the company complies with a law:
+
+- explain what the law requires, and
+- state plainly that you cannot determine compliance and that a qualified
+  person must assess the company's situation.
+
+An answer of "yes, you comply" is a legal determination you cannot make.
+This holds even when the user pushes for a yes or no.
+        </field>
+    </record>
+</odoo>

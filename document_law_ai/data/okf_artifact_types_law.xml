@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Artifact type for the law bridge (okf-mixin D12).
+
+             `bridge_module` points at document_law_ai, so the taxonomy can
+             be traced back to ONE bridge. `kind` is knowledge: a law is a
+             curated artifact whose freshness follows its source, not a
+             dynamically learned memory. -->
+        <record id="artifact_type_document_law" model="ai.artifact.type">
+            <field name="name">document_law</field>
+            <field name="kind">knowledge</field>
+            <field name="bridge_module">document_law_ai</field>
+            <field name="model_id" ref="document_law.model_document_law"/>
+            <field name="okf_contract" eval="{'generated_by': 'process', 'stale_policy': 'source', 'stale_ttl_days': 0, 'retention_purpose': 'none', 'retention_days': 0}"/>
+        </record>
+    </data>
+</odoo>
