@@ -513,16 +513,46 @@ class TestJoplinNoteAccessFilters(common.TransactionCase):
         return rule.domain_force
 
     def _resolve(self, domain_str, user):
-        """Evaluate a domain string with the web client's context.
+        """Evaluate a domain string the way the CLIENT does: `uid` only.
 
-        Search filters and action domains are evaluated with ``uid`` and
-        ``user`` in scope; ``user.partner_id.id`` is the follower partner.
+        The web client evaluates action domains and search filters against
+        `user.context`, which provides `uid` — and NOT `user`. Passing `user`
+        here made this helper more permissive than the browser, so a domain
+        using `user.partner_id.id` passed the tests and then failed in
+        production with
+
+            EvalError: Name 'user' is not defined
+
+        (2026-10-16). The helper now mirrors the client exactly.
+
+        Record rules are NOT evaluated here — they run on the server, where
+        `user` exists. Use `_resolve_rule` for those.
+        """
+        return safe_eval(domain_str, {'uid': user.id})
+
+    def _resolve_rule(self, domain_str, user):
+        """Evaluate a RECORD RULE domain the way the server does.
+
+        Record rules run server-side, where both `user` and `uid` are in
+        scope — that is why the rule can say `user.partner_id.id` while the
+        client-side action domain cannot.
         """
         return safe_eval(domain_str, {'uid': user.id, 'user': user})
 
     def _admitted(self, domain_str, user):
-        """Return the fixture notes a domain admits for ``user``."""
+        """Return the fixture notes a CLIENT-side domain admits for ``user``.
+
+        For action domains and search filters — evaluated with `uid` only.
+        """
         domain = self._resolve(domain_str, user)
+        return self.Note.with_user(user).search(domain)
+
+    def _admitted_by_rule(self, domain_str, user):
+        """Return the fixture notes a RECORD RULE admits for ``user``.
+
+        Record rules run server-side, where `user` is in scope.
+        """
+        domain = self._resolve_rule(domain_str, user)
         return self.Note.with_user(user).search(domain)
 
     # ---- My Notes ----
@@ -588,7 +618,8 @@ class TestJoplinNoteAccessFilters(common.TransactionCase):
         self.assertEqual(domain, [
             '|',
             ('user_id', '=', self.User1.id),
-            ('message_follower_ids.partner_id', '=', self.User1.partner_id.id),
+            ('message_follower_ids.partner_id.user_ids', 'in',
+             [self.User1.id]),
         ])
 
     def test_action_admits_owned_and_followed_and_excludes_unrelated(self):
@@ -599,14 +630,23 @@ class TestJoplinNoteAccessFilters(common.TransactionCase):
         self.assertNotIn(self.other_followed_note, admitted)
 
     def test_action_ceiling_matches_record_rule(self):
-        # The ceiling duplicates the record rule's domain (design D5). If the
-        # rule changes and the ceiling does not (or vice versa), this fails.
-        ceiling = self._resolve(self._action_domain(), self.User1)
-        rule = self._resolve(self._rule_domain('knowledge_joplin.rule_joplin_note_own'), self.User1)
-        self.assertEqual(ceiling, rule)
+        """The ceiling admits the same set as the record rule (design D5).
+
+        The domains are NOT textually identical: the ceiling is evaluated by
+        the client, which has `uid` but not `user`, while the record rule is
+        evaluated by the server, where `user` exists. They must therefore
+        express the same set in different words — `partner_id.user_ids in
+        [uid]` versus `partner_id = user.partner_id.id`.
+
+        Asserting the admitted SET is the meaningful check; asserting equal
+        domain strings would force one side to use a name it cannot resolve.
+        """
+        rule_xmlid = 'knowledge_joplin.rule_joplin_note_own'
+        ceiling = self._admitted(self._action_domain(), self.User1)
+        rule = self._admitted_by_rule(self._rule_domain(rule_xmlid), self.User1)
         self.assertEqual(
-            set(self._admitted(self._action_domain(), self.User1).ids),
-            set(self._admitted(self._rule_domain('knowledge_joplin.rule_joplin_note_own'), self.User1).ids),
+            set(ceiling.ids), set(rule.ids),
+            'the action ceiling and the record rule must admit the same notes',
         )
 
     # ---- Kanban ----
@@ -656,7 +696,13 @@ class TestJoplinNoteSearchPanel(common.TransactionCase):
     """
 
     # The section fields, in the order design D1 fixes them.
-    PANEL_FIELDS = ['folder_id', 'tag_ids', 'user_id']
+    #
+    # Tags are NOT here: a many2many cannot be a panel section.
+    # `search_panel_select_range` documents "of type many2one or selection",
+    # and passing a many2many raises "Endast typer many2one, val stöds för
+    # kategori". Tags are a filter instead. This reached production on
+    # 2026-10-16 and made the notes list fail to open.
+    PANEL_FIELDS = ['folder_id', 'user_id']
 
     @classmethod
     def setUpClass(cls):
@@ -755,43 +801,60 @@ class TestJoplinNoteSearchPanel(common.TransactionCase):
     # ---- Behavioural helpers ----
 
     def _action_domain(self):
-        """Return the resolved domain of the notes action (the ceiling)."""
+        """Return the resolved domain of the notes action (the ceiling).
+
+        Evaluated with the CLIENT's context — `uid` only, no `user`
+        (see `_resolve`).
+        """
         action = self.env.ref('knowledge_joplin.action_joplin_note')
-        return safe_eval(action.domain, {'uid': self.User1.id, 'user': self.User1})
+        return safe_eval(action.domain, {'uid': self.User1.id})
 
     def _filter_domain(self, name, user):
-        """Return the resolved domain of a search filter from the arch."""
+        """Return the resolved domain of a search filter from the arch.
+
+        Filters are evaluated by the client too, so `uid` only.
+        """
         view = self.env.ref('knowledge_joplin.view_joplin_note_search')
         arch = etree.fromstring(view.arch.encode())
         nodes = arch.xpath('//filter[@name=$name]', name=name)
         self.assertEqual(len(nodes), 1, f'filter {name!r} not found in search view')
-        return safe_eval(nodes[0].get('domain'), {'uid': user.id, 'user': user})
+        return safe_eval(nodes[0].get('domain'), {'uid': user.id})
 
     def _panel_domain(self, field, value):
         """Return the domain the panel adds when selecting ``value``.
 
-        A many2many section (tag_ids) filters with ``in``; a many2one section
-        (folder_id, user_id) filters with ``=`` — the same domains the web
-        client sends for a search panel selection.
+        Panel sections are many2one, so they filter with ``=`` — the same
+        domain the web client sends for a search panel selection.
         """
-        if field == 'tag_ids':
-            return [('tag_ids', 'in', [value.id])]
         return [(field, '=', value.id)]
+
+    def _tag_filter_domain(self, tag):
+        """Return the domain the tag filter adds.
+
+        Tags are a many2many, so the filter uses ``in`` (matching the
+        view's ``filter_domain="[('tag_ids', 'in', self)]"``).
+        """
+        return [('tag_ids', 'in', [tag.id])]
+
+    def _arch(self):
+        """The search view's arch, as a string."""
+        view = self.env.ref('knowledge_joplin.view_joplin_note_search')
+        return view.arch or ''
 
     def _panel_search(self, user, panel_domain, filter_name=None):
         """Search as ``user`` with the action ceiling, an optional default
         filter and the panel's domain combined — the list the panel produces.
         """
         action = self.env.ref('knowledge_joplin.action_joplin_note')
-        ceiling = safe_eval(action.domain, {'uid': user.id, 'user': user})
+        ceiling = safe_eval(action.domain, {'uid': user.id})
         domain = ceiling + panel_domain
         if filter_name:
             domain = domain + self._filter_domain(filter_name, user)
         return self.Note.with_user(user).search(domain)
 
-    # ---- 4.1 Panel and its three sections ----
+    # ---- 4.1 Panel and its sections ----
 
-    def test_searchpanel_has_three_sections(self):
+    def test_searchpanel_has_two_sections(self):
         states = self._searchpanel_states()
         self.assertEqual(list(states), self.PANEL_FIELDS)
 
@@ -800,6 +863,57 @@ class TestJoplinNoteSearchPanel(common.TransactionCase):
         # the view would not load, but assert it here so the intent is explicit.
         for name in self.PANEL_FIELDS:
             self.assertIn(name, self.Note._fields)
+
+    def test_panel_sections_are_supported_field_types(self):
+        """A panel section must be many2one or selection.
+
+        `search_panel_select_range` documents "of type many2one or
+        selection"; anything else raises at render time. This is the guard
+        that would have caught tag_ids being a many2many before it reached
+        production.
+        """
+        for name in self.PANEL_FIELDS:
+            ftype = self.Note._fields[name].type
+            self.assertIn(
+                ftype, ('many2one', 'selection'),
+                f'panel section {name!r} is {ftype!r}; only many2one and '
+                f'selection are supported',
+            )
+
+    def test_panel_select_range_works_for_every_section(self):
+        """Call what the client calls, with data present.
+
+        The client invokes `search_panel_select_range(field, {...,
+        hierarchize, limit, ...})` (search_model.js). Calling it here is
+        what catches a field whose comodel breaks the lookup — `user_id`
+        did, because res.users declares
+        `_inherits = {'res.partner': 'partner_id'}` and the default
+        hierarchical walk mixed res.partner and res.users records:
+
+            TypeError: inconsistent models in:
+            res.partner(3263,) - res.users(140,)
+        """
+        for name in self.PANEL_FIELDS:
+            node = self._panel_field(name)
+            hierarchize = node.get('hierarchize') != '0'
+            limit = int(node.get('limit') or 0)
+            self.Note.search_panel_select_range(
+                name, limit=limit, hierarchize=hierarchize,
+                enable_counters=node.get('enable_counters') == '1',
+            )
+
+    def test_owner_section_disables_hierarchisation(self):
+        """res.users delegates to res.partner, so hierarchize must be off.
+
+        Verified both ways: hierarchize=True raises the inconsistent-models
+        TypeError, hierarchize=False returns the values.
+        """
+        node = self._panel_field('user_id')
+        self.assertEqual(
+            node.get('hierarchize'), '0',
+            'user_id must set hierarchize="0": res.users inherits '
+            'res.partner, and the hierarchical walk mixes the two models',
+        )
 
     # ---- 4.2 Notebooks are hierarchical ----
 
@@ -813,11 +927,25 @@ class TestJoplinNoteSearchPanel(common.TransactionCase):
         node = self._panel_field('folder_id')
         self.assertEqual(node.get('limit'), '0')
 
-    # ---- 4.3 Tags are multi-select ----
+    # ---- 4.3 Tags are a filter, not a panel section ----
 
-    def test_tags_section_is_multi_select(self):
-        node = self._panel_field('tag_ids')
-        self.assertEqual(node.get('select'), 'multi')
+    def test_tags_are_not_a_panel_section(self):
+        """tag_ids is a many2many and cannot be a section."""
+        self.assertNotIn('tag_ids', self.PANEL_FIELDS)
+        states = self._searchpanel_states()
+        self.assertNotIn('tag_ids', states)
+
+    def test_tags_are_a_search_filter(self):
+        """Tags narrow the list through a filter instead."""
+        arch = self._arch()
+        self.assertIn(
+            'tag_ids', arch,
+            'tags must still be reachable — as a filter',
+        )
+        self.assertIn(
+            "filter_domain=\"[('tag_ids', 'in', self)]\"", arch,
+            'the tag filter must select notes carrying the chosen tag',
+        )
 
     # ---- 4.4 Owner is bounded ----
 
@@ -848,18 +976,19 @@ class TestJoplinNoteSearchPanel(common.TransactionCase):
         self.assertNotIn(self.note_b1, admitted)
 
     def test_selecting_tag_filters_the_list(self):
+        """The tag filter narrows to notes carrying that tag."""
         admitted = self._panel_search(
-            self.User1, self._panel_domain('tag_ids', self.tag_x),
+            self.User1, self._tag_filter_domain(self.tag_x),
         )
         self.assertIn(self.note_a1, admitted)
         self.assertIn(self.note_b1, admitted)
         self.assertNotIn(self.note_a2, admitted)
 
     def test_selecting_two_tags_narrows_further(self):
-        # Two selections combine (AND), so the result is the intersection.
+        # Two tags combine (AND), so the result is the intersection.
         domain = (
-            self._panel_domain('tag_ids', self.tag_x)
-            + self._panel_domain('tag_ids', self.tag_y)
+            self._tag_filter_domain(self.tag_x)
+            + self._tag_filter_domain(self.tag_y)
         )
         admitted = self._panel_search(self.User1, domain)
         self.assertNotIn(self.note_a1, admitted)
