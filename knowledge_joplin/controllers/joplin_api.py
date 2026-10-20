@@ -56,6 +56,17 @@ def _parse_item_payload(data, params):
     ``updated_time`` (int, ms).
     """
     raw = data
+    if not raw:
+        # Odoo 18 / Werkzeug: ``request.httprequest.data`` comes back
+        # empty for ``text/plain`` bodies on some request paths (the
+        # stream has already been consumed by form parsing). Reading
+        # the underlying WSGI stream directly recovers the body.
+        # Without this the Joplin client's raw markdown PUTs were
+        # stored as empty items.
+        try:
+            raw = request.httprequest.get_data(cache=True, as_text=False)
+        except Exception:  # pragma: no cover - defensive
+            raw = b""
     if isinstance(raw, bytes):
         raw = raw.decode("utf-8", errors="replace")
     raw = raw or ""
