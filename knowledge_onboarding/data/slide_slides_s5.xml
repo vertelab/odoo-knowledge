@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SEKTION 5: Manuellt test — verifiera att det fungerar
+         Slides: 2 (1 article, 1 quiz)
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- SECTION HEADER -->
+    <record id="slide_category_kb_s5" model="slide.slide">
+        <field name="name">5. Manuellt test</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="sequence">400</field>
+    </record>
+
+    <!-- SLIDE 5.1: Manuellt test -->
+    <record id="slide_know_s5_01" model="slide.slide">
+        <field name="name">Manuellt test — skriv, länka, hitta</field>
+        <field name="sequence">410</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.50</field>
+        <field name="html_content" type="html">
+<section class="s_cover o_cc o_cc3 pt160 pb160">
+    <div class="container">
+        <h1 class="display-3-fs" style="text-align: center;">Manuellt test</h1>
+        <p class="lead" style="text-align: center;">En artikel du skrivit, en länk du lagt, och ett ord du hittar igen. Det är hela kunskapsbasen i tre steg.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Innan du börjar</h2>
+        <p>Du behöver:</p>
+        <ul>
+            <li>behörighet att skapa en artikel i kunskapsbasen</li>
+            <li>en befintlig artikel att länka till — finns ingen, skapa två</li>
+        </ul>
+        <p class="small text-muted">Välj ett ord som är unikt för just din testartikel, till exempel <strong>zebrafink</strong>. Då vet du att sökningen hittar rätt sak och inte bara råkar träffa något annat.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb40">
+    <div class="container s_allow_columns">
+        <h2>Test 1 — skriv</h2>
+        <ol>
+            <li>Skapa en ny artikel. Rubrik: <strong>Testartikel</strong>.</li>
+            <li>Skriv en kort brödtext som innehåller ditt unika ord.</li>
+            <li>Spara och publicera.</li>
+        </ol>
+        <p><strong>Förväntat resultat:</strong> artikeln syns i kunskapsbasen med rätt rubrik. Kontrollera att den ligger där du tänkt — en artikel som hamnar i fel mapp är i praktiken osynlig.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb40">
+    <div class="container s_allow_columns">
+        <h2>Test 2 — länka</h2>
+        <ol>
+            <li>Öppna din testartikel igen.</li>
+            <li>Lägg in en länk till en annan artikel i kunskapsbasen.</li>
+            <li>Spara och klicka på länken.</li>
+        </ol>
+        <p><strong>Förväntat resultat:</strong> länken leder till rätt artikel. En död länk är värre än ingen länk — den skickar läsaren vilse.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb40">
+    <div class="container s_allow_columns">
+        <h2>Test 3 — hitta</h2>
+        <ol>
+            <li>Gå till sökfältet i kunskapsbasen.</li>
+            <li>Sök på ditt unika ord — det som bara finns i brödtexten, inte i rubriken.</li>
+            <li>Din testartikel ska komma upp som träff.</li>
+        </ol>
+        <p><strong>Förväntat resultat:</strong> artikeln hittas på ett ord ur brödtexten. Det är detta som skiljer en kunskapsbas från en mappstruktur — du behöver inte minnas var saken står, bara ungefär vad den handlade om.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb64">
+    <div class="container s_allow_columns">
+        <h2>Om det inte fungerar</h2>
+        <ol>
+            <li><strong>Artikeln går inte att hitta i sökningen.</strong> Antingen ligger den i en mapp du inte har läsbehörighet till, eller så är den fortfarande ett utkast. Publicera och sök igen.</li>
+            <li><strong>Sökningen hittar bara rubriker, inte brödtext.</strong> Indexeringen kan släpa efter någon minut. Vänta och sök igen — hittar den fortfarande inte, rapportera det.</li>
+            <li><strong>Länken fungerar inte.</strong> Kontrollera att du länkade till en publicerad artikel och inte till ett utkast.</li>
+        </ol>
+    </div>
+</section>
+
+<section class="s_call_to_action o_cc o_cc5 pt48 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h3>Sökningen är det som räknas</h3>
+                <p class="lead">En artikel ingen hittar är inte kunskap — den är en fil. Klarar din text sökningen på ett ord ur brödtexten har du lagt den där den gör nytta.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">Steg för steg: skriv en artikel, länka den till en annan och verifiera att den hittas via fritextsök på ett ord ur brödtexten.</field>
+    </record>
+
+    <!-- SLIDE 5.2: Quiz — Manuellt test -->
+    <record id="slide_know_s5_02" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Manuellt test</field>
+        <field name="sequence">420</field>
+        <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Kontrollera att du vet hur du verifierar kunskapsbasen själv.</field>
+    </record>
+
+    <record id="slide_know_s5_02_q1" model="slide.question">
+        <field name="question">Varför söker man på ett ord ur brödtexten och inte på rubriken?</field>
+        <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_know_s5_02"/>
+    </record>
+    <record id="slide_know_s5_02_q1_a1" model="slide.answer">
+        <field name="text_value">För att rubriken alltid hittas — det prövar ingenting</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt. Att hitta en rubrik är trivialt. Att hitta ett ord ur innehållet bevisar att texten är indexerad.</field>
+        <field name="question_id" ref="slide_know_s5_02_q1"/>
+    </record>
+    <record id="slide_know_s5_02_q1_a2" model="slide.answer">
+        <field name="text_value">För att brödtext är kortare</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Längden har ingen betydelse här.</field>
+        <field name="question_id" ref="slide_know_s5_02_q1"/>
+    </record>
+    <record id="slide_know_s5_02_q1_a3" model="slide.answer">
+        <field name="text_value">För att rubriker är skyddade</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">De är inte skyddade — de är bara för lätta att hitta.</field>
+        <field name="question_id" ref="slide_know_s5_02_q1"/>
+    </record>
+
+    <record id="slide_know_s5_02_q2" model="slide.question">
+        <field name="question">Du har sparat en artikel men sökningen hittar den inte. Vad kontrollerar du först?</field>
+        <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_know_s5_02"/>
+    </record>
+    <record id="slide_know_s5_02_q2_a1" model="slide.answer">
+        <field name="text_value">Om den är publicerad eller fortfarande ett utkast</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt. Utkast indexeras inte på samma sätt — publicera och sök igen.</field>
+        <field name="question_id" ref="slide_know_s5_02_q2"/>
+    </record>
+    <record id="slide_know_s5_02_q2_a2" model="slide.answer">
+        <field name="text_value">Om datorn är uppkopplad</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Då hade du inte kunnat spara artikeln alls.</field>
+        <field name="question_id" ref="slide_know_s5_02_q2"/>
+    </record>
+    <record id="slide_know_s5_02_q2_a3" model="slide.answer">
+        <field name="text_value">Om webbläsaren är för gammal</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Sällan orsaken till att en artikel inte hittas.</field>
+        <field name="question_id" ref="slide_know_s5_02_q2"/>
+    </record>
+
+    <record id="slide_know_s5_02_q3" model="slide.question">
+        <field name="question">Vad är risken med en länk till ett utkast?</field>
+        <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_know_s5_02"/>
+    </record>
+    <record id="slide_know_s5_02_q3_a1" model="slide.answer">
+        <field name="text_value">Läsaren kan inte öppna den — länken är död för alla utom författaren</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt. En död länk skickar läsaren vilse, och det är värre än ingen länk alls.</field>
+        <field name="question_id" ref="slide_know_s5_02_q3"/>
+    </record>
+    <record id="slide_know_s5_02_q3_a2" model="slide.answer">
+        <field name="text_value">Utkastet publiceras automatiskt</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — publicering är alltid ett medvetet val.</field>
+        <field name="question_id" ref="slide_know_s5_02_q3"/>
+    </record>
+    <record id="slide_know_s5_02_q3_a3" model="slide.answer">
+        <field name="text_value">Ingen — länkar fungerar oavsett status</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Fel. Behörigheten styr, och ett utkast är bara författarens.</field>
+        <field name="question_id" ref="slide_know_s5_02_q3"/>
+    </record>
+
+    <record id="slide_know_s5_02_q4" model="slide.question">
+        <field name="question">Vad skiljer en kunskapsbas från en mappstruktur?</field>
+        <field name="sequence">4</field>
+        <field name="slide_id" ref="slide_know_s5_02"/>
+    </record>
+    <record id="slide_know_s5_02_q4_a1" model="slide.answer">
+        <field name="text_value">Att du kan hitta innehållet utan att minnas var det ligger</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt. Du behöver bara minnas ungefär vad saken handlade om — inte sökvägen.</field>
+        <field name="question_id" ref="slide_know_s5_02_q4"/>
+    </record>
+    <record id="slide_know_s5_02_q4_a2" model="slide.answer">
+        <field name="text_value">Att den är snyggare</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Utseendet är inte poängen.</field>
+        <field name="question_id" ref="slide_know_s5_02_q4"/>
+    </record>
+    <record id="slide_know_s5_02_q4_a3" model="slide.answer">
+        <field name="text_value">Att den är snabbare att öppna</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Snabbhet är en bieffekt, inte skillnaden.</field>
+        <field name="question_id" ref="slide_know_s5_02_q4"/>
+    </record>
+
+    </data>
+</odoo>

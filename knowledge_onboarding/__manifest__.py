@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     'name': 'Knowledge: Onboarding (LMS)',
-    'version': '18.0.2.0.0',
+    'version': '18.0.3.0.0',
     'summary': 'Onboardingskurs: kunskapsbas, anteckningar och dokument-pages',
     'description': """
 Kunskap & anteckningar i Vertel
@@ -11,12 +11,13 @@ Kunskap & anteckningar i Vertel
 Onboardingskurs som lär ut hur du bygger en kunskapsbas, skriver anteckningar
 som går att återanvända och hittar bland allt ni vet.
 
-4 sektioner, 11 slides (6 article, 1 infographic, 4 quiz):
+5 sektioner, 13 slides (7 article, 1 infographic, 5 quiz):
 
 - Sektion 1: Varför en kunskapsbas — kunskap som försvinner
 - Sektion 2: Skriva och strukturera — för den som inte var där
 - Sektion 3: Anteckningar i mobilen — skriv där du är
 - Sektion 4: Hitta och återanvända — sökning, länkar och AI
+- Sektion 5: Manuellt test — skriv, länka, hitta
 
 Innehållet ligger i data/ (inte demo/) så att det laddas i alla databaser.
     """,
@@ -31,6 +32,7 @@ Innehållet ligger i data/ (inte demo/) så att det laddas i alla databaser.
         'data/slide_slides_s2.xml',
         'data/slide_slides_s3.xml',
         'data/slide_slides_s4.xml',
+        'data/slide_slides_s5.xml',
     ],
     'installable': True,
     'auto_install': False,
