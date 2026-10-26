@@ -73,12 +73,26 @@ class DocumentPage(models.Model):
         return '\n\n'.join(p for p in parts if p) or None
 
     def _okf_summary_source(self):
-        """The page title IS its summary.
+        """No own summary — let the fallback chain build one from the body.
 
-        Deterministic and free — no LLM needed to know that.
+        WHY NOT THE TITLE: `summary` is what gets embedded and what
+        `search_vector` is generated from (`summary || title`). Returning the
+        title here made every page indexable only by its name — the body was
+        read into `source_text` but never reached the vector. Measured on
+        ledningssystem 2026-10-26: a 12 000-character page produced a
+        34-character summary, and searching for any word in the body returned
+        nothing.
+
+        Returning None hands over to `_okf_build_summary()`:
+            2. text within the limit   (free, deterministic)
+            3. Allman assistent        (LLM, only when the body is too long)
+            4. truncation              (logged warning)
+
+        `source_text` is unchanged by this — the body is still the version
+        key, so an unchanged page still produces no new version.
         """
         self.ensure_one()
-        return self.name or None
+        return None
 
     def _okf_dirty_fields(self):
         """Fields whose change makes the OKF fields stale.

@@ -58,10 +58,32 @@ class TestDocumentPageAi(common.TransactionCase):
         page = self._page(content='<p>Body</p>')
         self.assertEqual(page._okf_artifact_type(), 'document_page')
 
-    def test_05_summary_source_is_the_title(self):
-        """The title IS the summary — deterministic, no LLM needed."""
+    def test_05_summary_source_defers_to_the_fallback_chain(self):
+        """The bridge supplies no summary — the body does.
+
+        `summary` is embedded and `search_vector` is generated from it
+        (`summary || title`). Returning the title made a page searchable by
+        its name only: the body reached `source_text` but never the vector.
+        Measured 2026-10-26 on a 12 000-character page — 34-character
+        summary, no body word findable.
+
+        None hands over to `_okf_build_summary()`, which takes the text
+        as-is when it fits and calls Allman assistent when it does not.
+        """
         page = self._page(name='Summary Probe', content='<p>x</p>')
-        self.assertEqual(page._okf_summary_source(), 'Summary Probe')
+        self.assertIsNone(
+            page._okf_summary_source(),
+            'the bridge must not return the title as the summary')
+
+    def test_05b_build_summary_uses_the_body_not_the_title(self):
+        """End to end: the built summary carries body words, not just the name."""
+        page = self._page(
+            name='Energi', content='<p>Maskinen drar 196 watt och 1717 kWh.</p>')
+        summary, source = page._okf_build_summary(
+            page._okf_body_source(), page._okf_summary_max_chars())
+        self.assertIn('196', summary, 'body numbers must reach the summary')
+        self.assertIn('kWh', summary, 'body words must reach the summary')
+        self.assertIn(source, ('text', 'coworker', 'truncated'))
 
     def test_06_body_source_includes_title_and_content(self):
         """Both the title and the rendered text belong to the page's meaning."""

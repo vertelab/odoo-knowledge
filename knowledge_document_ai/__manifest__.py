@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Knowledge: Document AI',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.1.0',
     'summary': 'OKF indexing of document.page',
     'category': 'Hidden',
     'author': 'Vertel Sverige AB',
