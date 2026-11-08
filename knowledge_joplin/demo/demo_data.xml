@@ -482,13 +482,13 @@ Check the **Resources** tab to view them.
 
 ### View Changes
 
-In Odoo 18, `<tree>` was replaced by `<list>`:
+In Odoo 18, `<list>` was replaced by `<list>`:
 
 ```xml
 <!-- Odoo 17 -->
-<tree>
+<list>
     <field name="name"/>
-</tree>
+</list>
 
 <!-- Odoo 18 -->
 <list>
@@ -496,7 +496,7 @@ In Odoo 18, `<tree>` was replaced by `<list>`:
 </list>
 ```
 
-The `<tree>` tag still works as an alias but emits a deprecation warning.
+The `<list>` tag still works as an alias but emits a deprecation warning.
 
 ### `states` and `attrs` Removed
 
