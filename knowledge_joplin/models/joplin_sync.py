@@ -45,6 +45,13 @@ _TIMESTAMP_KEYS = (
     'todo_due', 'todo_completed', 'deleted_time', 'item_updated_time',
     'blob_updated_time',
 )
+
+#: What to serve when a ``user_*`` timestamp is unset. Joplin turns an empty
+#: timestamp into ``0``, so serving ``''`` guarantees a permanent conflict loop.
+_TIMESTAMP_KEYS_FALLBACK = {
+    'user_created_time': 'created_time',
+    'user_updated_time': 'updated_time',
+}
 _BOOL_KEYS = (
     'is_todo', 'is_conflict', 'is_shared', 'encryption_applied',
     'encryption_blob_encrypted', 'is_locked',
@@ -296,6 +303,23 @@ _RESOURCE_FIELDS = (
 # Record -> serialized text
 # ---------------------------------------------------------------------------
 
+def _prop_value(record, jkey, val):
+    """Serialise one field, never emitting an empty timestamp.
+
+    Joplin parses an empty ``*_time`` string as ``'0'`` (BaseItem.ts
+    ``unserialize_format``), so an item served with ``user_updated_time:``
+    empty can never converge: ``remote.jop_updated_time === local.updated_time``
+    is unreachable and the client re-syncs it forever.
+
+    ``user_created_time`` / ``user_updated_time`` have no default in Odoo, so
+    rows created outside the sync carry NULL. Fall back to the corresponding
+    server-side timestamp instead of serving a value the client cannot parse.
+    """
+    if jkey in _TIMESTAMP_KEYS and jkey.startswith('user_') and not val:
+        val = record[_TIMESTAMP_KEYS_FALLBACK.get(jkey, 'updated_time')]
+    return prop_to_joplin(jkey, val)
+
+
 def _note_to_item(note):
     fields = []
     for jkey, okey in _NOTE_FIELDS:
@@ -303,7 +327,7 @@ def _note_to_item(note):
             val = note.folder_id.joplin_id if note.folder_id else ''
         else:
             val = note[okey]
-        fields.append((jkey, prop_to_joplin(jkey, val)))
+        fields.append((jkey, _prop_value(note, jkey, val)))
     fields.append(('type_', str(TYPE_NOTE)))
     return serialize_item(note.title or '', note.body or '', fields)
 
@@ -315,7 +339,7 @@ def _folder_to_item(folder):
             val = folder.parent_id.joplin_id if folder.parent_id else ''
         else:
             val = folder[okey]
-        fields.append((jkey, prop_to_joplin(jkey, val)))
+        fields.append((jkey, _prop_value(folder, jkey, val)))
     fields.append(('type_', str(TYPE_FOLDER)))
     return serialize_item(folder.name or '', None, fields)
 
@@ -323,7 +347,7 @@ def _folder_to_item(folder):
 def _tag_to_item(tag):
     fields = []
     for jkey, okey in _TAG_FIELDS:
-        fields.append((jkey, prop_to_joplin(jkey, tag[okey])))
+        fields.append((jkey, _prop_value(tag, jkey, tag[okey])))
     fields.append(('type_', str(TYPE_TAG)))
     return serialize_item(tag.name or '', None, fields)
 
@@ -331,7 +355,7 @@ def _tag_to_item(tag):
 def _resource_to_item(res):
     fields = []
     for jkey, okey in _RESOURCE_FIELDS:
-        fields.append((jkey, prop_to_joplin(jkey, res[okey])))
+        fields.append((jkey, _prop_value(res, jkey, res[okey])))
     fields.append(('type_', str(TYPE_RESOURCE)))
     return serialize_item(res.name or '', None, fields)
 
@@ -356,6 +380,42 @@ def _apply_fields(record, item, field_map, special_parent=False):
                  'todo_completed', 'blob_updated_time'):
         if okey in vals and isinstance(vals[okey], (int, float)):
             vals[okey] = from_ms(vals[okey])
+    return vals
+
+
+def _sync_timestamps(vals):
+    """Close any gap between the server's and the client's timestamps.
+
+    Joplin compares ``remoteContent.updated_time`` against its own
+    ``local.sync_time`` and, when the remote side is ahead, concludes "both
+    remote and local have changes" and writes a conflict copy (sync.ts). A
+    server-invented ``updated_time`` is therefore not a cosmetic wart: it is a
+    conflict generator that fires on every sync.
+
+    The invariant enforced here is that ingest never widens the gap itself:
+    when the client sent no ``user_*`` value, serve the server-side one rather
+    than leaving it NULL (Joplin turns NULL/empty into ``0``, which can never
+    converge). When the client sent neither, invent one timestamp and use it
+    for both, so the pair stays consistent.
+    """
+    updated = vals.get('updated_time')
+    created = vals.get('created_time')
+    if not updated and not created:
+        # Nothing at all: one stamp for both sides of the pair.
+        stamp = datetime.now(timezone.utc).replace(tzinfo=None)
+        vals['created_time'] = vals['updated_time'] = stamp
+        updated = created = stamp
+    elif not updated:
+        vals['updated_time'] = created
+        updated = created
+    elif not created:
+        vals['created_time'] = updated
+        created = updated
+
+    if not vals.get('user_updated_time'):
+        vals['user_updated_time'] = updated
+    if not vals.get('user_created_time'):
+        vals['user_created_time'] = created
     return vals
 
 
@@ -471,6 +531,7 @@ def _ingest_note(env, jid, item):
     Note = env['joplin.note'].with_context(active_test=False)
     note = Note.search([('joplin_id', '=', jid)], limit=1)
     vals = _apply_fields(note, item, _NOTE_FIELDS)
+    vals = _sync_timestamps(vals)
     vals['title'] = item['title']
     vals['body'] = item['body']
     if 'parent_id' in item['props']:
@@ -494,6 +555,7 @@ def _ingest_folder(env, jid, item):
     Folder = env['joplin.folder'].with_context(active_test=False)
     folder = Folder.search([('joplin_id', '=', jid)], limit=1)
     vals = _apply_fields(folder, item, _FOLDER_FIELDS)
+    vals = _sync_timestamps(vals)
     vals['name'] = item['title']
     if 'parent_id' in item['props']:
         p_jid = item['props']['parent_id']
@@ -534,6 +596,7 @@ def _ingest_tag(env, jid, item):
     Tag = env['joplin.tag'].with_context(active_test=False)
     tag = Tag.search([('joplin_id', '=', jid)], limit=1)
     vals = _apply_fields(tag, item, _TAG_FIELDS)
+    vals = _sync_timestamps(vals)
     vals['name'] = item['title']
     if 'deleted_time' in vals:
         vals['active'] = not bool(vals['deleted_time'])
@@ -551,6 +614,7 @@ def _ingest_resource(env, jid, item):
     Resource = env['joplin.resource'].with_context(active_test=False)
     res = Resource.search([('joplin_id', '=', jid)], limit=1)
     vals = _apply_fields(res, item, _RESOURCE_FIELDS)
+    vals = _sync_timestamps(vals)
     vals['name'] = item['title']
     if not res:
         vals['joplin_id'] = jid
@@ -568,7 +632,13 @@ def _ingest_notetag(env, jid, item):
     note = env['joplin.note'].search([('joplin_id', '=', note_jid)], limit=1) if note_jid else None
     tag = env['joplin.tag'].search([('joplin_id', '=', tag_jid)], limit=1) if tag_jid else None
     if note and tag:
-        note.write({'tag_ids': [(4, tag.id)]})
+        # with_context to bypass joplin.note.write()'s timestamp handling: a
+        # note/tag relation is NOT an edit of the note. Letting it bump
+        # updated_time put the note's timestamp in the future relative to the
+        # client's sync_time, which is precisely Joplin's conflict trigger
+        # (`remoteContent.updated_time > local.sync_time`) — so every re-sent
+        # relation minted a conflict copy of an unedited note.
+        note.with_context(joplin_sync_ingest=True).write({'tag_ids': [(4, tag.id)]})
     elif note_jid and tag_jid:
         # The relation can legitimately arrive before either end (the sync
         # target delivers items in no guaranteed order). Creating a shell for
@@ -588,7 +658,7 @@ def _ingest_notetag(env, jid, item):
                 'name': tag_jid,
                 'user_id': env.user.id,
             })
-        note.write({'tag_ids': [(4, tag.id)]})
+        note.with_context(joplin_sync_ingest=True).write({'tag_ids': [(4, tag.id)]})
     return jid
 
 
@@ -624,9 +694,23 @@ def _notetag_to_item(note, tag):
 
     Mirrors :func:`_ingest_notetag`, which reads ``note_id`` and ``tag_id`` from
     ``props`` — so emitting those two keys makes the item round-trip.
+
+    The relation is virtual (derived from the m2m table, see ``_notetag_pairs``)
+    and therefore has no timestamps of its own. Carrying none at all made Joplin
+    parse them as ``0``, so the item could never converge; carry the later of
+    the two endpoints' ``updated_time`` instead, which is stable for as long as
+    neither end changes.
     """
+    stamps = [t for t in (note.updated_time, tag.updated_time) if t]
+    updated = max(stamps) if stamps else None
+    created_stamps = [t for t in (note.created_time, tag.created_time) if t]
+    created = min(created_stamps) if created_stamps else updated
     fields = [('note_id', note.joplin_id), ('tag_id', tag.joplin_id),
-              ('type_', str(TYPE_NOTE_TAG))]
+              ('type_', str(TYPE_NOTE_TAG)),
+              ('created_time', ts_to_iso(created)),
+              ('updated_time', ts_to_iso(updated)),
+              ('user_created_time', ts_to_iso(created)),
+              ('user_updated_time', ts_to_iso(updated))]
     return serialize_item('', '', fields)
 
 

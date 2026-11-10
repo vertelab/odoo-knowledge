@@ -750,3 +750,200 @@ class TestDeltaRequestParameters(TransactionCase):
         items, _cursor, has_more = joplin_sync.delta_items(self.env, limit=3)
         self.assertEqual(len(items), 3)
         self.assertTrue(has_more, 'a truncated page must report has_more')
+
+
+@tagged('post_install', '-at_install')
+class TestTimestampsNeverEmpty(TransactionCase):
+    """No item may ever be served with an empty or unparsable timestamp.
+
+    Joplin's ``BaseItem.ts`` turns an empty timestamp string into ``0``. An
+    item whose ``user_updated_time`` is always 0 can never satisfy
+    ``remote.jop_updated_time === local.updated_time``, so the client re-syncs
+    it on every poll — the observed 404/conflict storm.
+    """
+
+    def test_note_without_user_timestamps_is_served_filled(self):
+        note = self.env['joplin.note'].create({
+            'title': 'no user stamps', 'body': 'b', 'joplin_id': _jid(),
+        })
+        self.assertFalse(note.user_updated_time, 'precondition: column is NULL')
+        props = joplin_sync.unserialize_item(
+            joplin_sync._note_to_item(note))['props']
+        for key in ('user_created_time', 'user_updated_time'):
+            self.assertTrue(
+                props.get(key),
+                '%s served empty for a note with NULL %s' % (key, key))
+            self.assertNotEqual(props[key], '0', '%s served as 0' % key)
+
+    def test_all_four_models_serve_parsable_user_timestamps(self):
+        records = [
+            self.env['joplin.note'].create(
+                {'title': 't', 'body': 'b', 'joplin_id': _jid()}),
+            self.env['joplin.folder'].create(
+                {'name': 't', 'joplin_id': _jid()}),
+            self.env['joplin.tag'].create(
+                {'name': 't', 'joplin_id': _jid()}),
+        ]
+        for record in records:
+            serializer = {
+                'joplin.note': joplin_sync._note_to_item,
+                'joplin.folder': joplin_sync._folder_to_item,
+                'joplin.tag': joplin_sync._tag_to_item,
+            }[record._name]
+            props = joplin_sync.unserialize_item(serializer(record))['props']
+            for key in ('user_created_time', 'user_updated_time'):
+                self.assertTrue(
+                    props.get(key),
+                    '%s served empty %s' % (record._name, key))
+
+    def test_notetag_item_carries_timestamps(self):
+        """Type-6 items had no timestamp props at all (21 of 82 delta items)."""
+        note = self.env['joplin.note'].create({
+            'title': 'n', 'body': 'b', 'joplin_id': _jid(),
+            'updated_time': '2024-03-03 03:03:03',
+            'created_time': '2024-01-01 01:01:01',
+        })
+        tag = self.env['joplin.tag'].create({
+            'name': 't', 'joplin_id': _jid(),
+            'updated_time': '2024-04-04 04:04:04',
+            'created_time': '2024-02-02 02:02:02',
+        })
+        props = joplin_sync.unserialize_item(
+            joplin_sync._notetag_to_item(note, tag))['props']
+        for key in ('created_time', 'updated_time',
+                    'user_created_time', 'user_updated_time'):
+            self.assertTrue(props.get(key), 'notetag serves no %s' % key)
+        self.assertEqual(props['updated_time'], '2024-04-04T04:04:04.000Z',
+                         'notetag must carry the later endpoint timestamp')
+        self.assertEqual(props['created_time'], '2024-01-01T01:01:01.000Z')
+
+
+@tagged('post_install', '-at_install')
+class TestNotetagDoesNotEditNote(TransactionCase):
+    """Re-sending a note/tag relation must not look like an edit.
+
+    The relation ingest wrote ``{'tag_ids': [(4, id)]}``, which bumped the
+    note's ``updated_time`` to now (days in the future relative to the
+    client's sync_time) and minted a revision. Both are conflict triggers on
+    the client side, and together they produced the conflict storm.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.Old = '2021-06-06 06:06:06'
+        self.note = self.env['joplin.note'].create({
+            'title': 'stable', 'body': 'unchanged', 'joplin_id': _jid(),
+            'updated_time': self.Old, 'created_time': self.Old,
+            'user_updated_time': self.Old, 'user_created_time': self.Old,
+        })
+        self.tag = self.env['joplin.tag'].create({
+            'name': 'tag', 'joplin_id': _jid(),
+            'updated_time': self.Old, 'created_time': self.Old,
+        })
+
+    def _relation_item(self):
+        return {
+            'id': self.note.joplin_id,
+            'title': '',
+            'body': '',
+            'props': {
+                'note_id': self.note.joplin_id,
+                'tag_id': self.tag.joplin_id,
+                'type_': '6',
+            },
+        }
+
+    def test_relation_does_not_move_updated_time(self):
+        joplin_sync._ingest_notetag(self.env, 'x', self._relation_item())
+        self.note.invalidate_recordset()
+        self.assertEqual(
+            self.note.updated_time.strftime('%Y-%m-%d %H:%M:%S'), self.Old,
+            'ingesting a note/tag relation moved the note updated_time')
+
+    def test_relation_does_not_mint_a_revision(self):
+        before = self.env['joplin.revision'].search_count(
+            [('note_id', '=', self.note.id)])
+        for _i in range(3):
+            joplin_sync._ingest_notetag(self.env, 'x', self._relation_item())
+        after = self.env['joplin.revision'].search_count(
+            [('note_id', '=', self.note.id)])
+        self.assertEqual(
+            after, before,
+            'a note/tag relation minted %d revisions' % (after - before))
+
+    def test_relation_still_assigns_the_tag(self):
+        joplin_sync._ingest_notetag(self.env, 'x', self._relation_item())
+        self.note.invalidate_recordset()
+        self.assertIn(self.tag, self.note.tag_ids,
+                      'the tag was dropped along with the timestamp bump')
+
+    def test_identical_put_mints_no_revision(self):
+        self.note.write({'title': 'stable', 'body': 'unchanged'})
+        count = self.env['joplin.revision'].search_count(
+            [('note_id', '=', self.note.id)])
+        self.note.write({'title': 'stable', 'body': 'unchanged'})
+        self.assertEqual(
+            self.env['joplin.revision'].search_count(
+                [('note_id', '=', self.note.id)]), count,
+            'an unchanged PUT recorded a document revision')
+
+    def test_real_edit_still_mints_a_revision(self):
+        self.note.write({'title': 'stable', 'body': 'changed now'})
+        self.assertTrue(
+            self.env['joplin.revision'].search_count(
+                [('note_id', '=', self.note.id)]),
+            'a genuine body edit must still record a revision')
+
+
+@tagged('post_install', '-at_install')
+class TestIngestTimestampAgreement(TransactionCase):
+    """Ingest must never leave updated_time ahead of user_updated_time.
+
+    ``sync.ts`` reads ``remoteContent.updated_time > local.sync_time`` as
+    "both sides changed" and writes a conflict copy. The server must not
+    manufacture that gap.
+    """
+
+    def _item(self, props):
+        return {
+            'id': props.get('id', _jid()),
+            'title': 't',
+            'body': 'b',
+            'props': props,
+        }
+
+    def test_missing_user_times_are_filled_from_server_times(self):
+        jid = _jid()
+        joplin_sync._ingest_note(self.env, jid, self._item({
+            'id': jid,
+            'created_time': '2023-03-03T03:03:03.000Z',
+            'updated_time': '2023-03-03T03:03:03.000Z',
+        }))
+        note = self.env['joplin.note'].search([('joplin_id', '=', jid)])
+        self.assertTrue(note.user_updated_time,
+                        'ingest left user_updated_time NULL')
+        self.assertEqual(note.user_updated_time, note.updated_time,
+                         'ingest created a gap without the client asking')
+        self.assertEqual(note.user_created_time, note.created_time)
+
+    def test_client_user_times_are_preserved(self):
+        jid = _jid()
+        joplin_sync._ingest_note(self.env, jid, self._item({
+            'id': jid,
+            'created_time': '2023-03-03T03:03:03.000Z',
+            'updated_time': '2023-03-03T03:03:03.000Z',
+            'user_created_time': '2023-01-01T01:01:01.000Z',
+            'user_updated_time': '2023-02-02T02:02:02.000Z',
+        }))
+        note = self.env['joplin.note'].search([('joplin_id', '=', jid)])
+        self.assertEqual(note.user_updated_time.strftime('%Y-%m-%d %H:%M:%S'),
+                         '2023-02-02 02:02:02',
+                         'the client-supplied user_updated_time was clobbered')
+
+    def test_note_without_any_timestamp_gets_one(self):
+        jid = _jid()
+        joplin_sync._ingest_note(self.env, jid, self._item({'id': jid}))
+        note = self.env['joplin.note'].search([('joplin_id', '=', jid)])
+        self.assertTrue(note.updated_time, 'ingest stored no updated_time')
+        self.assertEqual(note.updated_time, note.user_updated_time,
+                         'an invented timestamp must serve both sides')

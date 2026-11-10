@@ -132,13 +132,32 @@ class JoplinNote(models.Model):
         records._log_event(1)
         return records
 
+    #: Fields whose change constitutes a *content* edit. Tagging a note is
+    #: not a document edit: including ``tag_ids`` here made ``_ingest_notetag``
+    #: (which writes ``{'tag_ids': [(4, tag.id)]}``) mint a revision every time
+    #: the client re-sent a note/tag relation — 125 versions of notes nobody
+    #: had edited, surfacing in Joplin as "versions of a document among the
+    #: conflicts".
+    _CONTENT_FIELDS = ('title', 'body', 'folder_id', 'is_todo')
+
     def write(self, vals):
         now = datetime.utcnow()
-        changed = any(k in vals for k in ('title', 'body', 'folder_id', 'is_todo', 'tag_ids'))
+        # Tagging a note is not an edit of it. The sync ingest sets this flag
+        # so a re-sent note/tag relation can never mint a revision or move
+        # updated_time — both of which the Joplin client reads as "the server
+        # has a newer version", producing a conflict copy of an unedited note.
+        relation_only = self.env.context.get('joplin_sync_ingest')
+        changed = (not relation_only) and any(k in vals for k in self._CONTENT_FIELDS)
         if changed:
-            new_vals = {'title': vals.get('title'), 'body': vals.get('body')}
+            # Pass the record's *current* values when the key is absent, so a
+            # title-only write does not record the body being emptied (and a
+            # body-only write does not record the title being emptied).
             for note in self:
-                self._create_revision(note, new_vals)
+                note_vals = {
+                    'title': vals.get('title', note.title),
+                    'body': vals.get('body', note.body),
+                }
+                self._create_revision(note, note_vals)
             # Trust an explicit updated_time (the sync ingest supplies the
             # client's). Overwriting it made every ingest look like an edit
             # and destroyed the timestamp the client had sent.
@@ -172,6 +191,13 @@ class JoplinNote(models.Model):
         new_title = new_vals.get('title', old_title) or ''
         new_body = new_vals.get('body', old_body) or ''
         old_metadata = '{}'
+
+        # The client re-PUTs unchanged items constantly (46 PUTs against 542
+        # GETs in one measured day). Recording a revision for those produced
+        # 125 versions of notes nobody had edited, which the user saw as
+        # "versions of a document among the conflicts". No change, no version.
+        if (new_title, new_body) == (old_title, old_body):
+            return
 
         title_diff = dmp.diff_main(old_title, new_title)
         dmp.diff_cleanupSemantic(title_diff)
