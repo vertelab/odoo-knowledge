@@ -128,3 +128,43 @@ still holding a new `'<epoch_ms>|<item_name>'` cursor cannot decode it and
 gets a **full** delta rather than skipping items — a larger response, never
 a lost note. The reverse direction is covered by the same rule: undecodable
 cursors fall back to full delta.
+
+## Upgrading into this version — check the view tree first
+
+Installing this module on a database whose other modules have drifted can
+fail for reasons that have nothing to do with Joplin. The proven case
+(2026-11-10, `luke18a`): every `--update` aborted with a NULL `parent_id` in
+`ir_model_inherit`, which looked like an inheritance bug here but was really
+a stale view owned by `saltstack`.
+
+If an upgrade dies and the traceback is nowhere to be found, note that
+`checkmodule` deliberately splits the child's stderr away from its own log,
+and `logfile` in `/etc/odoo/odoo.conf` overrides stdout — so redirecting to a
+file yields an **empty** file. Run the update directly to see the error:
+
+```bash
+cd /usr/share/odoo-<repo>
+sudo -u odoo odoo --config /etc/odoo/odoo.conf -d <db> \
+  --update <module> --stop-after-init \
+  --logfile=/dev/stdout --log-level=warn 2>&1 | tail -40
+```
+
+A `ParseError` naming a field that exists in no module you have is usually a
+**stale sibling view**: views sharing a parent form are validated together, so
+one module's dead field blocks an unrelated module's upgrade. Find it and
+upgrade the *owner* first:
+
+```sql
+SELECT id, name FROM ir_ui_view WHERE arch_db::text LIKE '%<field>%';
+SELECT name, latest_version FROM ir_module_module WHERE name = '<owner>';
+```
+
+Compare the latter against `version` in that module's `__manifest__.py`;
+disk ≫ database means the view was never refreshed. Fix order is
+owner → blocked module:
+
+```bash
+sudo -u odoo odoo --config /etc/odoo/odoo.conf -d <db> \
+  --update <owner>,<blocked>,knowledge_joplin --stop-after-init \
+  --logfile=/dev/stdout --log-level=warn
+```
