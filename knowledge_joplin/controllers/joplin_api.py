@@ -1287,7 +1287,7 @@ class JoplinApi(http.Controller):
         if path.endswith(":"):
             path = path[:-1]
         try:
-            jid = joplin_sync.ingest(request.env, path, payload["content"])
+            joplin_sync.ingest(request.env, path, payload["content"])
         except Exception:
             _logger.exception("[Joplin] ingest failed for path=%s", path)
             return self._response({"error": "Failed to store item"}, 500)
