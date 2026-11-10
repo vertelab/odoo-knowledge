@@ -82,6 +82,47 @@ An operator seeing an old trashed folder with a `deleted_time` equal to its
 
 Both halves are pinned by `TestWriteTimestampRules`.
 
+## The two timestamps must never diverge
+
+Joplin keeps two timestamps per item: `updated_time` (the item as the server
+saw it) and `user_updated_time` (the item as the *user* last changed it). The
+client's conflict test is `remoteContent.updated_time > local.sync_time`, and
+its convergence test compares `jop_updated_time` against `local.updated_time`.
+Both break if the server lets the pair drift apart:
+
+- an **empty** timestamp is parsed as `'0'` (`BaseItem.ts`), which no local
+  value can ever equal — the item re-syncs forever;
+- an `updated_time` **ahead** of `user_updated_time` reads as "both sides
+  changed" and makes the client write a **conflict copy**.
+
+So the invariant this module enforces is: **every item carries all four
+timestamps, and `updated_time` is never ahead of `user_updated_time`.**
+
+- `_prop_value()` falls back to `created_time`/`updated_time` when the client
+  sent no `user_*` value, so nothing is ever served as an empty string.
+- `_sync_timestamps()` runs on every ingest path and fills whichever side is
+  missing, so the pair cannot be created half-populated.
+- A note/tag relation is **not an edit**. `tag_ids` is excluded from the
+  content-change set and `joplin_sync_ingest` makes the relation write inert,
+  because a relation write used to bump `updated_time` to now — up to 76 days
+  ahead — which is precisely what generated the conflicts.
+- `_create_revision()` records nothing when the text is unchanged. The client
+  re-PUTs unchanged items constantly; recording those produced 125 versions
+  of notes nobody had edited.
+- Type-6 note-tag items are virtual (derived from the m2m table) and carry
+  `updated` = `max(note, tag)` rather than no timestamps at all.
+
+Pinned by `TestTimestampsNeverEmpty`, `TestNotetagDoesNotEditNote` and
+`TestIngestTimestampAgreement`.
+
+### Repairing rows written before 18.0.1.1.2
+
+Migration `18.0.1.1.2` back-fills `user_created_time`/`user_updated_time` from
+the server-side columns, rewinds `updated_time` that the server had moved past
+the client's own value, and deletes revisions whose diff is empty. It is a
+guarded no-op on re-run. On `ledningssystem` it filled 70 timestamps, rewound
+15 invented future values and removed 22 empty revisions.
+
 ## Folder shells
 
 Ingesting a note whose folder has not arrived yet creates the folder shell
