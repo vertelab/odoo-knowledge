@@ -1,6 +1,6 @@
 {
     'name': 'Knowledge: Joplin Backend',
-    'version': '18.0.1.1.0',
+    'version': '18.0.1.1.1',
     'category': 'Knowledge',
     'summary': 'Joplin-compatible note-taking backend with REST API and sync protocol.',
     'description': '''

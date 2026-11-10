@@ -597,6 +597,39 @@ def _ingest_revision(env, jid, item):
     return jid
 
 
+def _notetag_pairs(env):
+    """Yield ``(notetag_id, note, tag)`` for every note/tag relation.
+
+    Note-tag items exist only as a relation between a note and a tag; they have
+    no table row of their own, so :func:`_record_kind_by_id` can never find
+    them. The same enumeration that ``delta_items`` advertises is used here, so
+    a GET can resolve every type-6 item the delta hands out.
+    """
+    tags = env['joplin.tag'].with_context(active_test=False).search([], order='id')
+    for tag in tags:
+        for note in tag.note_ids:
+            yield notetag_id(note.joplin_id, tag.joplin_id), note, tag
+
+
+def _find_notetag(env, jid):
+    """Return ``(note, tag)`` for a note-tag id, or ``None``."""
+    for ntid, note, tag in _notetag_pairs(env):
+        if ntid == jid:
+            return note, tag
+    return None
+
+
+def _notetag_to_item(note, tag):
+    """Serialise a note/tag relation as a Joplin type-6 item.
+
+    Mirrors :func:`_ingest_notetag`, which reads ``note_id`` and ``tag_id`` from
+    ``props`` — so emitting those two keys makes the item round-trip.
+    """
+    fields = [('note_id', note.joplin_id), ('tag_id', tag.joplin_id),
+              ('type_', str(TYPE_NOTE_TAG))]
+    return serialize_item('', '', fields)
+
+
 def content_for(env, path):
     """Return (content, mime_type) for a GET of item content, or None if absent."""
     kind, jid = _parse_path(path)
@@ -619,6 +652,13 @@ def content_for(env, path):
 
     if kind != 'item':
         return None, None
+
+    # Note-tags are advertised by delta_items() as type 6 but are not rows of
+    # any model, so they must be resolved before _record_kind_by_id() (which
+    # would report them absent and turn every fetch into a 404).
+    pair = _find_notetag(env, jid)
+    if pair:
+        return _notetag_to_item(*pair), 'text/plain'
 
     rec_kind, rec = _record_kind_by_id(env, jid)
     if not rec:
@@ -662,6 +702,17 @@ def stat_for(env, path):
 
     if kind != 'item':
         return None
+
+    pair = _find_notetag(env, jid)
+    if pair:
+        note, tag = pair
+        # The relation carries no timestamp; the tag's is what delta_items()
+        # uses as the proxy, so stat must agree with it or a client re-fetches
+        # the same item forever.
+        ts = to_ms(tag.updated_time)
+        return {'id': 'root:/%s.md' % jid, 'name': '%s.md' % jid,
+                'mime_type': 'text/plain',
+                'updated_time': ts, 'jop_updated_time': ts}
 
     rec_kind, rec = _record_kind_by_id(env, jid)
     if not rec:

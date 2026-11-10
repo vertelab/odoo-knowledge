@@ -585,6 +585,43 @@ class TestNotebookTreeAgreement(TransactionCase):
             self.assertIsNotNone(joplin_sync.stat_for(self.env, path),
                                  'no stat for %s' % path)
 
+    def test_every_delta_item_is_fetchable(self):
+        # The generalised form of the note-tag 404. delta_items() advertises
+        # item names; if any advertised name cannot be resolved by content_for
+        # / stat_for, the client sees "found a new item" and then a 404 forever.
+        # Note-tags are the case that shipped broken, because they are a
+        # relation rather than a row and _record_kind_by_id() cannot see them.
+        root, sub, notes, tag, resource = self._tree()
+        for name in self._all_delta_names():
+            path = '/%s' % name
+            content, mime = joplin_sync.content_for(self.env, path)
+            self.assertIsNotNone(
+                content,
+                'delta advertises %r but content_for returns None' % name)
+            self.assertTrue(mime, 'no mime type for %r' % name)
+            self.assertIsNotNone(
+                joplin_sync.stat_for(self.env, path),
+                'delta advertises %r but stat_for returns None' % name)
+
+    def test_note_tag_item_round_trips(self):
+        # A type-6 item must parse back into the same (note, tag) pair that
+        # _ingest_notetag() wrote, or a client re-uploading what it downloaded
+        # would corrupt the relation.
+        root, sub, notes, tag, resource = self._tree()
+        ntid = joplin_sync.notetag_id(notes[0].joplin_id, tag.joplin_id)
+
+        self.assertIn('%s.md' % ntid, self._all_delta_names(),
+                      'the note/tag relation is not advertised')
+
+        content, _mime = joplin_sync.content_for(
+            self.env, '/%s.md' % ntid)
+        self.assertIsNotNone(content, 'note-tag content is not served')
+
+        parsed = joplin_sync.unserialize_item(content)
+        self.assertEqual(parsed['type_'], joplin_sync.TYPE_NOTE_TAG)
+        self.assertEqual(parsed['props']['note_id'], notes[0].joplin_id)
+        self.assertEqual(parsed['props']['tag_id'], tag.joplin_id)
+
     def test_searchable_note_is_also_in_the_delta(self):
         # The concrete symptom: the Android app's search finds the note,
         # sync does not show it.
