@@ -45,6 +45,34 @@ def _from_ms_timestamp(ms):
     return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).replace(tzinfo=None)
 
 
+def _parse_delta_params(params, data=None, is_post=False):
+    """Extract ``cursor`` and ``limit`` for the delta endpoint.
+
+    The Joplin client sends the cursor as a query parameter on GET; some
+    callers POST it as JSON. Both are accepted, and a malformed limit must
+    degrade to "use the default" rather than raise a 500.
+
+    Returns ``(cursor, limit)`` where either may be None.
+    """
+    cursor = params.get("cursor")
+    limit = params.get("limit")
+    if is_post and data:
+        try:
+            payload = json.loads(data or b"{}")
+        except (TypeError, ValueError):
+            payload = {}
+        if isinstance(payload, dict):
+            cursor = cursor or payload.get("cursor")
+            limit = limit or payload.get("limit")
+    try:
+        limit = int(limit) if limit not in (None, "") else None
+    except (TypeError, ValueError):
+        limit = None
+    if limit is not None and limit <= 0:
+        limit = None
+    return (cursor or None), limit
+
+
 def _parse_item_payload(data, params):
     """Parse a PUT/POST body from a Joplin client.
 
@@ -1215,16 +1243,13 @@ class JoplinApi(http.Controller):
         if path == "//delta" or path == "/:/delta":
             # Joplin sends the cursor as a query parameter on GET.
             # Accept a JSON body too, for callers that POST it.
-            cursor = params.get("cursor")
-            if not cursor and request.httprequest.method == "POST":
-                try:
-                    payload = json.loads(request.httprequest.data or b"{}")
-                except Exception:
-                    payload = {}
-                if isinstance(payload, dict):
-                    cursor = payload.get("cursor")
+            cursor, limit = _parse_delta_params(
+                params,
+                data=request.httprequest.data,
+                is_post=request.httprequest.method == "POST",
+            )
             items, new_cursor, has_more = joplin_sync.delta_items(
-                request.env, cursor=cursor)
+                request.env, cursor=cursor, limit=limit)
             return self._response({
                 "items": items,
                 "has_more": has_more,

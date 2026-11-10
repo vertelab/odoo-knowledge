@@ -651,3 +651,65 @@ class TestPerUserBoundary(TransactionCase):
         names = {item['item_name'] for item in items}
         self.assertIn('%s.md' % self.note_b.joplin_id, names,
                       'a followed note is missing from the follower delta')
+
+
+
+@tagged('post_install', '-at_install')
+class TestDeltaRequestParameters(TransactionCase):
+    """The route must honour ``limit`` and ``cursor``.
+
+    The paging tests above call ``delta_items()`` directly, so they were
+    blind to the controller dropping the request parameters. A client
+    asking ``?limit=3&cursor=...`` got page 1 and then an empty page 2,
+    which is indistinguishable from "the delta is complete" and hid every
+    item after the first page. That is the reported symptom.
+    """
+
+    def _helper(self):
+        from odoo.addons.knowledge_joplin.controllers.joplin_api import (
+            _parse_delta_params,
+        )
+        return _parse_delta_params
+
+    def test_limit_is_forwarded(self):
+        cursor, limit = self._helper()({'limit': '3'})
+        self.assertIsNone(cursor)
+        self.assertEqual(limit, 3)
+
+    def test_cursor_is_forwarded(self):
+        cursor, limit = self._helper()({'cursor': '123|a.md', 'limit': '5'})
+        self.assertEqual(cursor, '123|a.md')
+        self.assertEqual(limit, 5)
+
+    def test_junk_limit_falls_back_to_default(self):
+        for junk in ('', 'abc', '0', '-1'):
+            _cursor, limit = self._helper()({'limit': junk})
+            self.assertIsNone(limit, 'limit %r should be ignored' % junk)
+
+    def test_missing_params_are_none(self):
+        cursor, limit = self._helper()({})
+        self.assertIsNone(cursor)
+        self.assertIsNone(limit)
+
+    def test_post_body_cursor_is_read(self):
+        cursor, limit = self._helper()(
+            {}, data=b'{"cursor": "42|b.md", "limit": 2}', is_post=True)
+        self.assertEqual(cursor, '42|b.md')
+        self.assertEqual(limit, 2)
+
+    def test_malformed_post_body_does_not_raise(self):
+        cursor, limit = self._helper()({}, data=b'not json', is_post=True)
+        self.assertIsNone(cursor)
+        self.assertIsNone(limit)
+
+    def test_limit_actually_truncates_the_delta(self):
+        """A forwarded limit must shorten the page, not be ignored."""
+        for i in range(6):
+            self.env['joplin.note'].create({
+                'title': 'param note %d' % i,
+                'body': 'body',
+                'joplin_id': _jid(),
+            })
+        items, _cursor, has_more = joplin_sync.delta_items(self.env, limit=3)
+        self.assertEqual(len(items), 3)
+        self.assertTrue(has_more, 'a truncated page must report has_more')
