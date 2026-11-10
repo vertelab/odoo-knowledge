@@ -31,6 +31,10 @@ class JoplinTag(models.Model):
     encryption_applied = fields.Boolean(string='Encryption Applied', default=False)
 
     color = fields.Integer(string='Color', default=0)
+    # Soft delete on every item type, as in Joplin's own data model.
+    # joplin.tag does not inherit mail.thread, so 'tracking' is not a valid
+    # field parameter here — unlike joplin.note, which does.
+    deleted_time = fields.Datetime(string='Deleted Time')
     active = fields.Boolean(string='Active', default=True)
 
     _sql_constraints = [
@@ -57,14 +61,26 @@ class JoplinTag(models.Model):
         return records
 
     def write(self, vals):
-        if 'name' in vals:
+        changed = 'name' in vals
+        # See joplin.folder.write(): an explicit updated_time wins.
+        if changed and 'updated_time' not in vals:
             vals['updated_time'] = datetime.utcnow()
+
+        if 'active' in vals and not vals['active'] and 'deleted_time' not in vals:
+            vals['deleted_time'] = datetime.utcnow()
+
         res = super().write(vals)
         if vals.get('active') is False:
             self._log_event(3)
-        elif 'name' in vals:
+        elif changed:
             self._log_event(2)
         return res
+
+    def action_trash(self):
+        self.write({'active': False})
+
+    def action_restore(self):
+        self.write({'active': True, 'deleted_time': False})
 
     def unlink(self):
         self._log_event(3)

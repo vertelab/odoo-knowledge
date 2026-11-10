@@ -36,6 +36,11 @@ class JoplinFolder(models.Model):
     encryption_applied = fields.Boolean(string='Encryption Applied', default=False)
     master_key_id = fields.Char(string='Master Key ID')
 
+    # Joplin carries deleted_time on EVERY item type, not only on notes.
+    # Without it the sync protocol cannot report a deleted notebook, and
+    # _FOLDER_FIELDS (which maps it) raised a KeyError on every folder.
+    # No 'tracking' here: joplin.folder does not inherit mail.thread.
+    deleted_time = fields.Datetime(string='Deleted Time')
     active = fields.Boolean(string='Active', default=True)
 
     _sql_constraints = [
@@ -62,14 +67,28 @@ class JoplinFolder(models.Model):
         return records
 
     def write(self, vals):
-        if 'name' in vals or 'parent_id' in vals:
+        changed = any(k in vals for k in ('name', 'parent_id', 'icon'))
+        # Trust the client's updated_time when it supplies one: the sync
+        # ingest passes the timestamp from the Joplin item, and overwriting
+        # it here made every ingest look like a modification.
+        if changed and 'updated_time' not in vals:
             vals['updated_time'] = datetime.utcnow()
+
+        if 'active' in vals and not vals['active'] and 'deleted_time' not in vals:
+            vals['deleted_time'] = datetime.utcnow()
+
         res = super().write(vals)
         if vals.get('active') is False:
             self._log_event(3)
-        elif any(k in vals for k in ('name', 'parent_id', 'icon')):
+        elif changed:
             self._log_event(2)
         return res
+
+    def action_trash(self):
+        self.write({'active': False})
+
+    def action_restore(self):
+        self.write({'active': True, 'deleted_time': False})
 
     def unlink(self):
         self._log_event(3)

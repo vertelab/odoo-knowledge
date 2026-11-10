@@ -37,6 +37,9 @@ TYPE_NOTE_TAG = 6
 TYPE_MASTER_KEY = 9
 TYPE_REVISION = 13
 
+# Page size for the delta. The client follows has_more until it is False.
+_DELTA_PAGE_SIZE = 200
+
 _TIMESTAMP_KEYS = (
     'created_time', 'updated_time', 'user_created_time', 'user_updated_time',
     'todo_due', 'todo_completed', 'deleted_time', 'item_updated_time',
@@ -258,6 +261,10 @@ _TAG_FIELDS = (
     ('updated_time', 'updated_time'),
     ('user_created_time', 'user_created_time'),
     ('user_updated_time', 'user_updated_time'),
+    # Joplin carries deleted_time on EVERY item type, tags included. Without
+    # it the tag model gained a deleted_time column that nothing reads or
+    # writes, so a tag deletion could never be reported to the client.
+    ('deleted_time', 'deleted_time'),
 )
 
 _RESOURCE_FIELDS = (
@@ -468,7 +475,7 @@ def _ingest_note(env, jid, item):
     vals['body'] = item['body']
     if 'parent_id' in item['props']:
         folder_jid = item['props']['parent_id']
-        folder = env['joplin.folder'].search([('joplin_id', '=', folder_jid)], limit=1) if folder_jid else None
+        folder = _resolve_folder(env, folder_jid) if folder_jid else None
         vals['folder_id'] = folder.id if folder else False
     # deleted_time drives soft-delete in Joplin; mirror as active flag.
     if 'deleted_time' in vals:
@@ -490,7 +497,7 @@ def _ingest_folder(env, jid, item):
     vals['name'] = item['title']
     if 'parent_id' in item['props']:
         p_jid = item['props']['parent_id']
-        parent = env['joplin.folder'].search([('joplin_id', '=', p_jid)], limit=1) if p_jid else None
+        parent = _resolve_folder(env, p_jid) if p_jid else None
         vals['parent_id'] = parent.id if parent else False
     if 'deleted_time' in vals:
         vals['active'] = not bool(vals['deleted_time'])
@@ -504,11 +511,32 @@ def _ingest_folder(env, jid, item):
     return jid
 
 
+def _resolve_folder(env, jid, name=None):
+    """Return the folder for *jid*, creating an empty shell if it is absent.
+
+    A note's parent must never silently become "no notebook": that is what
+    made the Android client show an empty notebook list while every note was
+    present and searchable. The real folder arrives in the same delta and
+    overwrites the shell.
+    """
+    Folder = env['joplin.folder'].with_context(active_test=False)
+    folder = Folder.search([('joplin_id', '=', jid)], limit=1)
+    if folder:
+        return folder
+    return Folder.create({
+        'joplin_id': jid,
+        'name': name or jid,
+        'user_id': env.user.id,
+    })
+
+
 def _ingest_tag(env, jid, item):
     Tag = env['joplin.tag'].with_context(active_test=False)
     tag = Tag.search([('joplin_id', '=', jid)], limit=1)
     vals = _apply_fields(tag, item, _TAG_FIELDS)
     vals['name'] = item['title']
+    if 'deleted_time' in vals:
+        vals['active'] = not bool(vals['deleted_time'])
     if not tag:
         vals['joplin_id'] = jid
         if 'user_id' not in vals:
@@ -540,6 +568,26 @@ def _ingest_notetag(env, jid, item):
     note = env['joplin.note'].search([('joplin_id', '=', note_jid)], limit=1) if note_jid else None
     tag = env['joplin.tag'].search([('joplin_id', '=', tag_jid)], limit=1) if tag_jid else None
     if note and tag:
+        note.write({'tag_ids': [(4, tag.id)]})
+    elif note_jid and tag_jid:
+        # The relation can legitimately arrive before either end (the sync
+        # target delivers items in no guaranteed order). Creating a shell for
+        # whichever side is missing keeps the tag assignment instead of
+        # dropping it silently — the real item overwrites the shell when it
+        # arrives. Same reasoning as _resolve_folder().
+        if not note:
+            note = env['joplin.note'].create({
+                'joplin_id': note_jid,
+                'title': note_jid,
+                'body': '',
+                'user_id': env.user.id,
+            })
+        if not tag:
+            tag = env['joplin.tag'].create({
+                'joplin_id': tag_jid,
+                'name': tag_jid,
+                'user_id': env.user.id,
+            })
         note.write({'tag_ids': [(4, tag.id)]})
     return jid
 
@@ -657,45 +705,144 @@ def delete_for(env, path):
     return True
 
 
-def delta_items(env):
-    """Return the list of delta items for the authenticated user."""
-    items = []
+def _encode_cursor(updated_time, item_name):
+    """Opaque delta cursor: the (updated_time, item_name) pair of the last item sent.
 
-    notes = env['joplin.note'].with_context(active_test=False).search([])
-    for n in notes:
-        items.append({'item_name': '%s.md' % n.joplin_id, 'type': TYPE_NOTE,
-                      'updated_time': to_ms(n.updated_time),
-                      'jop_updated_time': to_ms(n.updated_time)})
+    A bare millisecond timestamp cannot separate items sharing a timestamp,
+    which made a paged client skip or repeat them. ``item_name`` is the
+    protocol's own identity for an item and is unique across ALL item types,
+    so it breaks the tie globally.
 
-    folders = env['joplin.folder'].with_context(active_test=False).search([])
-    for f in folders:
-        items.append({'item_name': '%s.md' % f.joplin_id, 'type': TYPE_FOLDER,
-                      'updated_time': to_ms(f.updated_time),
-                      'jop_updated_time': to_ms(f.updated_time)})
+    An internal database id would NOT do: ids are only unique within one
+    table, so the same (updated_time, id) pair can name a note and a folder
+    at once — measured as a one-item overlap between consecutive pages.
+    """
+    return '%s|%s' % (to_ms(updated_time), item_name)
 
-    tags = env['joplin.tag'].with_context(active_test=False).search([])
-    for t in tags:
-        items.append({'item_name': '%s.md' % t.joplin_id, 'type': TYPE_TAG,
-                      'updated_time': to_ms(t.updated_time),
-                      'jop_updated_time': to_ms(t.updated_time)})
 
-    resources = env['joplin.resource'].with_context(active_test=False).search([])
-    for r in resources:
-        items.append({'item_name': '%s.md' % r.joplin_id, 'type': TYPE_RESOURCE,
-                      'updated_time': to_ms(r.updated_time),
-                      'jop_updated_time': to_ms(r.updated_time)})
+def _decode_cursor(cursor):
+    """Return ``(updated_time, item_name)``. Tolerates junk.
 
-    # NoteTag relations (synthesized stable ids)
+    The timestamp comes back as a NAIVE UTC datetime, the same shape the
+    column holds, so it can go straight into an ORM domain.
+    """
+    if cursor in (None, '', 0, '0', False):
+        return None, ''
+    raw = str(cursor)
+    if '|' not in raw:
+        # A legacy numeric cursor (the old wall-clock stamp) or garbage:
+        # fall back to a full delta rather than silently sending nothing.
+        return None, ''
+    raw_time, item_name = raw.split('|', 1)
+    try:
+        return from_ms(int(raw_time)), item_name
+    except (ValueError, TypeError):
+        return None, ''
+
+
+def _decode_cursor_ms(cursor):
+    """Return ``(epoch_ms or None, item_name)`` for ordering comparisons.
+
+    Comparisons happen in the millisecond domain, not the datetime domain.
+    ``to_ms()`` truncates to whole milliseconds, so ``from_ms(to_ms(dt))``
+    lands BEFORE the stored microsecond-precision value. Comparing the two
+    shapes made a page's last item reappear on the next page.
+    """
+    if cursor in (None, '', 0, '0', False):
+        return None, ''
+    raw = str(cursor)
+    if '|' not in raw:
+        return None, ''
+    raw_time, item_name = raw.split('|', 1)
+    try:
+        return int(raw_time), item_name
+    except (ValueError, TypeError):
+        return None, ''
+
+
+# Model and joplin item type. joplin.item is deliberately absent: it holds
+# raw protocol debris (locks, .sync state, unrecognised payloads) and is
+# reachable only by path, for the raw fallback.
+_DELTA_SOURCES = (
+    ('joplin.note', TYPE_NOTE),
+    ('joplin.folder', TYPE_FOLDER),
+    ('joplin.tag', TYPE_TAG),
+    ('joplin.resource', TYPE_RESOURCE),
+)
+
+
+def delta_items(env, cursor=None, limit=None):
+    """Return ``(items, new_cursor, has_more)`` for the authenticated user.
+
+    The single enumeration used by BOTH the sync-target route
+    (``root:/:/delta``) and the legacy REST route (``/joplin/api/delta``).
+    Items come back ordered by ``(updated_time, item_name)`` — a total order
+    across all item types — and the cursor is the pair of the last item
+    actually returned, so it never advances past items that were not sent.
+    """
+    limit = limit or _DELTA_PAGE_SIZE
+    after_time, after_name = _decode_cursor(cursor)
+    after_ms, _after_name_ms = _decode_cursor_ms(cursor)
+
+    collected = []
+    for model_name, type_ in _DELTA_SOURCES:
+        domain = []
+        if after_time:
+            domain = [('updated_time', '>=', after_time)]
+        records = env[model_name].with_context(active_test=False).search(
+            domain, order='updated_time, id')
+        for rec in records:
+            collected.append(
+                (rec.updated_time, '%s.md' % rec.joplin_id, type_))
+
+    # Note-tag relations. They carry no timestamp of their own; the tag's is
+    # the best available proxy and is what the client uses to notice a
+    # re-tagging.
+    tags = env['joplin.tag'].with_context(active_test=False).search(
+        [], order='updated_time, id')
     seen = set()
-    for t in tags:
-        for n in t.note_ids:
-            key = (n.joplin_id, t.joplin_id)
+    for tag in tags:
+        for note in tag.note_ids:
+            key = (note.joplin_id, tag.joplin_id)
             if key in seen:
                 continue
             seen.add(key)
-            items.append({'item_name': '%s.md' % notetag_id(n.joplin_id, t.joplin_id),
-                          'type': TYPE_NOTE_TAG,
-                          'updated_time': to_ms(t.updated_time),
-                          'jop_updated_time': to_ms(t.updated_time)})
+            collected.append((
+                tag.updated_time,
+                '%s.md' % notetag_id(note.joplin_id, tag.joplin_id),
+                TYPE_NOTE_TAG,
+            ))
 
-    return items
+    # Total order across every item type. The '>=' domain above is an index
+    # hint; the exact cut happens here, in Python, so a tie on updated_time
+    # is resolved by item_name instead of by a table-local id. Both sides of
+    # the comparison are in epoch milliseconds.
+    if after_ms is not None:
+        collected = [row for row in collected
+                     if (to_ms(row[0]), row[1]) > (after_ms, after_name)]
+
+    collected.sort(key=lambda row: (to_ms(row[0]), row[1]))
+
+    page = collected[:limit]
+    has_more = len(collected) > limit
+
+    items = []
+    new_cursor = cursor
+    for updated_time, item_name, type_ in page:
+        items.append({
+            'item_name': item_name,
+            'type': type_,
+            'updated_time': to_ms(updated_time),
+            'jop_updated_time': to_ms(updated_time),
+        })
+        new_cursor = _encode_cursor(updated_time, item_name)
+
+    if not page:
+        # Nothing changed: keep the caller's cursor so the next poll starts
+        # from the right place.
+        if cursor not in (None, '', 0, False):
+            new_cursor = cursor
+        else:
+            new_cursor = '0|'
+
+    return items, new_cursor, has_more

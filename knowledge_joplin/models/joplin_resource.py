@@ -102,7 +102,8 @@ class JoplinResource(models.Model):
         return records
 
     def write(self, vals):
-        if 'name' in vals or 'datas' in vals or 'filename' in vals:
+        if ('name' in vals or 'datas' in vals or 'filename' in vals) \
+                and 'updated_time' not in vals:
             vals['updated_time'] = datetime.utcnow()
             if vals.get('datas'):
                 raw = base64.b64decode(vals['datas'])

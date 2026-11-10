@@ -1104,23 +1104,23 @@ class JoplinApi(http.Controller):
         except Exception:
             data = params
         cursor = data.get('cursor', 0) if isinstance(data, dict) else 0
-        Item = request.env["joplin.item"].sudo()
-        domain = []
-        if cursor:
-            from_dt = datetime.fromtimestamp(cursor / 1000, tz=timezone.utc)
-            domain = [('updated_time', '>=', from_dt)]
-        items = Item.search(domain, order='updated_time', limit=50)
-        new_cursor = int(time.time() * 1000)
+        # One enumeration for both surfaces: the typed joplin.* models, a
+        # real (updated_time, id) cursor and honest has_more. This route used
+        # to page joplin.item — the raw debris table — and hand back the wall
+        # clock as cursor, so a client could ask again and again without ever
+        # seeing a change.
+        items, new_cursor, has_more = joplin_sync.delta_items(
+            request.env, cursor=cursor)
         return self._response({
             "items": [{
-                "id": f"root:{item.path}",
-                "name": item.path.split("/")[-1],
+                "id": f"root:/{item['item_name']}",
+                "name": item['item_name'],
                 "mime_type": "text/plain",
-                "updated_time": _to_ms_timestamp(item.updated_time) if item.updated_time else 0,
-                "jop_updated_time": _to_ms_timestamp(item.updated_time) if item.updated_time else 0,
+                "updated_time": item['updated_time'],
+                "jop_updated_time": item['jop_updated_time'],
             } for item in items],
-            "has_more": False,
-            "cursor": new_cursor,
+            "has_more": has_more,
+            "cursor": str(new_cursor),
         })
 
     # ---- BATCH ITEMS ----
@@ -1213,10 +1213,22 @@ class JoplinApi(http.Controller):
             })
         # Handle delta endpoint: root:/:/delta
         if path == "//delta" or path == "/:/delta":
+            # Joplin sends the cursor as a query parameter on GET.
+            # Accept a JSON body too, for callers that POST it.
+            cursor = params.get("cursor")
+            if not cursor and request.httprequest.method == "POST":
+                try:
+                    payload = json.loads(request.httprequest.data or b"{}")
+                except Exception:
+                    payload = {}
+                if isinstance(payload, dict):
+                    cursor = payload.get("cursor")
+            items, new_cursor, has_more = joplin_sync.delta_items(
+                request.env, cursor=cursor)
             return self._response({
-                "items": joplin_sync.delta_items(request.env),
-                "has_more": False,
-                "cursor": str(int(time.time() * 1000)),
+                "items": items,
+                "has_more": has_more,
+                "cursor": str(new_cursor),
             })
 
         # Item paths (/<joplin_id>.md, /.resource/<id>) are mapped onto the

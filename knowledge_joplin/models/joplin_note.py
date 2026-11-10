@@ -139,9 +139,13 @@ class JoplinNote(models.Model):
             new_vals = {'title': vals.get('title'), 'body': vals.get('body')}
             for note in self:
                 self._create_revision(note, new_vals)
-            vals['updated_time'] = now
+            # Trust an explicit updated_time (the sync ingest supplies the
+            # client's). Overwriting it made every ingest look like an edit
+            # and destroyed the timestamp the client had sent.
+            if 'updated_time' not in vals:
+                vals['updated_time'] = now
 
-        if 'active' in vals and not vals['active']:
+        if 'active' in vals and not vals['active'] and 'deleted_time' not in vals:
             vals['deleted_time'] = now
 
         res = super().write(vals)
@@ -223,6 +227,7 @@ class JoplinNote(models.Model):
         self.write({'active': False})
 
     def action_restore(self):
+        # deleted_time is a Datetime: clear it with False, never a timestamp.
         self.write({'active': True, 'deleted_time': False})
 
     def action_permanent_delete(self):
