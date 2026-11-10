@@ -30,6 +30,23 @@ enumeration: `models/joplin_sync.py:delta_items(env, cursor=None, limit=None)`.
   the old implementation) falls back to a full delta. It never silently
   skips items.
 
+### Request parameters
+
+`limit` and `cursor` are read from the query string (GET) or a JSON body
+(POST) by `controllers/joplin_api.py:_parse_delta_params()`. A junk or
+non-positive `limit` falls back to the default page size rather than
+raising — a client must never get a 500 for a badly formed page size.
+
+This used to be broken: the route forwarded neither parameter, so every
+call ran unpaged from the start and page 2 came back empty with
+`has_more: false` — which reads exactly like "the delta is complete" and
+made every item past page 1 invisible. The paging tests did not catch it
+because they call `delta_items()` directly; `TestDeltaRequestParameters`
+now covers the parsing and pins a shortened page to a real `has_more`.
+
+Note the delta is scoped to the token's user: a walk returns that user's
+items only, which is why a non-admin walk is shorter than the table count.
+
 ## Soft delete on every item type
 
 Joplin carries `deleted_time` on folders and tags as well as notes.
@@ -76,7 +93,7 @@ silently discarding the tag.
 ## Running the tests
 
 ```bash
-# 0 failed, 0 error(s) of 136 tests on a clean database
+# 0 failed, 0 error(s) of 143 tests on a clean database
 sudo checkmodule -d <db> -m knowledge_joplin -t > /tmp/kj.log 2>&1
 ```
 
