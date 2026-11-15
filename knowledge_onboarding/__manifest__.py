@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Kunskap & anteckningar i Vertel',
-    'version': '18.0.1.0.0',
+    'version': '1.0.0',
     'summary': 'Onboardingskurs: kunskapsbas, anteckningar och dokument-pages',
     'description': """
 Lär dig bygga en kunskapsbas, skriva anteckningar och hitta bland allt ni vet.

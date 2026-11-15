@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Knowledge: AI',
-    'version': '18.0.1.0.0',
+    'version': '1.0.0',
     'summary': 'OKF-indexering av joplin.note',
     'category': 'Hidden',
     'author': 'Vertel AB',

@@ -1,6 +1,6 @@
 {
     'name': 'Knowledge: Graph Database Bridge',
-    'version': '18.0.1.0.4',
+    'version': '1.0.4',
     'category': 'Knowledge',
     'summary': 'Publish Odoo model changes to RabbitMQ for graph database sync.',
     'description': '''
