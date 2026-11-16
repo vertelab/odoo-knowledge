@@ -1,0 +1,17 @@
+id,name,model_id,group_id/id,operation,domain
+rule_joplin_note_own,joplin.note: own + follower,joplin.note,knowledge_joplin.group_joplin_user_own,crud,"['|', ('user_id', '=', user.id), ('message_follower_ids.partner_id', '=', user.partner_id.id)]"
+rule_joplin_note_all,joplin.note: all documents,joplin.note,knowledge_joplin.group_joplin_user_all,crud,
+rule_joplin_folder_own,joplin.folder: own,joplin.folder,knowledge_joplin.group_joplin_user_own,crud,"[('user_id', '=', user.id)]"
+rule_joplin_folder_all,joplin.folder: all,joplin.folder,knowledge_joplin.group_joplin_user_all,crud,
+rule_joplin_tag_own,joplin.tag: own,joplin.tag,knowledge_joplin.group_joplin_user_own,crud,"[('user_id', '=', user.id)]"
+rule_joplin_tag_all,joplin.tag: all,joplin.tag,knowledge_joplin.group_joplin_user_all,crud,
+access_joplin_note_tag_own,joplin.note.tag.own,joplin.note.tag,knowledge_joplin.group_joplin_user_own,crud,
+rule_joplin_resource_own,joplin.resource: own + note follower,joplin.resource,knowledge_joplin.group_joplin_user_own,crud,"['|', ('user_id', '=', user.id), ('note_id.message_follower_ids.partner_id', '=', user.partner_id.id)]"
+rule_joplin_resource_all,joplin.resource: all,joplin.resource,knowledge_joplin.group_joplin_user_all,crud,
+rule_joplin_revision_own,joplin.revision: own + follower + owner,joplin.revision,knowledge_joplin.group_joplin_user_own,crud,"['|', '|', ('user_id', '=', user.id), ('note_id.user_id', '=', user.id), ('note_id.message_follower_ids.partner_id', '=', user.partner_id.id)]"
+rule_joplin_revision_all,joplin.revision: all,joplin.revision,knowledge_joplin.group_joplin_user_all,crud,
+access_joplin_event_own,joplin.event.own,joplin.event,knowledge_joplin.group_joplin_user_own,crud,
+rule_joplin_api_token_own,joplin.api.token: own tokens,joplin.api.token,base.group_user,crud,"[('user_id', '=', user.id)]"
+access_joplin_api_token_system,joplin.api.token.system,joplin.api.token,base.group_system,crud,
+access_joplin_item_user,joplin.item.user,joplin.item,base.group_user,crud,
+access_joplin_item_system,joplin.item.system,joplin.item,base.group_system,crud,

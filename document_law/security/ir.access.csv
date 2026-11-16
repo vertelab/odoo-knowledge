@@ -1,0 +1,3 @@
+id,name,model_id,group_id/id,operation,domain
+access_document_law,access_document_law,document.law,base.group_user,crud,
+account_period_company_rule,Document Law: Document Law Multi-Company Rule,document.law,,crud,"[('company_id', 'in', company_ids)]"

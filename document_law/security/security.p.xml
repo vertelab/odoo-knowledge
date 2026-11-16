@@ -1,4 +1,5 @@
 <odoo>
+    <!-- #if VERSION <= "19.0" -->
     <data>
 
         <record id="account_period_company_rule" model="ir.rule">
@@ -8,4 +9,5 @@
         </record>
 
     </data>
+    <!-- #endif -->
 </odoo>
