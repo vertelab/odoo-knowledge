@@ -39,7 +39,17 @@
      "external_dependencies": {
        "python": ["rss_parser", "xmltodict",],
      },
-    'data': ['security/ir.model.access.csv', "security/security.xml", 'views/document_law.xml', 'views/res_company.xml', 'data/create_law_records_cron.xml'],
+    'data': [
+        # #if VERSION >= "20.0"
+        'security/ir.access.csv',
+        # #else
+        'security/ir.model.access.csv',
+        # #endif
+        "security/security.xml",
+        'views/document_law.xml',
+        'views/res_company.xml',
+        'data/create_law_records_cron.xml',
+    ],
     'demo': [],
     'application': False,
     'installable': True,    
