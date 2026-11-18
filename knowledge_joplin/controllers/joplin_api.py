@@ -739,10 +739,10 @@ class JoplinApi(http.Controller):
         if auth_err:
             return auth_err
         res = request.env['joplin.resource'].search([('joplin_id', '=', joplin_id)], limit=1)
-        if not res or not res.datas:
+        if not res or not res.raw:
             return self._response({'error': 'Resource not found'}, 404)
         import base64
-        content = base64.b64decode(res.datas)
+        content = base64.b64decode(res.raw)
         headers = [('Content-Type', res.mime or 'application/octet-stream'),
                     ('Content-Disposition', f'attachment; filename="{res.filename or "file"}"')]
         return request.make_response(content, headers)
