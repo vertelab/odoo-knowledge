@@ -1,0 +1,43 @@
+{
+    'name': 'Knowledge: Joplin Backend',
+    'version': '1.0.0',
+    'category': 'Knowledge',
+    'summary': 'Joplin-compatible note-taking backend with REST API and sync protocol.',
+    'description': '''
+Joplin Backend
+==============
+
+    Implements Joplin's full REST API and sync protocol in Odoo.
+    Stores notes, folders, tags, resources, and revisions in joplin.* models.
+    Features Markdown to HTML conversion, chatter, follower-based sharing,
+    versioning via diffs, and personal notes with user_id isolation.
+
+    Features:
+
+        - Web integration: Exposes HTTP endpoints for external systems.
+        - UI Integration: Extends 7 view(s) in the Odoo interface.
+        - Extends Odoo: Builds on joplin.api.token, joplin.event, joplin.folder, joplin.item.
+    ''',
+    'author': 'Vertel AB',
+    'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_joplin',
+    'license': 'AGPL-3',
+    'depends': ['mail', 'web'],
+    'external_dependencies': {
+        'python': ['markdown', 'diff-match-patch', 'magic'],
+    },
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'views/joplin_note_views.xml',
+        'views/joplin_folder_views.xml',
+        'views/joplin_tag_views.xml',
+        'views/joplin_resource_views.xml',
+        'views/joplin_menus.xml',
+        'views/res_users_views.xml',
+    ],
+    'demo': ['demo/demo_data.xml'],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+    'assets': {},
+}
