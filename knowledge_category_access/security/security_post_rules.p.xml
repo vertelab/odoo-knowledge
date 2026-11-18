@@ -1,0 +1,68 @@
+<odoo noupdate="0">
+              <!-- security rules for website slides -->
+                  <!-- #if VERSION <= "19.0" -->
+              <!-- DOCUMENTED TECHNICAL DEBT in 20.0.
+
+                   Two ir.rule records restrict document.page to the groups on
+                   the page or to its owners. ir.rule is gone in 20.0: an
+                   ir.access row with a group is a PERMISSION that ORs in,
+                   and a row without a group is a RESTRICTION applying to
+                   every user (models.py:3601-3646).
+
+                   This file cannot be migrated mechanically for three
+                   reasons, all verified 2026-11-16:
+
+                   1. The first record OVERRIDES a rule owned by
+                      document_page_access_group (it writes noupdate: False on
+                      that xmlid). Odoo's migration refuses: "modified ir.rule,
+                      skipping".
+                   2. The domain references document.page.groups_id, which does
+                      not exist in any checkout we have — the owning module is
+                      not cloned.
+                   3. Odoo's migration warns "without effective operations for
+                      group document_knowledge.group_document_user ...
+                      compatible ir.model.access found in groups: none!" — the
+                      group has no access on document.page at all, so the rule
+                      could only ever restrict internal users who already had
+                      read access.
+
+                   Consequence until resolved: document_knowledge users see
+                   every document page, not just the ones their groups are
+                   attached to. Internal data only; no public exposure.
+                   Resolving it needs document_page_access_group cloned and
+                   its groups_id either migrated or renamed. -->
+<function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('module', '=', 'document_page_access_group'), ('name', '=', 'document_page_rule')]" />
+            </function>
+            <value eval="{'noupdate': False}" />
+    </function>    
+
+
+    <record id="document_page_access_group.document_page_rule" model="ir.rule">
+        <field name="name">Document Page Access</field>
+        <field name="model_id" ref="model_document_page" />
+        <field eval="False" name="global" />
+        <field
+            name="groups"
+            eval="[Command.link(ref('document_knowledge.group_document_user'))]"
+        />
+        <field
+            name="domain_force"
+        >['|', ('groups_id', 'in', [g.id for g in user.groups_id]), ('user_ids', 'in', [user.id])]</field>
+    </record>
+
+      <record id="document_page_rule_category" model="ir.rule">
+        <field name="name">Document Category Access</field>
+        <field name="model_id" ref="model_document_page" />
+        <field eval="False" name="global" />
+        <field
+            name="groups"
+            eval="[Command.link(ref('document_knowledge.group_document_user'))]"
+        />
+        <field
+            name="domain_force"
+        >['|', ('parent_groups_id', 'in', [g.id for g in user.groups_id]), ('parent_user_ids', 'in', [user.id])]</field>
+    </record>
+              <!-- #endif -->
+</odoo>

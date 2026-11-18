@@ -1,6 +1,6 @@
 {
     'name': 'Knowledge: Joplin Backend',
-    'version': '18.0.1.1.2',
+    'version': '1.0.0',
     'category': 'Knowledge',
     'summary': 'Joplin-compatible note-taking backend with REST API and sync protocol.',
     'description': '''
@@ -18,7 +18,7 @@ Joplin Backend
         - UI Integration: Extends 7 view(s) in the Odoo interface.
         - Extends Odoo: Builds on joplin.api.token, joplin.event, joplin.folder, joplin.item.
     ''',
-    'author': 'Vertel Sverige AB',
+    'author': 'Vertel AB',
     'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_joplin',
     'license': 'AGPL-3',
     'depends': ['mail', 'web'],

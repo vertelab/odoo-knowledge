@@ -1,6 +1,6 @@
 {
     'name': 'Knowledge: Graph Database Bridge',
-    'version': '18.0.1.0.4',
+    'version': '1.0.4',
     'category': 'Knowledge',
     'summary': 'Publish Odoo model changes to RabbitMQ for graph database sync.',
     'description': '''
@@ -15,7 +15,7 @@ Graph Database Bridge
         - UI Integration: Extends 2 view(s) in the Odoo interface.
         - Extends Odoo: Builds on knowledge.graph.model, knowledge.graph.publisher.
     ''',
-    'author': 'Vertel Sverige AB',
+    'author': 'Vertel AB',
     'website': 'https://vertel.se/apps/odoo-knowledge/knowledge_graphdb',
     'license': 'AGPL-3',
     # 'base_automation' (Odoo core) owns the base.automation model used by
@@ -36,15 +36,6 @@ Graph Database Bridge
         'data/data.xml',
     ],
     'application': False,
-    # Installable so the module keeps loading: it is INSTALLED in production
-    # (ledningssystem, since 2026-10-12). `installable: False` does not just
-    # hide a module from the Apps list — Odoo skips loading its code entirely,
-    # so an installed module's models vanish from the registry and anything
-    # touching them raises KeyError. That regression was hit on 2026-10-15.
-    #
-    # The module is being uninstalled in production (decision 2026-10-15);
-    # once that is done this can go back to False to keep it out of module
-    # sets. Until then it must stay True.
     'installable': True,
     'auto_install': False,
 }

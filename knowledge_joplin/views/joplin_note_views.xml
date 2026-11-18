@@ -17,7 +17,7 @@
                     <filter name="my_todos" string="My To-Dos"
                             domain="[('user_id', '=', uid), ('is_todo', '=', True)]"/>
                     <filter name="shared_with_me" string="Shared with Me"
-                            domain="[('message_follower_ids.partner_id.user_ids', 'in', [uid]), ('user_id', '!=', uid)]"/>
+                            domain="[('message_follower_ids.partner_id', '!=', False), ('user_id', '!=', uid)]"/>
                     <separator/>
                     <filter name="todos" string="To-Dos"
                             domain="[('is_todo', '=', True)]"/>
@@ -25,12 +25,6 @@
                             domain="[('is_conflict', '=', True)]"/>
                     <filter name="trashed" string="Trashed"
                             domain="[('active', '=', False)]"/>
-                    <separator/>
-                    <!-- Tags: a many2many cannot be a search panel section
-                         (`search_panel_select_range` supports many2one and
-                         selection only), so it is a filter. Selecting one or
-                         more tags narrows the list to notes carrying them. -->
-                    <field name="tag_ids" filter_domain="[('tag_ids', 'in', self)]"/>
                     <separator/>
                     <filter name="this_week" string="This Week"
                             date="updated_time"/>
@@ -46,28 +40,6 @@
                         <filter name="group_active" string="Active/Trashed"
                                 context="{'group_by': 'active'}"/>
                     </group>
-                    <!-- Search panel: only many2one and selection fields are
-                         supported (`search_panel_select_range`: "of type
-                         many2one or selection"). A many2many raises
-                         "Endast typer many2one, val stöds för kategori".
-
-                         `user_id` needs hierarchize="0": res.users has
-                         `_inherits = {'res.partner': 'partner_id'}`, and the
-                         default hierarchical lookup walks the comodel's
-                         `_parent_name`, mixing res.partner and res.users
-                         records and raising
-                         "TypeError: inconsistent models in:
-                          res.partner(3263,) - res.users(140,)".
-
-                         Tags are a many2many and therefore cannot be a panel
-                         section; they are a filter instead (see the Tags
-                         filter above). Both defects reached production on
-                         2026-10-16 and made the notes list fail to open. -->
-                    <searchpanel>
-                        <field name="folder_id" icon="fa-folder" limit="0" enable_counters="1"/>
-                        <field name="user_id" icon="fa-user" limit="20"
-                               hierarchize="0" enable_counters="1"/>
-                    </searchpanel>
                 </search>
             </field>
         </record>
@@ -98,21 +70,23 @@
             <field name="name">joplin.note.kanban</field>
             <field name="model">joplin.note</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" default_order="updated_time desc">
+                <kanban class="o_kanban_mobile">
                     <field name="title"/>
                     <field name="tag_ids"/>
                     <field name="folder_id"/>
+                    <field name="body"/>
+                    <field name="body_html"/>
                     <field name="is_todo"/>
-                    <field name="todo_completed"/>
                     <field name="todo_due"/>
                     <field name="user_id"/>
                     <templates>
                         <t t-name="card">
-                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="oe_kanban_global_click">
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_title">
                                         <b><field name="title"/></b>
                                     </div>
+                                    <field name="is_todo" widget="boolean_toggle"/>
                                     <div class="o_kanban_tags_section">
                                         <field name="tag_ids" widget="many2many_tags"/>
                                     </div>
@@ -121,13 +95,13 @@
                                     <div class="text-muted small">
                                         <field name="folder_id"/>
                                     </div>
-                                    <div t-if="record.is_todo.raw_value" class="text-muted small">
-                                        <i class="fa fa-check-square-o" title="To-Do"/>
-                                        <t t-if="record.todo_completed.raw_value"> Completed</t>
-                                        <t t-else=""> Open</t>
-                                        <t t-if="record.todo_due.raw_value">
-                                            <i class="fa fa-calendar ms-2" title="Due date"/> <t t-out="record.todo_due.raw_value"/>
-                                        </t>
+                                    <t t-if="record.is_todo.raw_value and record.todo_due.raw_value">
+                                        <div class="text-muted small">
+                                            <i class="fa fa-calendar" title="Due date"/> <t t-out="record.todo_due.raw_value"/>
+                                        </div>
+                                    </t>
+                                    <div class="text-muted" style="max-height: 4.5em; overflow: hidden;">
+                                        <field name="body_html" widget="html"/>
                                     </div>
                                     <div class="o_kanban_footer">
                                         <field name="user_id" avatar="true"/>
@@ -258,21 +232,7 @@
             <field name="res_model">joplin.note</field>
             <field name="view_mode">kanban,list,form</field>
             <field name="search_view_id" ref="view_joplin_note_search"/>
-            <!-- Ceiling = the record rule for group_joplin_user_own: owned
-                 notes plus followed notes.
-
-                 The domain is evaluated in the WEB CLIENT
-                 (`action_service._preprocessAction` -> `evaluateExpr`),
-                 against `user.context`, which provides `uid` but NOT
-                 `user`. Writing `user.id` / `user.partner_id.id` here
-                 raises `EvalError: Name 'user' is not defined` and the
-                 action fails to open — the same trap as in the search
-                 view filter, and it cost a production incident on
-                 2026-10-16. Keep the `uid` form.
-
-                 `partner_id.user_ids in [uid]` is the idiom Odoo core
-                 uses for "My Meetings" (calendar/views/calendar_views.xml). -->
-            <field name="domain">['|', ('user_id', '=', uid), ('message_follower_ids.partner_id.user_ids', 'in', [uid])]</field>
+            <field name="domain">[]</field>
             <field name="context">{'search_default_my_notes': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Create your first note</p>

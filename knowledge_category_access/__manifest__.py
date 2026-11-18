@@ -5,9 +5,9 @@
         This module adds the ability to assign access groups to 'document category'
         by depending on the document_page_access_group from OCA/knowledge.
     """,
-    "version": "18.0.1.0.0",
+    "version": "1.0.0",
     "category": "Knowledge Management",
-    "author": "Vertel Sverige AB",
+    "author": "Vertel AB",
     "website": "https://vertel.se/apps/odoo-knowledge/knowledge_category_access",
     "depends": [
         "document_page_access_group",

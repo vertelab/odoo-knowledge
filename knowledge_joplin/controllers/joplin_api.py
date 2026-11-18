@@ -10,8 +10,6 @@ from odoo.tools import html2plaintext
 
 import markdown
 
-from odoo.addons.knowledge_joplin.models import joplin_sync
-
 _logger = logging.getLogger(__name__)
 
 MARKDOWN_EXTENSIONS = [
@@ -43,83 +41,6 @@ def _from_ms_timestamp(ms):
     if not ms:
         return datetime.now(timezone.utc).replace(tzinfo=None)
     return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).replace(tzinfo=None)
-
-
-def _parse_delta_params(params, data=None, is_post=False):
-    """Extract ``cursor`` and ``limit`` for the delta endpoint.
-
-    The Joplin client sends the cursor as a query parameter on GET; some
-    callers POST it as JSON. Both are accepted, and a malformed limit must
-    degrade to "use the default" rather than raise a 500.
-
-    Returns ``(cursor, limit)`` where either may be None.
-    """
-    cursor = params.get("cursor")
-    limit = params.get("limit")
-    if is_post and data:
-        try:
-            payload = json.loads(data or b"{}")
-        except (TypeError, ValueError):
-            payload = {}
-        if isinstance(payload, dict):
-            cursor = cursor or payload.get("cursor")
-            limit = limit or payload.get("limit")
-    try:
-        limit = int(limit) if limit not in (None, "") else None
-    except (TypeError, ValueError):
-        limit = None
-    if limit is not None and limit <= 0:
-        limit = None
-    return (cursor or None), limit
-
-
-def _parse_item_payload(data, params):
-    """Parse a PUT/POST body from a Joplin client.
-
-    The Joplin client sends item content as raw markdown (text/plain), but
-    some endpoints/older clients send a JSON envelope with a ``content``
-    key. Handle both, and never silently discard the body.
-
-    Returns a dict with at least a ``content`` key (str) and optionally
-    ``updated_time`` (int, ms).
-    """
-    raw = data
-    if not raw:
-        # Odoo 18 / Werkzeug: ``request.httprequest.data`` comes back
-        # empty for ``text/plain`` bodies on some request paths (the
-        # stream has already been consumed by form parsing). Reading
-        # the underlying WSGI stream directly recovers the body.
-        # Without this the Joplin client's raw markdown PUTs were
-        # stored as empty items.
-        try:
-            raw = request.httprequest.get_data(cache=True, as_text=False)
-        except Exception:  # pragma: no cover - defensive
-            raw = b""
-    if isinstance(raw, bytes):
-        raw = raw.decode("utf-8", errors="replace")
-    raw = raw or ""
-
-    # JSON envelope: {"content": "...", "updated_time": 123}
-    stripped = raw.strip()
-    if stripped.startswith("{") or stripped.startswith("["):
-        try:
-            parsed = json.loads(stripped)
-            if isinstance(parsed, dict) and "content" in parsed:
-                return {
-                    "content": parsed.get("content") or "",
-                    "updated_time": parsed.get("updated_time") or 0,
-                }
-        except (ValueError, TypeError):
-            pass
-
-    # Raw body (markdown) - the normal case for the Joplin apps.
-    # Fall back to query params only when the body itself is empty.
-    if raw:
-        return {"content": raw, "updated_time": (params or {}).get("updated_time", 0)}
-    return {
-        "content": (params or {}).get("content", ""),
-        "updated_time": (params or {}).get("updated_time", 0),
-    }
 
 
 def _get_user():
@@ -1132,23 +1053,23 @@ class JoplinApi(http.Controller):
         except Exception:
             data = params
         cursor = data.get('cursor', 0) if isinstance(data, dict) else 0
-        # One enumeration for both surfaces: the typed joplin.* models, a
-        # real (updated_time, id) cursor and honest has_more. This route used
-        # to page joplin.item — the raw debris table — and hand back the wall
-        # clock as cursor, so a client could ask again and again without ever
-        # seeing a change.
-        items, new_cursor, has_more = joplin_sync.delta_items(
-            request.env, cursor=cursor)
+        Item = request.env["joplin.item"].sudo()
+        domain = []
+        if cursor:
+            from_dt = datetime.fromtimestamp(cursor / 1000, tz=timezone.utc)
+            domain = [('updated_time', '>=', from_dt)]
+        items = Item.search(domain, order='updated_time', limit=50)
+        new_cursor = int(time.time() * 1000)
         return self._response({
             "items": [{
-                "id": f"root:/{item['item_name']}",
-                "name": item['item_name'],
+                "id": f"root:{item.path}",
+                "name": item.path.split("/")[-1],
                 "mime_type": "text/plain",
-                "updated_time": item['updated_time'],
-                "jop_updated_time": item['jop_updated_time'],
+                "updated_time": _to_ms_timestamp(item.updated_time) if item.updated_time else 0,
+                "jop_updated_time": _to_ms_timestamp(item.updated_time) if item.updated_time else 0,
             } for item in items],
-            "has_more": has_more,
-            "cursor": str(new_cursor),
+            "has_more": False,
+            "cursor": new_cursor,
         })
 
     # ---- BATCH ITEMS ----
@@ -1241,34 +1162,46 @@ class JoplinApi(http.Controller):
             })
         # Handle delta endpoint: root:/:/delta
         if path == "//delta" or path == "/:/delta":
-            # Joplin sends the cursor as a query parameter on GET.
-            # Accept a JSON body too, for callers that POST it.
-            cursor, limit = _parse_delta_params(
-                params,
-                data=request.httprequest.data,
-                is_post=request.httprequest.method == "POST",
-            )
-            items, new_cursor, has_more = joplin_sync.delta_items(
-                request.env, cursor=cursor, limit=limit)
+            Item = request.env["joplin.item"].sudo()
+            items = Item.search([], order='updated_time', limit=100)
             return self._response({
-                "items": items,
-                "has_more": has_more,
-                "cursor": str(new_cursor),
+                "items": [{
+                    "id": f"root:{item.path}",
+                    "item_name": item.path,
+                    "mime_type": "text/plain",
+                    "updated_time": _to_ms_timestamp(item.updated_time) if item.updated_time else 0,
+                    "jop_updated_time": _to_ms_timestamp(item.updated_time) if item.updated_time else 0,
+                    "type": 1,
+                } for item in items],
+                "has_more": False,
+                "cursor": str(int(time.time() * 1000)),
             })
 
-        # Item paths (/<joplin_id>.md, /.resource/<id>) are mapped onto the
-        # joplin.* models (note, folder, tag, resource) by joplin_sync.
-        # Anything else falls back to the raw joplin.item store.
+        # Handle all items stored in joplin.item
+        Item = request.env["joplin.item"].sudo()
         if path.endswith(":"):
             path = path[:-1]
-        if want_content:
-            content, mime = joplin_sync.content_for(request.env, path)
-            if content is None:
-                return self._response({"error": "Not found"}, 404)
-            return http.Response(content, status=200, content_type=mime or "text/plain")
-        stat = joplin_sync.stat_for(request.env, path)
-        if stat:
-            return self._response(stat)
+        item = Item.search([("path", "=", path)], limit=1)
+        if not item and not path.startswith("/.sync/"):
+            # Joplin temp files etc - create on read to return default stat
+            item = Item.create({
+                "path": path,
+                "content": "",
+                "updated_time": datetime.now(timezone.utc).replace(tzinfo=None),
+            })
+        if item:
+            if want_content:
+                return http.Response(
+                    item.content or "",
+                    status=200,
+                    content_type="text/plain",
+                )
+            return self._response({
+                "id": f"{owner}:{path}",
+                "name": path.split("/")[-1],
+                "mime_type": "text/plain",
+                "updated_time": _to_ms_timestamp(item.updated_time) if item.updated_time else 0,
+            })
         return self._response({"error": "Not found"}, 404)
 
     @http.route("/joplin/api/items/<path:item_path>", type="http", auth="none", methods=["PUT"], csrf=False)
@@ -1276,7 +1209,10 @@ class JoplinApi(http.Controller):
         auth_err = self._auth()
         if auth_err:
             return auth_err
-        payload = _parse_item_payload(request.httprequest.data, params)
+        try:
+            data = json.loads(request.httprequest.data)
+        except Exception:
+            data = params
         if item_path.endswith(":/content"):
             item_path = item_path[:-len(":/content")]
         colon_pos = item_path.find(":")
@@ -1284,19 +1220,24 @@ class JoplinApi(http.Controller):
             return self._response({"error": "Invalid path"}, 400)
         owner = item_path[:colon_pos]
         path = item_path[colon_pos + 1:]
-        if path.endswith(":"):
-            path = path[:-1]
-        try:
-            joplin_sync.ingest(request.env, path, payload["content"])
-        except Exception:
-            _logger.exception("[Joplin] ingest failed for path=%s", path)
-            return self._response({"error": "Failed to store item"}, 500)
-        stat = joplin_sync.stat_for(request.env, path) or {}
+        Item = request.env["joplin.item"].sudo()
+        item = Item.search([("path", "=", path)], limit=1)
+        if item:
+            item.write({
+                "content": data.get("content", item.content),
+                "updated_time": _from_ms_timestamp(data.get("updated_time", 0)),
+            })
+        else:
+            item = Item.create({
+                "path": path,
+                "content": data.get("content", ""),
+                "updated_time": _from_ms_timestamp(data.get("updated_time", 0)),
+            })
         return self._response({
-            "id": stat.get("id") or f"{owner}:{path}",
-            "name": stat.get("name") or path.split("/")[-1],
-            "mime_type": stat.get("mime_type") or "text/plain",
-            "updated_time": stat.get("updated_time", 0),
+            "id": f"{owner}:{path}",
+            "name": path.split("/")[-1],
+            "mime_type": "text/plain",
+            "updated_time": _to_ms_timestamp(item.updated_time) if item.updated_time else 0,
         })
 
     @http.route("/joplin/api/items/<path:item_path>", type="http", auth="none", methods=["POST"], csrf=False)
@@ -1334,7 +1275,8 @@ class JoplinApi(http.Controller):
         if colon_pos < 0:
             return self._response({"error": "Invalid path"}, 400)
         path = item_path[colon_pos + 1:]
-        if path.endswith(":"):
-            path = path[:-1]
-        joplin_sync.delete_for(request.env, path)
+        Item = request.env["joplin.item"].sudo()
+        item = Item.search([("path", "=", path)], limit=1)
+        if item:
+            item.unlink()
         return self._response({})
