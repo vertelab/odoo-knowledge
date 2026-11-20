@@ -26,7 +26,13 @@ know exactly what gets indexed rather than trust a heuristic.
 The model owns its SOURCES; `ai.okf.mixin` owns the fields and the flag.
 """
 
-from odoo import models, fields
+import logging
+
+from odoo import models, fields, api
+
+_logger = logging.getLogger(__name__)
+
+AGENT_XMLID = 'ai_agent_core.agent_odoo_business'
 
 
 class DocumentPage(models.Model):
@@ -140,3 +146,59 @@ class DocumentPage(models.Model):
         res = super()._register_hook()
         self.env['ai.okf.mixin']._okf_register_indexable('document.page')
         return res
+
+    # ── Agent attachment (document-page-skill, design D2) ──────────────
+
+    # `@api.model` + `records=None`, matching the house precedent
+    # `knowledge_joplin_ai.joplin.note._ensure_agent_attachment` — the
+    # same `<function ... eval="[obj()]"/>` call shape. `obj()` evaluates
+    # to an empty recordset; `call_kw` passes it as a positional argument,
+    # so the method must accept it.
+    @api.model
+    def _ensure_agent_attachment(self, records=None):
+        """Attach the documentation skill and the three page tools.
+
+        Called from `data/document_agent_attach.xml` with a `<function>`
+        placed OUTSIDE any noupdate block, so it runs on install AND on
+        upgrade — the module is auto_install, and an existing installation
+        that receives it through an upgrade must get the attachment too.
+
+        Idempotent: membership is checked before writing, so repeated runs
+        (every upgrade) add nothing. Tolerates a missing agent:
+        `ref(..., raise_if_not_found=False)` returns an empty recordset
+        and the method returns early — a raising `ref()` would abort the
+        install. Additive: `(4, id)` appends, so the agent's own skills
+        and tools survive.
+        """
+        agent = self.env.ref(AGENT_XMLID, raise_if_not_found=False)
+        if not agent:
+            _logger.info(
+                'knowledge_document_ai: agent %s not found — document skill '
+                'and tools created but not attached', AGENT_XMLID)
+            return
+
+        skill = self.env.ref(
+            'knowledge_document_ai.skill_document_page',
+            raise_if_not_found=False)
+        tools = self.env['ai.tool'].browse([
+            self.env.ref('knowledge_document_ai.tool_page_create',
+                         raise_if_not_found=False).id,
+            self.env.ref(
+                'knowledge_document_ai.tool_page_create_from_record',
+                raise_if_not_found=False).id,
+            self.env.ref(
+                'knowledge_document_ai.tool_page_create_from_conversation',
+                raise_if_not_found=False).id,
+        ]).exists()
+
+        vals = {}
+        if skill and skill not in agent.skill_ids:
+            vals['skill_ids'] = [(4, skill.id)]
+        missing_tools = tools - agent.tool_ids
+        if missing_tools:
+            vals['tool_ids'] = [(4, t.id) for t in missing_tools]
+        if vals:
+            agent.write(vals)
+            _logger.info(
+                'knowledge_document_ai: attached document skill and %d '
+                'tool(s) to %s', len(missing_tools), agent.name)
