@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Documentation skill for the Odoo specialist (document-page-skill).
+
+        The skill owns the JUDGEMENT — when something is worth documenting
+        for the team and how it is shaped. The tools own the mechanics.
+
+        THE OTHER HALF: `knowledge_joplin_ai` teaches the PERSONAL note
+        (joplin.note, `personal` scope, direct write). This skill teaches
+        the SHARED page (document.page, `company` scope, always approved).
+        The trigger keywords are disjoint on purpose: "anteckning" and
+        "kom ihåg" belong to joplin; "dokumentera" and "artikel" belong
+        here. A user who says "lägg det i mina anteckningar" must not get
+        a page the whole company can read.
+
+        No domain is named in ai_agent_core; this record lives in the
+        document bridge module.
+    -->
+    <record id="skill_document_page" model="ai.skill">
+        <field name="name">Knowledge — document for the team</field>
+        <field name="description">Document a conclusion, a decision or a record for the whole team as a knowledge page (document.page). Covers when to document (the user asks, or you propose and the user agrees), the page's shape (title, HTML content, category, summary), and the rule that a team page always passes the approval gate — unlike a personal note, which is yours alone.</field>
+        <field name="category">general</field>
+        <field name="source_type">odoo</field>
+        <field name="compatibility">odoo</field>
+        <field name="trigger_keywords">dokumentera, dokumentera detta, dokumentera det här, skriv en artikel, skriv ner det här, kunskapsartikel, teamets kunskap, document for the team, knowledge article</field>
+        <field name="recipe_text">
+# Knowledge — document for the team
+
+A conversation can reach a conclusion worth *sharing*: a decision, a
+procedure, a summary of a record that colleagues will need. Write it as a
+`document.page` so the whole team can find it.
+
+**This is not a personal note.** A note (`joplin.note`) is yours alone and
+is written directly. A page is the company's knowledge and always waits for
+approval. If the user says "lägg det i mina anteckningar" they mean a note —
+use the Joplin skill instead.
+
+## When to document
+
+Document when EITHER is true:
+
+1. The user asks you to document, write an article, or "skriv ner det här
+   så att alla kan läsa".
+2. You propose documenting and the user agrees.
+
+Never document on your own initiative. If you think something belongs in
+the team's knowledge base, say so and ask first:
+
+  "Det här verkar värt att dokumentera för teamet — ska jag skriva en
+   kunskapsartikel?"
+
+Creating a page is a write to shared knowledge and passes the approval gate.
+Do not try to route around it.
+
+## How to shape the page
+
+- **Title** — required. Short, specific, findable later. Use the subject,
+  not the word "Dokumentation". Good: "Fakturamatchning för EU-kunder".
+  Bad: "Sammanfattning".
+- **Content** — HTML. Write what was decided and why, not a transcript.
+  Headings, lists and tables are fine. Keep it self-contained: a colleague
+  who was not in the conversation should understand it.
+- **Category** — optional. The category the page belongs in. If it does not
+  exist it is created for you — do not create it yourself.
+- **Summary** — optional. One line describing what the page establishes.
+  It becomes the history entry's summary.
+
+## Which tool to use
+
+- `page_create` — free text. You supply the title and the HTML content.
+- `page_create_from_record` — you name an Odoo model and a record id; the
+  page documents that record. The model must be one you are allowed to read.
+- `page_create_from_conversation` — you supply a title and a content that
+  documents the current conversation. The content is required: if there is
+  nothing to document, do not call the tool.
+
+## The history is never yours
+
+`document.page.content` is not stored on the page — it lives in
+`document.page.history`, and the page points at the latest entry. The model
+creates that entry for you when you write `content`. Never set
+`history_head` yourself and never try to write a history row directly.
+
+## After documenting
+
+Confirm briefly and name the page, e.g. "Dokumenterad som *Fakturamatchning
+för EU-kunder* under *Ekonomi*." Do not paste the page back.
+        </field>
+    </record>
+</odoo>
