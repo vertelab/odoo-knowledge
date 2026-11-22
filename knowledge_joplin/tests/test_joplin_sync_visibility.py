@@ -649,12 +649,12 @@ class TestPerUserBoundary(TransactionCase):
         self.user_a = Users.create({
             'name': 'Sync A', 'login': 'sync_a_%s' % _jid()[:8],
             'email': 'a_%s@example.invalid' % _jid()[:8],
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
         })
         self.user_b = Users.create({
             'name': 'Sync B', 'login': 'sync_b_%s' % _jid()[:8],
             'email': 'b_%s@example.invalid' % _jid()[:8],
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
         })
         self.note_b = self.env['joplin.note'].with_user(self.user_b).create({
             'title': 'private to B', 'body': 'secret', 'joplin_id': _jid(),

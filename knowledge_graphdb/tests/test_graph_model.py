@@ -88,7 +88,7 @@ class TestGraphModel(common.TransactionCase):
         demo_user = self.env['res.users'].create({
             'name': 'Demo Graph User',
             'login': 'demographuser',
-            'groups_id': [(4, internal_group.id)],
+            'group_ids': [(4, internal_group.id)],
         })
         self.ModelConfig.sudo().create({
             'model_id': self.partner_model.id,
