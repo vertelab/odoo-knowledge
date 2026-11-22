@@ -15,6 +15,7 @@
         <!-- SECURITY GROUPS                                                    -->
         <!-- ================================================================ -->
 
+    <!-- #if VERSION <= "19.0" -->
         <record id="group_joplin_user_own" model="res.groups">
             <field name="name">User: Only Own Document</field>
             <field name="category_id" ref="base.module_category_hidden"/>
@@ -41,6 +42,7 @@
         <record id="base.group_system" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('group_joplin_admin'))]"/>
         </record>
+    <!-- #endif -->
 
         <!-- ================================================================ -->
         <!-- RECORD RULES                                                       -->
