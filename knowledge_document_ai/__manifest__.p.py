@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Knowledge: Document AI',
-    'version': '1.2.0',
-    'summary': 'OKF indexing of document.page + page-creation tools',
+    'version': '1.1.0',
+    'summary': 'OKF indexing of document.page',
     'category': 'Hidden',
     'author': 'Vertel Sverige AB',
     'website': 'https://vertel.se',
