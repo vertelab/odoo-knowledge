@@ -20,7 +20,7 @@ class TestJoplinModels(common.TransactionCase):
             cls.User1 = cls.env['res.users'].create({
                 'name': 'Test User 1',
                 'login': 'test_joplin1@test.com',
-                'groups_id': [
+                'group_ids': [
                     (4, cls.env.ref('base.group_user').id),
                     (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
                 ],
@@ -31,7 +31,7 @@ class TestJoplinModels(common.TransactionCase):
             cls.User2 = cls.env['res.users'].create({
                 'name': 'Test User 2',
                 'login': 'test_joplin2@test.com',
-                'groups_id': [
+                'group_ids': [
                     (4, cls.env.ref('base.group_user').id),
                     (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
                 ],
@@ -211,7 +211,7 @@ class TestJoplinModels(common.TransactionCase):
             'name': 'test.txt',
             'mime': 'text/plain',
             'filename': 'test.txt',
-            'datas': base64.b64encode(b'Hello World').decode('utf-8'),
+            'raw': base64.b64encode(b'Hello World').decode('utf-8'),
             'note_id': note.id,
             'user_id': self.User1.id,
         })
@@ -226,7 +226,7 @@ class TestJoplinModels(common.TransactionCase):
             'joplin_id': secrets.token_hex(16),
             'name': 'data.bin',
             'mime': 'application/octet-stream',
-            'datas': base64.b64encode(b'\x00\x01\x02').decode('utf-8'),
+            'raw': base64.b64encode(b'\x00\x01\x02').decode('utf-8'),
             'note_id': note.id,
             'user_id': self.User1.id,
         })
@@ -307,7 +307,7 @@ class TestJoplinSecurity(common.TransactionCase):
             cls.User1 = cls.env['res.users'].create({
                 'name': 'Secure User 1',
                 'login': 'secure_joplin1@test.com',
-                'groups_id': [
+                'group_ids': [
                     (4, cls.env.ref('base.group_user').id),
                     (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
                 ],
@@ -318,7 +318,7 @@ class TestJoplinSecurity(common.TransactionCase):
             cls.User2 = cls.env['res.users'].create({
                 'name': 'Secure User 2',
                 'login': 'secure_joplin2@test.com',
-                'groups_id': [
+                'group_ids': [
                     (4, cls.env.ref('base.group_user').id),
                     (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
                 ],
@@ -383,7 +383,7 @@ class TestJoplinApi(common.HttpCase):
             cls.User1 = cls.env['res.users'].create({
                 'name': 'API User',
                 'login': 'api_joplin@test.com',
-                'groups_id': [
+                'group_ids': [
                     (4, cls.env.ref('base.group_user').id),
                     (4, cls.env.ref('knowledge_joplin.group_joplin_user_own').id),
                 ],

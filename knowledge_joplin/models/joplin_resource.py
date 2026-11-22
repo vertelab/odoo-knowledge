@@ -25,7 +25,9 @@ class JoplinResource(models.Model):
     mime = fields.Char(string='MIME Type')
     filename = fields.Char(string='Filename')
     file_extension = fields.Char(string='File Extension')
-    datas = fields.Binary(string='File Data', attachment=True)
+    # 20.0 removed the base64 `datas` field; `raw` is the computed binary
+    # that replaces it and the only writable name for the file bytes.
+    raw = fields.Binary(string='File Data', attachment=True)
     datas_fname = fields.Char(string='File Name')
     file_size = fields.Integer(string='File Size (bytes)')
 
@@ -102,8 +104,7 @@ class JoplinResource(models.Model):
         return records
 
     def write(self, vals):
-        if ('name' in vals or 'datas' in vals or 'filename' in vals) \
-                and 'updated_time' not in vals:
+        if 'name' in vals or 'datas' in vals or 'filename' in vals:
             vals['updated_time'] = datetime.utcnow()
             if vals.get('datas'):
                 raw = base64.b64decode(vals['datas'])

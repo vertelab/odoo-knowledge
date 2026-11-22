@@ -17,13 +17,13 @@ class GraphPublisher(models.AbstractModel):
     def _get_connection_params(self):
         ICP = self.env['ir.config_parameter'].sudo()
         return {
-            'host': ICP.get_param('knowledge_graphdb.rabbitmq_host', 'localhost'),
-            'port': int(ICP.get_param('knowledge_graphdb.rabbitmq_port', '5672')),
-            'login': ICP.get_param('knowledge_graphdb.rabbitmq_user', 'guest'),
-            'password': ICP.get_param('knowledge_graphdb.rabbitmq_password', 'guest'),
-            'exchange': ICP.get_param('knowledge_graphdb.rabbitmq_exchange', 'odoo_events_topic'),
-            'exchange_type': ICP.get_param('knowledge_graphdb.rabbitmq_exchange_type', 'topic'),
-            'virtual_host': ICP.get_param('knowledge_graphdb.rabbitmq_vhost', '/'),
+            'host': ICP.get_str('knowledge_graphdb.rabbitmq_host', 'localhost'),
+            'port': int(ICP.get_str('knowledge_graphdb.rabbitmq_port', '5672')),
+            'login': ICP.get_str('knowledge_graphdb.rabbitmq_user', 'guest'),
+            'password': ICP.get_str('knowledge_graphdb.rabbitmq_password', 'guest'),
+            'exchange': ICP.get_str('knowledge_graphdb.rabbitmq_exchange', 'odoo_events_topic'),
+            'exchange_type': ICP.get_str('knowledge_graphdb.rabbitmq_exchange_type', 'topic'),
+            'virtual_host': ICP.get_str('knowledge_graphdb.rabbitmq_vhost', '/'),
         }
 
     def _get_connection(self):

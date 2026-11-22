@@ -89,13 +89,6 @@
           <field name="rss_titel" string="Content" filter_domain="['|', ('rss_titel','ilike',self), ('rss_text','ilike',self)]"/>
           <field name="rss_dok_id" string="Document ID"/>
           <field name="company_id"/>
-          <group expand="0" string="Group By...">
-            <filter name="group_by_rss_rm" string="Reform Year" context="{'group_by':'rss_rm'}"/>
-            <filter name="group_by_rss_organ" string="Department" context="{'group_by':'rss_organ'}"/>
-            <filter name="group_by_company_id" context="{'group_by':'company_id'}"/>
-            <filter name="group_by_rss_publicerad" string="Updated" context="{'group_by':'rss_publicerad'}"/>
-            <filter name="group_by_stage" string="Stage" context="{'group_by':'stage'}"/>
-          </group>
           <searchpanel>
             <field name="stage" icon="fa-folder" string="Stages" enable_counters="1"/>
           </searchpanel>
