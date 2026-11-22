@@ -28,18 +28,6 @@
                     <separator/>
                     <filter name="this_week" string="This Week"
                             date="updated_time"/>
-                    <group expand="0" string="Group By">
-                        <filter name="group_folder" string="Folder"
-                                context="{'group_by': 'folder_id'}"/>
-                        <filter name="group_user" string="User"
-                                context="{'group_by': 'user_id'}"/>
-                        <filter name="group_tag" string="Tag"
-                                context="{'group_by': 'tag_ids'}"/>
-                        <filter name="group_todo" string="To-Do Status"
-                                context="{'group_by': 'is_todo'}"/>
-                        <filter name="group_active" string="Active/Trashed"
-                                context="{'group_by': 'active'}"/>
-                    </group>
                 </search>
             </field>
         </record>

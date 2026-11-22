@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_graph_model_user,knowledge.graph.model.user,knowledge.graph.model,knowledge_graphdb.group_graph_user,crud,
+access_graph_model_admin,knowledge.graph.model.admin,knowledge.graph.model,knowledge_graphdb.group_graph_admin,crud,
+rule_graph_model_user,knowledge.graph.model: own only,knowledge.graph.model,knowledge_graphdb.group_graph_user,crud,"[('user_id', '=', user.id)]"

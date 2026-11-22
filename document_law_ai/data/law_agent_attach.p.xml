@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Attach the law agent to Allmän assistent
+        (document-law-ai-capability, design D7).
+
+        The call MUST sit OUTSIDE any noupdate block: a <function> inside
+        noupdate="1" runs on install only, while one outside it runs on
+        BOTH install and upgrade. That is the whole point — the module is
+        auto_install, so an existing installation that receives it through
+        an upgrade must get the attachment too, not just a fresh install.
+
+        Idempotent via `document.law._ensure_agent_attachment()` — it
+        checks membership before writing, so running on every upgrade adds
+        nothing. `obj()` is an empty recordset; `call_kw` passes it as a
+        positional argument, so the method is `@api.model` and accepts it
+        as `records=None` (same shape as
+        `ai_agent_core.ai.tool._ensure_builtin_tool_records`).
+    -->
+    <function model="document.law" name="_ensure_agent_attachment"
+              eval="[obj()]"/>
+</odoo>

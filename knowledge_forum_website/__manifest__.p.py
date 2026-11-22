@@ -34,7 +34,11 @@
    
     'depends': ['website_forum', 'document_knowledge', 'document_page'],
     'data': [
+        # #if VERSION >= "20.0"
+        'security/ir.access.csv',
+        # #else
         'security/document_knowledge_security.xml',
+        # #endif
         #'views/website_forum.xml',
     ],
     'demo': [],

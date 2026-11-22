@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SEKTION 3: Anteckningar i mobilen
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <record id="slide_category_kb_s3" model="slide.slide">
+        <field name="name">3. Anteckningar i mobilen</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="sequence">200</field>
+    </record>
+
+    <record id="slide_kb_s3_01" model="slide.slide">
+        <field name="name">Skriv där du är</field>
+        <field name="sequence">210</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.30</field>
+        <field name="html_content" type="html">
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Idén kommer inte när du sitter vid datorn</h2>
+        <p>De bästa anteckningarna skrivs ofta på plats — hos kunden, i verkstaden, på väg till ett möte. Om du måste vänta tills du är tillbaka vid datorn hinner du glömma hälften.</p>
+        <p>Därför kan anteckningarna synkroniseras mot mobilen. Du skriver i telefonen, och anteckningen hamnar i kunskapsbasen.</p>
+    </div>
+</section>
+
+<section class="s_features pt32 pb64">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-pencil mb-3 rounded bg-o-color-3"/>
+                <div class="overflow-hidden">
+                    <h3 class="h5-fs">Skriv offline</h3>
+                    <p>Anteckningen sparas lokalt i telefonen och skickas när du får uppkoppling igen.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-refresh mb-3 rounded bg-o-color-3"/>
+                <div class="overflow-hidden">
+                    <h3 class="h5-fs">Synka automatiskt</h3>
+                    <p>Ändringar går båda vägarna — telefonen och kunskapsbasen hålls i takt.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-search mb-3 rounded bg-o-color-3"/>
+                <div class="overflow-hidden">
+                    <h3 class="h5-fs">Sök överallt</h3>
+                    <p>Anteckningen blir sökbar i kunskapsbasen så snart den synkroniserats.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="s_call_to_action o_cc o_cc5 pt48 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h3>Skriv först, städa sedan</h3>
+                <p class="lead">En rörig anteckning som finns är bättre än en perfekt som aldrig blev skriven. Fånga tanken på plats och förbättra formuleringen när du är tillbaka vid datorn.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">Varför anteckningar ska kunna skrivas i mobilen, hur synkroniseringen fungerar och varför en rörig anteckning slår ingen anteckning.</field>
+    </record>
+
+    <record id="slide_kb_s3_02" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Mobilen</field>
+        <field name="sequence">220</field>
+        <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Testa dina kunskaper om att skriva anteckningar i mobilen och hur de synkroniseras.</field>
+    </record>
+
+    <record id="slide_kb_s3_02_q1" model="slide.question">
+        <field name="question">Vad händer om du skriver en anteckning utan uppkoppling?</field>
+        <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_kb_s3_02"/>
+    </record>
+    <record id="slide_kb_s3_02_q1_a1" model="slide.answer">
+        <field name="text_value">Den sparas lokalt och skickas när du får nät igen</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Du kan skriva var som helst — synkroniseringen väntar tills det går.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q1"/>
+    </record>
+    <record id="slide_kb_s3_02_q1_a2" model="slide.answer">
+        <field name="text_value">Den försvinner</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — den sparas lokalt först.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q1"/>
+    </record>
+    <record id="slide_kb_s3_02_q1_a3" model="slide.answer">
+        <field name="text_value">Du måste skriva om den senare</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — den skickas automatiskt när uppkopplingen är tillbaka.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q1"/>
+    </record>
+
+    <record id="slide_kb_s3_02_q2" model="slide.question">
+        <field name="question">Varför är det bättre att skriva på plats än att vänta?</field>
+        <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_kb_s3_02"/>
+    </record>
+    <record id="slide_kb_s3_02_q2_a1" model="slide.answer">
+        <field name="text_value">Du minns detaljerna medan de är färska</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Detaljer försvinner snabbt — särskilt sådant som kändes självklart.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q2"/>
+    </record>
+    <record id="slide_kb_s3_02_q2_a2" model="slide.answer">
+        <field name="text_value">Det går snabbare att skriva i mobilen</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — det går oftast långsammare. Poängen är timingen.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q2"/>
+    </record>
+    <record id="slide_kb_s3_02_q2_a3" model="slide.answer">
+        <field name="text_value">Systemet kräver det</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — det är en vana, inte ett krav.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q2"/>
+    </record>
+
+    <record id="slide_kb_s3_02_q3" model="slide.question">
+        <field name="question">Vad är bättre: en rörig anteckning eller ingen anteckning?</field>
+        <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_kb_s3_02"/>
+    </record>
+    <record id="slide_kb_s3_02_q3_a1" model="slide.answer">
+        <field name="text_value">En rörig anteckning — den kan förbättras senare</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Fånga tanken först, städa formuleringen sedan.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q3"/>
+    </record>
+    <record id="slide_kb_s3_02_q3_a2" model="slide.answer">
+        <field name="text_value">Ingen anteckning — hellre inget än dåligt</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — då försvinner kunskapen helt.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q3"/>
+    </record>
+    <record id="slide_kb_s3_02_q3_a3" model="slide.answer">
+        <field name="text_value">Det spelar ingen roll</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — en anteckning som finns kan alltid förbättras.</field>
+        <field name="question_id" ref="slide_kb_s3_02_q3"/>
+    </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Top Menu -->
+        <menuitem id="menu_joplin_root" name="Joplin Notes" sequence="10"
+                  web_icon="knowledge_joplin,static/description/icon.png"/>
+
+        <!-- Submenus -->
+        <menuitem id="menu_joplin_notes" name="Notes"
+                  parent="menu_joplin_root"
+                  action="action_joplin_note" sequence="10"/>
+
+        <menuitem id="menu_joplin_folders" name="Folders"
+                  parent="menu_joplin_root"
+                  action="action_joplin_folder" sequence="20"/>
+
+        <menuitem id="menu_joplin_tags" name="Tags"
+                  parent="menu_joplin_root"
+                  action="action_joplin_tag" sequence="30"/>
+
+        <menuitem id="menu_joplin_resources" name="Resources"
+                  parent="menu_joplin_root"
+                  action="action_joplin_resource" sequence="40"/>
+
+    </data>
+</odoo>

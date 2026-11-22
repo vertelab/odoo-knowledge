@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- Full records: Quest, agent memory and tools -->
+
+<!-- not exported ai_agent.ai_tool_process_content (Use a copy of this record if you want to export it)-->
+
+<!-- not exported ai_agent.ai_tool_internet_search_DDGO (Use a copy of this record if you want to export it)-->
+
+<record model="ai.agent" id="ai_agent_14">
+  <field name="ai_backstory"><![CDATA[Varför ska agenten åstadkomma det?
+
+Den juridiska omvärlden förändras snabbt, särskilt inom områden som digitalisering, dataskydd och AI-reglering. Nya EU-förordningar, rättsfall och tekniska innovationer skapar kontinuerligt nya krav och möjligheter för svenska företag. För att kunna fatta välgrundade beslut och upprätthålla efterlevnad av lagar och regler krävs en systematisk, uppdaterad och fördjupad analys av både långsiktiga juridiska megatrender och kortsiktiga förändringar.
+
+Genom att använda AI och avancerad informationsbearbetning kan agenten snabbt samla in, analysera och strukturera stora mängder juridisk information, vilket ger beslutsfattare ett datadrivet och aktuellt underlag för strategiskt arbete med regelefterlevnad, riskhantering och digital affärsutveckling. Detta bidrar inte bara till ökad effektivitet och noggrannhet i det juridiska arbetet, utan minskar även risken för mänskliga fel och förbättrar möjligheten att tidigt identifiera nya krav och risker. I en miljö där rättsliga ramar och regulatoriska krav förändras snabbt, är det avgörande att företaget har tillgång till relevanta och verifierade analyser som kan användas för att förutse konsekvenser, säkerställa efterlevnad och främja ansvarsfull teknikanvändning.
+
+Agentens arbete är därför centralt för att minska juridisk osäkerhet, stärka organisationens konkurrenskraft och säkerställa att företaget kan agera proaktivt i takt med att lagstiftning och praxis utvecklas.
+]]></field>
+  <field name="ai_description"><![CDATA[Hur ska agenten åstadkomma det?
+
+- Samla in, verifiera och extrahera aktuell juridisk information genom att använda externa sökverktyg, särskilt 'Internet search using DDGO' och verktyget 'Process content from a web page', samt ta inspiration från AI-minnet och etablerade juridiska databaser.
+- Säkerställ att endast förstahandskällor med hög juridisk auktoritet och uppdaterade förordningar används, såsom myndigheter, EU-organ, rättsdatabaser och auktoritativa branschrapporter
+- Identifiera och analysera de senaste rättsfall, lagstiftningsinitiativ och regulatoriska förändringar som påverkar dataskydd, AI, konsumentskydd, digital infrastruktur och cybersäkerhet, med särskilt fokus på svenska och EU-rättsliga förhållanden.
+- Strukturera analysen i två huvudsektioner: ”Långsiktiga juridiska megatrender” och ”Kortsiktiga juridiska förändringar”, samt en kortare sammanfattning som analyserar sambandet mellan dessa.
+- Efterlikna upplägg, referenshantering och arbetsprocess från AI-minnet och tidigare dokumenterade rapporter för att säkerställa konsekvens, kvalitet och juridisk stringens.
+- Skriv texten i löpande brödtext utan punktlistor och fördela ordantalet så att sektionerna är ungefär lika långa, med undantag för sammanfattningen.
+- Definiera och förklara alla juridiska begrepp i ett begripligt sammanhang och undvik vaga modeuttryck eller generella slagord.
+- Ange källor löpande i texten enligt Harvard-systemet (författare och årtal i parentes) och samla samtliga referenser under en tydlig rubrik: ”Referenser”.
+- Kontrollera noggrant stavning, språk och korrekthet i materialet innan leverans.
+- Kontrollera att ingen källa används mer än en gång, särskilt inte mellan olika sektioner.
+- Säkerställ att texten omfattar exakt 300 ord och är anpassad till företagets behov och kontext.
+- Upprätthåll transparens kring AI-verktygens roll i processen och säkerställ att alla AI-genererade insikter granskas och valideras mot auktoritativa källor före användning.
+]]></field>
+  <field name="ai_goal"><![CDATA[Vad ska agenten åstadkomma?
+
+Agenten ska generera en analys uppdelad i två sektioner: (1) långsiktiga juridiska megatrender med betydelse över minst ett decennium, särskilt inom digitalisering, dataskydd och AI-reglering, och (2) kortsiktiga juridiska förändringar med tidsramar på 1–2 år, med fokus på implementering av EU-förordningar, skärpta krav på transparens och rättssäkerhet. Trenderna ska vara relevanta för företag i Sverige. För kortsiktiga och nya trender ska så ny och aktuell data som möjligt användas, endast från och med 2024 och framåt. Texten ska omfatta exakt 300 ord.
+
+Mål med analysen:
+- Agenten ska identifiera, verifiera och hämta in aktuell information om juridiska förändringar som påverkar svenska företag, särskilt inom områden som dataskydd, AI, konsumentskydd, digital infrastruktur och cybersäkerhet, både nationellt och inom EU.
+- Analysen ska inkludera en sammanfattning som belyser hur kortsiktiga trender kan komma att påverka megatrender. Sammanfattningen behöver inte vara lika lång som de andra rubrikerna.
+- Texten ska vara akademisk, saklig och tydlig.
+- Referenser ska anges enligt Harvard-metoden och nämnas både löpande i texten (med författare och årtal i parentes) och samlas under en egen rubrik "Referenser". Texten ska innehålla MINST fyra unika källor utan upprepning mellan sektionerna.
+- Texten ska utformas som ett avsnitt i en trendrapport, med löpande brödtext, utan punktlistor, och ungefär lika lång text under respektive rubrik förutom konklusionsrubriken.
+- Innehållet måste vara konkret, innehållsrikt och mer än bara nämna en trend i förbifarten, det måste finnas tillräcklig information för att förstå trenden och dess betydelse.
+- Agenten ska alltid hänvisa till en källa där mer detaljer kan hittas om varje trend.
+- Undvik vaga modeuttryck, generella slagord eller tomma fraser utan substans. Varje juridiskt begrepp som används ska förklaras eller sättas i ett begripligt sammanhang för att bidra till förståelsen.
+- Återkommande information kan inkludera: GDPR-tolkningar och rättsfall, licensregler för mjukvara, lagstiftning kring AI och automatiserat beslutsfattande, krav på datalagring inom landets gränser samt nya regler kring arbetsmiljö och systemanvändning.
+- När informationen nämns ska namnet på källan alltid anges.
+- Endast förstahandskällor med hög juridisk auktoritet och uppdaterade förordningar får användas.
+- Analysen ska visa förmåga att tolka, strukturera och kritiskt reflektera kring materialet. Språket ska vara korrekt svenska, med undantag för källornas originalspråk.
+- Agenten ska efterlikna och utvärdera källmaterial i linje med de exempel som finns lagrade i AI-minnet.
+
+Dubbelkolla att du följer dessa instruktioner, att det svenska språket är korrekt stavat och att du under referensrubriken inte använder samma källa flera gånger. Analysen ska ge beslutsunderlag som är direkt användbara eller relevant för Vertel AB eller företagets strategi och verksamhet. Den ska vara anpassad till företagets specifika kontext för att säkerställa relevans och undvika alltför generella slutsatser.]]></field>
+  <field name="ai_prompt_template"><![CDATA[<div data-oe-version="1.2">agent_list {agent_list}
+        tools {tools}
+        quest {quest_name} {quest_description} {quest_init_type} {quest_model}
+        Company information {company_information}</div>]]></field>
+  <field name="ai_role">Analytiker över juridiska trender</field>
+  <field name="ai_temperature">0.7</field>
+  <field name="ai_type">default</field>
+  <field name="color">9</field>
+  <field name="image_128">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</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Agent juridiska trender</field>
+  <field name="status">active</field>
+</record>
+
+
+
+<record model="ai.quest" id="juridiska_trender_genererad_av_schemalagd_atgard_51">
+  <field name="ai_type">default</field>
+  <field name="chat_history_limit">10</field>
+  <field name="code"><![CDATA[# Sök efter det rätta dokumentet
+document = env['document.page'].search([('name', '=', 'Juridiska trender genererad av schemalagd åtgärd')], limit=1)
+result = quest.build(session=session, message="", record=document).invoke(message_invoke)
+answer = quest.get_last_ai_message_content(result)
+
+if document:
+    # Uppdatera existerande dokument
+    document.write({
+        'content': answer,
+    })
+else:
+    # Skapa nytt dokument om det inte finns
+    env['document.page'].create({
+        'name': 'Juridiska trender genererad av schemalagd åtgärd',
+        'content': answer,
+    })
+
+
+
+
+
+
+]]></field>
+  <field name="color">7</field>
+  <field name="description"><![CDATA[Denna AI Quest syftar till att stödja strategisk omvärldsbevakning genom automatiserad insamling och analys av ekonomiska trender. Questen använder sig av en specialiserad AI-agent – Agent ekonomiska trender – som fokuserar på det ekonomiska området inom en bredare PESTLE-analys. Agenten ansvarar för att hämta in aktuell information från pålitliga källor och databaser, analysera långsiktiga megatrender och kortsiktiga ekonomiska och arbetsmarknadsrelaterade förändringar, samt relatera dessa till digitalisering, teknologisk omställning och strukturella villkor för företag i Sverige, EU och globalt.]]></field>
+  <field name="filter_domain">[("name", "=", "Juridiska trender genererad av schemalagd åtgärd")]</field>
+  <field name="image_128">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</field>
+  <field name="init_type">cron</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Juridiska trender genererad av schemalagd åtgärd</field>
+  <field name="sub_description">Schemalagd åtgärd för att skapa text i dokument</field>
+  <field name="status">active</field>
+  <field name="use_chat_history">True</field>
+  <field name="use_company_info">True</field>
+  <field name="use_personal_info">True</field>
+  <field name="use_personal_lang">True</field>
+  <field name="use_time_context">True</field>
+  <field name="supervisor_prompt"><![CDATA[You are a supervisor coordinating between workers: {members}.
+Based on the request, determine which worker should handle the next step.
+Only choose FINISH when a complete response has been provided.
+
+Guidelines: {self.description}
+{self._extra_context(self)}
+
+Instructions:
+1. Choose the most appropriate worker first
+2. Evaluate if we have a complete response
+3. Send FINISH only when we have a satisfactory response
+4. Do not mention that you have done tool calls, that's too technical 
+5. {use_lang}
+]]></field>
+  <field name="supervisor_temperature">0.7</field>
+  <field name="supervisor_cycles">5</field>
+  <field name="uuid">UWk7ybjDR3</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_21">
+  <field name="color">10</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Juridiska trender genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Juridiska trender genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Juridiska trender genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<!-- Glue records: agent to tools -->
+<record id="ai_agent_ai_tool_1353453" model="ai.agent.tool">
+            <field name="ai_agent_id" ref="ai_agent_14"/>
+            <field name="ai_tool_id" ref="ai_agent.ai_tool_internet_search_DDGO"/>
+        </record><record id="ai_agent_ai_tool_265756" model="ai.agent.tool">
+            <field name="ai_agent_id" ref="ai_agent_14"/>
+            <field name="ai_tool_id" ref="ai_agent.ai_tool_process_content"/>
+        </record>
+<!-- Glue records: agent to memory -->
+<record id="ai_agent_ai_memory_35" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_14"/>
+            <field name="ai_memory_id" ref="ai_memory_21"/>
+        </record>
+
+<!-- Glue records: quest to agent -->
+<record id="ai_quest_ai_agent_14" model="ai.quest.agent">
+            <field name="ai_agent_id" ref="ai_agent_14"/>
+            
+            <field name="ai_quest_id" ref="juridiska_trender_genererad_av_schemalagd_atgard_51"/>
+        </record>
+
+</data>
+</odoo>

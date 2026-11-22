@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <!-- #if VERSION <= "19.0" -->
 
     <record id="access_document_page_publicly" model="ir.model.access">
         <field name="name">document_page_public_access</field>
@@ -20,4 +21,5 @@
         <field name="perm_create">0</field>
         <field name="perm_unlink">0</field>
     </record>
+    <!-- #endif -->
 </odoo>

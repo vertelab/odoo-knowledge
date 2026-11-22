@@ -8,7 +8,7 @@ class DocumentPage(models.Model):
     _inherit = "document.page"
 
     def open_page(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url')
         action = {
             'type': 'ir.actions.act_url',
             "name": "Document Page Manual",

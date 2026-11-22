@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Law tools for the Lag-specialist (document-law-ai-capability).
+
+        Three tools, split by what they do to the data (design D3):
+        search returns rows, get returns one law's text, interpret returns
+        the law plus the company's context. All three are read_only; the
+        skill (design D6) carries the no-legal-advice boundary.
+
+        No tool calls an LLM itself (design D4): `law_interpret` returns
+        the company context and the law's text; the agent does the
+        interpreting. That keeps the tools testable and keeps the
+        reasoning inside the skill that constrains it.
+
+        SANDBOX NOTE: the tools run in the ai.tool sandbox, whose
+        `__builtins__` is a RESTRICTED DICT (models/ai_tool.py
+        `_execute_tool_async`) that does NOT contain the exception classes.
+        A bare `except Exception` therefore raises
+        `NameError: name 'Exception' is not defined` the moment the except
+        clause is evaluated. Exception classes are reached through
+        `builtins` (via `__import__`, which the sandbox does provide) and
+        aliased at the top of each tool that catches. Integer parsing is
+        done by a `_to_int` helper that checks the value instead of
+        catching a conversion error.
+    -->
+
+    <!-- ── law_search — find the relevant statute ───────────────────── -->
+    <record id="tool_law_search" model="ai.tool">
+        <field name="name">law_search</field>
+        <field name="description">Search the Swedish statutes held in document.law (SFS documents from the Riksdag). Use to find the relevant law before reading it. Narrow by free text (matches designation, title and text), by designation (e.g. "2024:123"), by issuing department, and/or by publication date range. Results are bounded; when more laws match than are returned the tool reports the truncation — narrow the search rather than assume you saw everything. When nothing matches the tool says so plainly; do not invent a law.</field>
+        <field name="parameters">{"type": "object", "properties": {"query": {"type": "string", "description": "Free text matched against designation, title and law text."}, "designation": {"type": "string", "description": "Designation to match, e.g. \"2024:123\" or \"SFS 2024:123\"."}, "department": {"type": "string", "description": "Issuing department (rss_organ), e.g. \"Finansdepartementet\"."}, "date_from": {"type": "string", "description": "Earliest publication date, ISO YYYY-MM-DD."}, "date_to": {"type": "string", "description": "Latest publication date, ISO YYYY-MM-DD."}, "limit": {"type": "integer", "description": "Maximum number of laws to return (default 10, max 50)."}}, "required": []}</field>
+        <field name="risk_level">read_only</field>
+        <field name="code"><![CDATA[
+async def execute(query=None, designation=None, department=None,
+                  date_from=None, date_to=None, limit=None):
+    """Search document.law and report truncation."""
+    if 'document.law' not in env:
+        return json.dumps({
+            'error': 'document.law is not installed',
+            'retryable': False,
+        })
+    limit = _to_int(limit, 10)
+    limit = max(1, min(limit, 50))
+
+    domain = [('rss_dok_id', '!=', False)]
+    if query and str(query).strip():
+        term = str(query).strip()
+        domain += ['|', '|',
+                   ('rss_beteckning', 'ilike', term),
+                   ('rss_titel', 'ilike', term),
+                   ('rss_text', 'ilike', term)]
+    if designation and str(designation).strip():
+        term = str(designation).strip()
+        # Accept both "2024:123" and "SFS 2024:123" — match the bare form.
+        if term.lower().startswith('sfs '):
+            term = term[4:].strip()
+        domain.append(('rss_beteckning', 'ilike', term))
+    if department and str(department).strip():
+        domain.append(('rss_organ', 'ilike', str(department).strip()))
+    if date_from and str(date_from).strip():
+        domain.append(('rss_datum', '>=', str(date_from).strip()))
+    if date_to and str(date_to).strip():
+        domain.append(('rss_datum', '<=', str(date_to).strip()))
+
+    Law = env['document.law']
+    total = Law.search_count(domain)
+    laws = Law.search(domain, limit=limit, order='rss_datum desc, id desc')
+    results = [{
+        'id': law.id,
+        'designation': law.rss_beteckning or None,
+        'title': law.rss_titel or None,
+        'department': law.rss_organ or None,
+        'date': str(law.rss_datum) if law.rss_datum else None,
+        'published': str(law.rss_publicerad) if law.rss_publicerad else None,
+    } for law in laws]
+    out = {
+        'count': len(results),
+        'total_matches': total,
+        'truncated': total > len(results),
+        'results': results,
+    }
+    if not results:
+        out['message'] = ('No law matches the search. The records hold '
+                          'Swedish SFS documents only — a question about '
+                          'EU regulation or case law falls outside them.')
+    elif out['truncated']:
+        out['message'] = ('%d of %d matching laws returned — narrow the '
+                          'search (designation, department or date range) '
+                          'to see the rest.' % (len(results), total))
+    return json.dumps(out, ensure_ascii=False, default=str)
+
+
+def _to_int(value, default):
+    """Parse `value` as an int, or return `default`.
+
+    A helper rather than `try/except`: the sandbox's `__builtins__` does
+    not carry the exception classes, so `except ValueError` would raise
+    `NameError` when it fired.
+    """
+    if value is None or value is False:
+        return default
+    text = str(value).strip()
+    if not text:
+        return default
+    negative = text.startswith('-')
+    digits = text[1:] if negative else text
+    if not digits.isdigit():
+        return default
+    number = int(digits)
+    return -number if negative else number
+]]></field>
+    </record>
+
+    <!-- ── law_get — read one law ───────────────────────────────────── -->
+    <record id="tool_law_get" model="ai.tool">
+        <field name="name">law_get</field>
+        <field name="description">Read one Swedish statute from document.law by its document id (rss_dok_id) or its Odoo record id. Returns the designation, issuing department, dates and the law's plain text — not raw HTML. A long law is truncated; the tool reports it so the agent can request the remainder rather than assume it read all. Fails with an actionable error when the identifier matches no law.</field>
+        <field name="parameters">{"type": "object", "properties": {"document_id": {"type": "string", "description": "The law's document id (rss_dok_id), as returned by law_search."}, "law_id": {"type": "integer", "description": "The law's Odoo record id, as returned by law_search."}, "max_chars": {"type": "integer", "description": "Maximum characters of law text to return (default 8000)."}, "offset": {"type": "integer", "description": "Character offset to start the text at (default 0) — use to read the remainder of a truncated law."}}, "required": []}</field>
+        <field name="risk_level">read_only</field>
+        <field name="code"><![CDATA[
+async def execute(document_id=None, law_id=None, max_chars=None, offset=None):
+    """Read one document.law row as text, reporting truncation."""
+    if 'document.law' not in env:
+        return json.dumps({
+            'error': 'document.law is not installed',
+            'retryable': False,
+        })
+    law = _find_law(document_id, law_id)
+    if not law:
+        return json.dumps({
+            'error': 'No law matches the given identifier',
+            'parameter': 'document_id' if document_id else 'law_id',
+            'expected': 'a rss_dok_id or Odoo record id of an existing law',
+            'actual': str(document_id or law_id),
+            'retryable': False,
+        })
+
+    max_chars = max(1, _to_int(max_chars, 8000))
+    offset = max(0, _to_int(offset, 0))
+
+    text = law.rss_text or ''
+    if not text and law.rss_html:
+        text = env['ai.okf.mixin']._okf_html_to_text(law.rss_html)
+    text = text or ''
+    total_chars = len(text)
+    chunk = text[offset:offset + max_chars]
+    returned_to = offset + len(chunk)
+    truncated = returned_to < total_chars
+
+    out = {
+        'id': law.id,
+        'document_id': law.rss_dok_id or None,
+        'designation': law.rss_beteckning or None,
+        'title': law.rss_titel or None,
+        'subtitle': law.rss_subtitel or None,
+        'department': law.rss_organ or None,
+        'date': str(law.rss_datum) if law.rss_datum else None,
+        'published': str(law.rss_publicerad) if law.rss_publicerad else None,
+        'text': chunk,
+        'text_chars': total_chars,
+        'truncated': truncated,
+    }
+    if truncated:
+        out['message'] = (
+            'Text truncated: showing characters %d-%d of %d. Call law_get '
+            'again with offset=%d to read the remainder.'
+            % (offset, returned_to, total_chars, returned_to))
+    return json.dumps(out, ensure_ascii=False, default=str)
+
+
+def _to_int(value, default):
+    """Parse `value` as an int, or return `default` (sandbox-safe)."""
+    if value is None or value is False:
+        return default
+    text = str(value).strip()
+    if not text:
+        return default
+    negative = text.startswith('-')
+    digits = text[1:] if negative else text
+    if not digits.isdigit():
+        return default
+    number = int(digits)
+    return -number if negative else number
+
+
+def _find_law(document_id=None, law_id=None):
+    """Find one document.law by record id or document id. Empty if none."""
+    Law = env['document.law']
+    if law_id is not None and str(law_id).strip() != '':
+        rid = _to_int(law_id, 0)
+        if rid:
+            found = Law.browse(rid).exists()
+            if found:
+                return found
+    if document_id and str(document_id).strip():
+        return Law.search(
+            [('rss_dok_id', '=', str(document_id).strip())], limit=1)
+    return Law.browse()
+]]></field>
+    </record>
+
+    <!-- ── law_interpret — the law plus the company's context ───────── -->
+    <record id="tool_law_interpret" model="ai.tool">
+        <field name="name">law_interpret</field>
+        <field name="description">Return a Swedish statute's text together with the asking company's context, so the agent can interpret what the law means for THIS company rather than restating the statute. Resolves the company from the session; when no company can be determined it fails with an actionable error rather than guessing. The tool does not call an LLM — the agent does the interpreting, grounded in the returned context. Reports when the company context came back empty.</field>
+        <field name="parameters">{"type": "object", "properties": {"document_id": {"type": "string", "description": "The law's document id (rss_dok_id), as returned by law_search."}, "law_id": {"type": "integer", "description": "The law's Odoo record id, as returned by law_search."}, "topic": {"type": "string", "description": "The topic to search the company memory for (e.g. the law's subject). Defaults to the law's designation and title."}, "max_chars": {"type": "integer", "description": "Maximum characters of law text to return (default 8000)."}}, "required": []}</field>
+        <field name="risk_level">read_only</field>
+        <field name="code"><![CDATA[
+import builtins as _b
+
+Exception = _b.Exception
+
+
+async def execute(document_id=None, law_id=None, topic=None, max_chars=None):
+    """Return the law's text plus the company's context (design D4/D5)."""
+    if 'document.law' not in env:
+        return json.dumps({
+            'error': 'document.law is not installed',
+            'retryable': False,
+        })
+
+    # ── Resolve the company (design D5) ─────────────────────────────
+    # The company must be KNOWN. An interpretation against the wrong
+    # company is worse than no interpretation — it is confidently wrong
+    # about the business it claims to describe. We therefore resolve from
+    # the session's coworker first (the session is the canonical "current
+    # run"), then env.company, and fail rather than default.
+    company = _resolve_company()
+    if not company:
+        return json.dumps({
+            'error': 'No company could be determined for this session',
+            'parameter': 'company',
+            'expected': 'a company in context (session coworker or env.company)',
+            'actual': '(none)',
+            'retryable': True,
+            'message': ('Ask the user which company the interpretation '
+                        'should be made for, then retry. Do not guess.'),
+        })
+
+    law = _find_law(document_id, law_id)
+    if not law:
+        return json.dumps({
+            'error': 'No law matches the given identifier',
+            'parameter': 'document_id' if document_id else 'law_id',
+            'expected': 'a rss_dok_id or Odoo record id of an existing law',
+            'actual': str(document_id or law_id),
+            'retryable': False,
+        })
+
+    max_chars = max(1, _to_int(max_chars, 8000))
+
+    text = law.rss_text or ''
+    if not text and law.rss_html:
+        text = env['ai.okf.mixin']._okf_html_to_text(law.rss_html)
+    text = text or ''
+    law_truncated = len(text) > max_chars
+    law_text = text[:max_chars]
+
+    # ── Company context (design D4) ─────────────────────────────────
+    # Ground the interpretation in the company memory: the management
+    # summary, strategy and indexed company facts. This is the mechanism
+    # the stack already has for exactly this — "in the company's context".
+    query = topic or law.rss_beteckning or law.rss_titel or ''
+    context_block = ''
+    context_empty = True
+    try:
+        Memory = env['ai.company.memory']
+        context_block = Memory.build_system_prompt_block(
+            company.id, user_id=env.user.id) or ''
+        hits = Memory.search_for_company(
+            company.id, query=query, limit=10) or []
+        if hits:
+            lines = []
+            for hit in hits:
+                content = (hit.get('content') or '').strip()
+                if content:
+                    lines.append(content[:1000])
+            if lines:
+                context_block = (context_block + '\n\n' if context_block
+                                 else '') + '\n§ '.join(lines)
+        context_empty = not context_block.strip()
+    except Exception as e:
+        return json.dumps({
+            'error': 'Company context could not be read: %s' % e,
+            'parameter': 'company',
+            'expected': 'readable ai.company.memory for company %s'
+                        % company.id,
+            'actual': str(e),
+            'retryable': True,
+        })
+
+    out = {
+        'company': {
+            'id': company.id,
+            'name': company.display_name,
+        },
+        'law': {
+            'id': law.id,
+            'document_id': law.rss_dok_id or None,
+            'designation': law.rss_beteckning or None,
+            'title': law.rss_titel or None,
+            'department': law.rss_organ or None,
+            'date': str(law.rss_datum) if law.rss_datum else None,
+            'text': law_text,
+            'text_chars': len(text),
+            'truncated': law_truncated,
+        },
+        'company_context': context_block,
+        'company_context_empty': context_empty,
+    }
+    if law_truncated:
+        out['law']['message'] = (
+            'Law text truncated at %d of %d characters — call law_get with '
+            'offset to read the remainder.' % (max_chars, len(text)))
+    if context_empty:
+        out['message'] = (
+            'The company context came back empty. Interpret the law\'s text '
+            'as it stands and say that the interpretation is not '
+            'company-specific rather than pretending it is.')
+    return json.dumps(out, ensure_ascii=False, default=str)
+
+
+def _to_int(value, default):
+    """Parse `value` as an int, or return `default` (sandbox-safe)."""
+    if value is None or value is False:
+        return default
+    text = str(value).strip()
+    if not text:
+        return default
+    negative = text.startswith('-')
+    digits = text[1:] if negative else text
+    if not digits.isdigit():
+        return default
+    number = int(digits)
+    return -number if negative else number
+
+
+def _find_law(document_id=None, law_id=None):
+    """Find one document.law by record id or document id. Empty if none."""
+    Law = env['document.law']
+    if law_id is not None and str(law_id).strip() != '':
+        rid = _to_int(law_id, 0)
+        if rid:
+            found = Law.browse(rid).exists()
+            if found:
+                return found
+    if document_id and str(document_id).strip():
+        return Law.search(
+            [('rss_dok_id', '=', str(document_id).strip())], limit=1)
+    return Law.browse()
+
+
+def _resolve_company():
+    """Resolve the asking company from the session, then env.company.
+
+    Returns a res.company recordset (possibly empty). Never defaults to a
+    guess: the caller decides what to do when the result is empty.
+    """
+    # 1. The session's coworker (canonical "current run").
+    sess_model = env.context.get('_ai_context_model')
+    sess_id = env.context.get('_ai_context_id')
+    if sess_model == 'ai.coworker.session' and sess_id:
+        sess = env['ai.coworker.session'].browse(
+            _to_int(sess_id, 0)).exists()
+        if sess and sess.coworker_id and sess.coworker_id.company_id:
+            return sess.coworker_id.company_id
+    # 2. The coworker named in context directly.
+    cw_id = env.context.get('ai_coworker_id')
+    if cw_id:
+        cw = env['ai.coworker'].browse(_to_int(cw_id, 0)).exists()
+        if cw and cw.company_id:
+            return cw.company_id
+    # 3. The environment's own company (usually set for a user session).
+    return env.company or env['res.company']
+]]></field>
+    </record>
+</odoo>

@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- Full records: Quest, agent memory and tools -->
+
+<record model="ai.memory" id="ai_memory_18">
+  <field name="color">11</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Ekonomiska trender genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Ekonomiska trender genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Ekonomiska trender genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_22">
+  <field name="color">10</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Miljömässiga trender genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Miljomassiga trender genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Miljömässiga trender genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_19">
+  <field name="color">10</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Sociala trender genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Sociala trender genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Sociala trender genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.quest" id="schemalagd_ekonomiskt_uppdrag_46">
+  <field name="ai_type">default</field>
+  <field name="chat_history_limit">10</field>
+  <field name="code"><![CDATA[# Sök och hämta in dokument
+documents = env['document.page'].search([
+    ('name', 'in', [
+        'Ekonomiska trender genererad av schemalagd åtgärd',
+        'Politiska trender genererad av schemalagd åtgärd',
+        'Sociala trender genererad av schemalagd åtgärd',
+        'Tekniska/Teknologiska trender genererad av schemalagd åtgärd',
+        'Juridiska trender genererad av schemalagd åtgärd',
+        'Miljömässiga trender genererad av schemalagd åtgärd'
+    ])
+])
+
+# Om questen kan ta emot flera dokument
+result = quest.build(session=session, message="", record=documents).invoke(message_invoke)
+answer = quest.get_last_ai_message_content(result)
+
+#markup function
+#from markupsafe import Markup
+#import markdown
+#markdown.markdown(text)
+#ai.quest -> self.markdown2html
+
+#Omvandla Markdown till HTML
+answer = self.markdown2html(answer)
+
+env['document.page'].create({
+    'name': 'Omvärldsbevakning av aktuella trender',
+    'content': answer,
+})
+
+
+
+
+
+
+]]></field>
+  <field name="color">7</field>
+  <field name="description"><![CDATA[Detta uppdrag syftar till att låta {Huvudagent för omvärldsbevakning} genomföra en omfattande omvärldsbevakning. Agenterna ska självständigt analysera, tolka och strukturera denna information. Agentens roll är att agera som en huvudanalytiker och målet är att leverera en sammanhängande, kritiskt reflekterande text utifrån varje delområde som är uppdelad i sex huvudkategorier enligt PESTLE-modellen, där alla faktorer ska med, politiska faktorer, ekonomiska faktorer, sociala faktorer, tekniska/teknologiska faktorer, juridiska faktorer, miljömässiga faktorer
+
+Rapportstruktur:
+
+Underrubrik -> Dagens datum: ÅÅÅÅ-MM-DD
+mellanrum 1 rad
+Rubrik -> Politiska faktorer
+Underrubrik -> Megatrender
+brödtext
+Underrubrik -> Kortsiktiga trender
+brödtext
+mellanrum 2 rader
+
+Rubrik -> Ekonomiska faktorer
+brödtext
+Underrubrik -> Kortsiktiga trender
+brödtext
+mellanrum 2 rader
+
+Rubrik -> Sociala faktorer
+brödtext
+Underrubrik -> Kortsiktiga trender
+brödtext
+mellanrum 2 rader
+
+Rubrik -> Tekniska/teknologiska faktorer
+brödtext
+Underrubrik -> Kortsiktiga trender
+brödtext
+mellanrum 2 rader
+
+Rubrik -> Juridiska faktorer
+brödtext
+Underrubrik -> Kortsiktiga trender
+brödtext
+mellanrum 2 rader
+
+Rubrik -> Miljömässiga faktorer
+brödtext
+Underrubrik -> Kortsiktiga trender
+brödtext
+mellanrum 2 rader
+
+Rubrik -> Referenser
+källor i brödtext: Lista alla källor som använts i rapporten enligt Harvard-systemet.
+
+Övriga instruktioner:
+- Skriv dagens datum för rapporten på en egen rad i formatet ÅÅÅÅ-MM-DD.
+- En fullständig referenslista ska placeras sist i rapporten under rubriken “Referenser”.
+- Skriv källorna sist, under rubriken Referenser utan punklista, ingen källa får återanvändas flera gånger i texten. Alla källor ska refereras löpande i texten enligt Harvard-systemet: (Författare, Årtal).
+- Agenten ska kontrollera stavning, språk och korrekthet i materialet.
+- Texten ska vara akademisk, saklig och skriven på korrekt svenska, med undantag för källornas originalspråk.
+- Analysen bygger på de dokument och källor som agenten har tillgång till, och källorna består av MINST 24 unika källor(MINST 4 per PESTLE-kategori som kommer från dokument i 'document.page')
+- Analysen ska vara exakt 2000 ord lång (exklusive rubriker och referenslista).
+
+Två separata avsnitt kommer behandlas i brödtexten och analysen:
+1. Megatrender (långsiktiga, strukturella förändringar som påverkar samhällen och branscher)
+2. Kortsiktiga trender (aktuella och snabbt föränderliga fenomen som kräver taktisk uppmärksamhet)
+
+Huudagenten ska inte sammanfatta, utan leverera texten i löpande brödtext, utan punktlistor, och med ett akademiskt, sakligt och tydligt språk. Rapporten ska levereras som en sammanhållen text, utan sammanfattning. Varje trendbeskrivning ska följas av en analytisk reflektion kan vara varför trenden är relevant och vilka konsekvenser kan den få för organisationer, beslutsfattare eller samhället i stort?]]></field>
+  <field name="filter_domain">[("parent_id", "in", [110])]</field>
+  <field name="image_128">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</field>
+  <field name="init_type">cron</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Omvärldsbevakning av aktuella trender</field>
+  <field name="sub_description">Schemalagd åtgärd för att skapa text i dokument med hjälp av PESTLE-analys</field>
+  <field name="status">active</field>
+  <field name="use_chat_history">True</field>
+  <field name="use_company_info">True</field>
+  <field name="use_personal_info">True</field>
+  <field name="use_personal_lang">True</field>
+  <field name="use_time_context">True</field>
+  <field name="is_supervisor">True</field>
+  <field name="supervisor_prompt"><![CDATA[Du är en supervisor som koordinerar arbetet mellan följande agent: {Huvudagent för omvärldsbevakning}.
+Ditt uppdrag är att övervaka och säkerställa att agenten uppfyller sin roll i närvärldsbevakningen enligt uppdragets riktlinjer.
+
+
+Guidelines: 
+{self.description}
+{self._extra_context(self)}
+
+Välj endast FINISH när du har en komplett, välstrukturerad och kvalitativ omvärldsbevakning.
+Du får inte nämna verktygsanrop eller tekniska steg i dialogen, håll dig till uppdragets språk och formella ton.
+
+{use_lang}
+]]></field>
+  <field name="supervisor_temperature">0.7</field>
+  <field name="supervisor_cycles">10</field>
+  <field name="uuid">nHFrB7G2Fz</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_17">
+  <field name="color">10</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Politiska trender genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Politiska trender genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Politiska trender genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_21">
+  <field name="color">10</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Juridiska trender genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Juridiska trender genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Juridiska trender genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_20">
+  <field name="color">10</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Tekniska/Teknologiska trender genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Teknologiska trender genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Tekniska/Teknologiska trender genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.agent" id="ai_agent_20">
+  <field name="ai_backstory"><![CDATA[Varför ska agenten åstadkomma det?
+
+I en värld där förändringstakten ökar och företag ständigt måste förhålla sig till nya politiska, ekonomiska, sociala, tekniska, juridiska och miljömässiga utmaningar är en systematisk omvärldsbevakning avgörande för att kunna fatta välgrundade beslut. Genom att analysera trender utifrån PESTLE-modellen får organisationen en helhetsbild av de krafter som formar marknaden och samhället, vilket stärker förmågan att förutse risker, identifiera möjligheter och anpassa strategier i tid.  
+
+Att basera analysen på tidigare inlästa dokument och AI-minnets samlade kunskap säkerställer att arbetet utgår från ett brett, dokumenterat och validerat underlag. Detta minskar risken för subjektiva bedömningar och säkerställer att analysen vilar på en solid grund av beprövade källor och expertutlåtanden.  
+
+Genom att särskilja mellan långsiktiga megatrender och kortsiktiga förändringar kan agenten hjälpa beslutsfattare att både navigera i dagens snabbt föränderliga landskap och samtidigt förbereda sig för framtida strukturella skiften. Syftet är att ge ett beslutsunderlag som är både djupt, brett och direkt användbart för strategisk planering, riskhantering och affärsutveckling.]]></field>
+  <field name="ai_description"><![CDATA[Hur ska agenten åstadkomma det?
+
+- Agenten ska självständigt analysera, tolka och strukturera innehållet i de inlästa dokumenten och den lagrade informationen i AI-minnet, utan att använda externa källor.
+- För varje PESTLE-kategori ska agenten systematiskt identifiera och särskilja långsiktiga megatrender (minst 10 år) och kortsiktiga trender (1–2 år) utifrån materialet i AI-minnet.
+- Agenten ska säkerställa att varje trendbeskrivning följs av en analytisk reflektion kring trendens relevans och möjliga konsekvenser för företag och marknader.
+- Agenten ska noggrant kontrollera att samtliga källor som finns i dokumenten används, att MINST 24 unika källor inkluderas och att ingen källa återanvänds mellan olika rubriker eller trendavsnitt.
+- Agenten ska använda Harvards referenssystem konsekvent och ange källor löpande i texten (författare och årtal i parentes) samt samla samtliga källor under rubriken “Referenser”.
+- Texten ska skrivas i akademisk, saklig och tydlig löpande brödtext utan punktlistor, och struktureras enligt de sex PESTLE-kategorierna med separata avsnitt för megatrender och kortsiktiga trender inom varje kategori.
+- Agenten ska säkerställa att texten omfattar exakt 2000 ord (exklusive rubriker och referenslista) och att dagens datum anges tydligt i rubriken.
+- Slutligen ska agenten noggrant korrekturläsa texten för att upptäcka eventuella stavfel, språkfel eller sakfel, samt dubbelkolla att alla använda källor är korrekt refererade och att inga källor saknas eller upprepas.]]></field>
+  <field name="ai_goal"><![CDATA[Vad ska agenten åstadkomma?
+
+OBS: Ingen extern analys behövs, men agenten ska visa förmåga att tolka, strukturera och kritiskt reflektera kring materialet. 
+Dubbelkolla materialet för eventuella fel. Allt språk ska vara på svenska förutom källorna, kolla upp stavfel. Dubbelkolla så att du fått med alla källor som finns i dokumenten i AI-källorna. Ska finnas MINST 24 källor.
+
+Denna AI-agent har som uppdrag att genomföra en omvärldsbevakning baserad på tidigare inlästa dokument och lagrad information i AI-minnet. Agenten arbetar utifrån PESTLE-modellen och ansvarar över att generera en sammanhållen och djupgående analys baserat på inlästa dokument från AI-minnet, där följande perspektiv behandlas:
+- Politiska faktorer
+- Ekonomiska faktorer
+- Sociala faktorer
+- Tekniska/teknologiska faktorer
+- Juridiska faktorer
+- Miljöfaktorer
+
+För varje kategori ska två separata analysavsnitt finnas:
+1. Megatrender – långsiktiga, strukturella förändringar
+2. Kortsiktiga trender – aktuella, snabbt föränderliga fenomen
+
+Agenten hämtar sina insikter från de dokument och källor som finns i det uppdrag agenten agerar inom. Det är agentens ansvar att själv strukturera, tolka och analysera innehållet i dessa dokument.
+
+Analysen ska uppfylla följande krav:
+- Dagens datum ska finnas med tydligt i rubriken. Kolla upp dagens datum
+- Exakt 2000 ord i löpande text (rubriker och referenslista exkluderade)
+- Tydligt strukturerad enligt de sex PESTLE-kategorierna
+- Totalt är det MINST 24 unika källor, med MINST 4 per PESTLE-kategori
+- Ingen källa får återanvändas flera gånger i texten eller mellan olika rubriker
+- Texten ska skrivas i akademiskt, sakligt och tydligt språk
+- Punktlistor är inte tillåtna – endast löpande brödtext
+- Varje trendbeskrivning ska följas av en analys: varför är trenden relevant, vilka konsekvenser kan den ha?
+
+Alla källor som används i texten ska refereras löpande enligt Harvard-systemet – dvs. med författare och datum i parentes i den löpande texten – och samlas sist under en tydlig rubrik: “Referenser”.
+]]></field>
+  <field name="ai_prompt_template"><![CDATA[<div data-oe-version="1.2">agent_list {agent_list}
+        tools {tools}
+        quest {quest_name} {quest_description} {quest_init_type} {quest_model}
+        Company information {company_information} Document&nbsp;information {content}</div>]]></field>
+  <field name="ai_role">Agenten har som roll att genomföra en omvärldsbevakning med hjälp av en PESTLE-analys.</field>
+  <field name="ai_temperature">0.7</field>
+  <field name="ai_type">default</field>
+  <field name="color">9</field>
+  <field name="image_128">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</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Huvudagent för omvärldsbevakning</field>
+  <field name="status">active</field>
+</record>
+
+
+
+<!-- Glue records: agent to tools -->
+
+<!-- Glue records: agent to memory -->
+<record id="ai_agent_ai_memory_17" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_20"/>
+            <field name="ai_memory_id" ref="ai_memory_17"/>
+        </record>
+<record id="ai_agent_ai_memory_180" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_20"/>
+            <field name="ai_memory_id" ref="ai_memory_18"/>
+        </record>
+<record id="ai_agent_ai_memory_19" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_20"/>
+            <field name="ai_memory_id" ref="ai_memory_19"/>
+        </record>
+<record id="ai_agent_ai_memory_20" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_20"/>
+            <field name="ai_memory_id" ref="ai_memory_20"/>
+        </record>
+<record id="ai_agent_ai_memory_41" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_20"/>
+            <field name="ai_memory_id" ref="ai_memory_21"/>
+        </record>
+<record id="ai_agent_ai_memory_220" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_20"/>
+            <field name="ai_memory_id" ref="ai_memory_22"/>
+        </record>
+
+<!-- Glue records: quest to agent -->
+<record id="ai_quest_ai_agent_20" model="ai.quest.agent">
+            <field name="ai_agent_id" ref="ai_agent_20"/>
+            
+            <field name="ai_quest_id" ref="schemalagd_ekonomiskt_uppdrag_46"/>
+        </record>
+
+</data>
+</odoo>

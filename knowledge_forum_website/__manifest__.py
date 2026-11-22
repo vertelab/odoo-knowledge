@@ -34,7 +34,7 @@
    
     'depends': ['website_forum', 'document_knowledge', 'document_page'],
     'data': [
-        'security/document_knowledge_security.xml',
+        'security/ir.access.csv',
         #'views/website_forum.xml',
     ],
     'demo': [],

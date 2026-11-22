@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- Full records: Quest, agent memory and tools -->
+
+<record model="ai.quest" id="nulagesbeskrivning_swotanaly_78">
+  <field name="ai_type">default</field>
+  <field name="chat_history_limit">10</field>
+  <field name="code"><![CDATA[# Hämta projektet
+
+project = env['project.project'].search([('name', '=', 'Invärldsbevakning SWOT-analys')], limit=1)
+    if not project:
+        raise UserError("Projektet finns inte.")
+
+# Hämta alla tasks i projektet
+tasks = env['project.task'].search([('project_id', '=', project.id)])
+
+# Skicka tasks-recordset till AI-agenten (quest)
+result = quest.build(session=session, message="", record=tasks).invoke(message_invoke)
+answer = quest.get_last_ai_message_content(result)
+
+# Omvandla markdown till HTML (om metoden finns)
+answer = self.markdown2html(answer)
+
+# Spara som projektbeskrivning
+project.write({'description': answer})
+})
+]]></field>
+  <field name="color">9</field>
+  <field name="description"><![CDATA[Beskrivning av uppdragets syfte och funktion
+
+Detta uppdrag är utformat för att automatiskt skapa en sammanfattande och beskrivande text för projektet **"Invärldsbevakning SWOT-analys"**. Uppdraget samlar in all information från de åtta SWOT-tasks (två per kategori: Opportunities, Strengths, Weaknesses, Threats), där varje task innehåller en beskrivande text och en unik koordinat. Uppdraget sammanställer dessa texter och koordinater, grupperar dem per SWOT-kategori och uppdaterar projektets beskrivningsfält med en strukturerad översikt. Resultatet blir en aktuell, överskådlig och direkt användbar beskrivning som speglar projektets nuläge och analys.
+
+Vad visar punkterna och koordinaterna i SWOT-matrisen?
+
+I SWOT-matrisen representerar varje punkt en identifierad faktor (t.ex. "Strength 1", "Threat 2") som har analyserats i projektet. Varje punkt har en **koordinat** som anger dess exakta position i matrisen utifrån två dimensioner:
+
+- **X-axeln:** Går från positivt (lågt värde) till negativt (högt värde)
+- **Y-axeln:** Går från externt (lågt värde) till internt (högt värde)
+
+**Styrkor** och **svagheter** är interna faktorer (höga y-värden), medan **möjligheter** och **hot** är externa (låga y-värden). Ju längre åt höger på x-axeln, desto mer negativ är faktorn; ju längre åt vänster, desto mer positiv är den.
+
+Vad betyder koordinaternas placering?
+
+- **Långt ut i ett hörn:** Faktorn är mycket tydlig och extrem i sitt slag, t.ex. en avgörande styrka eller ett allvarligt hot.
+- **Nära mitten:** Faktorn är mindre avgörande, kanske mer generell eller av mindre betydelse.
+- **Nära en gräns:** Faktorn kan ha drag av flera kategorier, t.ex. en svaghet som också kan bli en möjlighet vid rätt hantering.
+
+Koordinaterna gör det möjligt att visualisera **hur starkt, relevant eller akut varje faktor är** och hur den förhåller sig till övriga faktorer i analysen. Detta hjälper ledningen att prioritera åtgärder och se mönster i nuläget, vilket är centralt för strategiskt beslutsfattande.
+
+Vad visar helheten i SWOT-matrisen?
+
+Helheten i SWOT-matrisen ger en **visuell och strukturerad överblick över projektets styrkor, svagheter, möjligheter och hot**. Genom att analysera var punkterna är placerade kan du snabbt se:
+- Vilka områden som är mest kritiska att hantera (många punkter långt ut i hörnen)
+- Om det finns en balans mellan interna och externa faktorer
+- Om det finns faktorer som är särskilt akuta eller strategiskt viktiga
+
+Detta ger ett kraftfullt beslutsunderlag och hjälper organisationen att förstå både nuläge och möjliga strategiska vägar framåt.]]></field>
+  <field name="filter_domain">[("active", "=", True)]</field>
+  <field name="image_128">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</field>
+  <field name="init_type">cron</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Nulägesbeskrivning SWOT-analys</field>
+  <field name="sub_description">SWOT-analys</field>
+  <field name="status">active</field>
+  <field name="use_chat_history">True</field>
+  <field name="use_company_info">True</field>
+  <field name="use_personal_info">True</field>
+  <field name="use_personal_lang">True</field>
+  <field name="use_time_context">True</field>
+  <field name="is_supervisor">True</field>
+  <field name="supervisor_prompt"><![CDATA[Du är en supervisor som koordinerar arbetet mellan följande agent: {Huvudagent för invärldsbevaking SWOT-analys}.
+Ditt uppdrag är att övervaka och säkerställa att agenten uppfyller sin roll i närvärldsbevakningen enligt uppdragets riktlinjer.
+
+
+Guidelines: 
+{self.description}
+{self._extra_context(self)}
+
+Välj endast FINISH när du har en komplett, välstrukturerad och kvalitativ omvärldsbevakning.
+Du får inte nämna verktygsanrop eller tekniska steg i dialogen, håll dig till uppdragets språk och formella ton.
+
+{use_lang}
+
+]]></field>
+  <field name="supervisor_temperature">0.7</field>
+  <field name="supervisor_cycles">10</field>
+  <field name="uuid">foquvFEtBX</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_60">
+  <field name="color">5</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['access_token' ,'access_url' ,'access_warning' ,'active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'allocated_hours' ,'allow_billable' ,'allow_milestones' ,'allow_task_dependencies' ,'attachment_ids' ,'child_ids' ,'closed_depend_on_count' ,'closed_subtask_count' ,'color' ,'company_id' ,'coordinate' ,'create_date' ,'create_uid' ,'current_user_same_company_partner' ,'date_assign' ,'date_deadline' ,'date_end' ,'date_last_stage_update' ,'depend_on_count' ,'depend_on_ids' ,'dependent_ids' ,'dependent_tasks_count' ,'description' ,'display_follow_button' ,'display_in_project' ,'display_name' ,'display_parent_task_button' ,'display_sale_order_button' ,'displayed_image_id' ,'duration_tracking' ,'email_cc' ,'has_late_and_unreached_milestone' ,'has_message' ,'html_field_history' ,'html_field_history_metadata' ,'id' ,'is_closed' ,'link_preview_name' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'milestone_id' ,'my_activity_date_deadline' ,'name' ,'number' ,'parent_id' ,'partner_id' ,'personal_stage_id' ,'personal_stage_type_id' ,'personal_stage_type_ids' ,'portal_user_names' ,'priority' ,'project_id' ,'project_privacy_visibility' ,'project_sale_order_id' ,'quadrant' ,'rating_active' ,'rating_avg' ,'rating_avg_text' ,'rating_count' ,'rating_ids' ,'rating_last_feedback' ,'rating_last_image' ,'rating_last_text' ,'rating_last_value' ,'rating_percentage_satisfaction' ,'recurrence_id' ,'recurring_count' ,'recurring_task' ,'repeat_interval' ,'repeat_type' ,'repeat_unit' ,'repeat_until' ,'sale_line_id' ,'sale_order_id' ,'sale_order_state' ,'sequence' ,'show_display_in_project' ,'stage_id' ,'state' ,'subtask_allocated_hours' ,'subtask_completion_percentage' ,'subtask_count' ,'tag_ids' ,'task_properties' ,'task_to_invoice' ,'user_ids' ,'user_skill_ids' ,'website_message_ids' ,'working_days_close' ,'working_days_open' ,'working_hours_close' ,'working_hours_open' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("active", "=", True)]</field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Alla tasks fran SWOT-analysen.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Alla tasks från SWOT-analysen</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">7c74RxsuQc</field>
+</record>
+
+
+
+<record model="ai.agent" id="ai_agent_30">
+  <field name="ai_backstory"><![CDATA[Varför ska agenten åstadkomma det?
+
+Syftet med agentens uppdrag är att skapa en beskrivande text som sammanfattar den genomförda SWOT-analysen, baserat på informationen som finns lagrad i AI-minnet. Agenten ska alltså omvandla de insamlade och kategoriserade SWOT-faktorerna till en strukturerad och lättförståelig text som speglar analysens resultat och nuläge. Detta gör att analysen blir tydlig, överskådlig och direkt användbar för vidare beslut eller dokumentation.]]></field>
+  <field name="ai_description"><![CDATA[Hur ska agenten åstadkomma det?
+
+- Söka igenom sitt AI-minne efter poster kopplade till SWOT-analysen.
+- Extrahera beskrivande texter och koordinater för varje identifierad faktor.
+- Sortera och gruppera informationen per SWOT-kategori.
+- Presentera informationen i en strukturerad form, t.ex. med rubriker för varje kategori och punktlistor för respektive faktor.]]></field>
+  <field name="ai_goal"><![CDATA[Vad ska agenten åstadkomma?
+
+- Identifiera och samla in alla beskrivande texter och tillhörande data om SWOT-faktorer från sitt AI-minne.
+- Gruppera informationen efter kategori: Styrkor (Strengths), Svagheter (Weaknesses), Möjligheter (Opportunities), Hot (Threats).
+- Strukturera informationen så att varje kategori tydligt framgår och varje faktor presenteras med sin beskrivning och de koordinater som står i informationen i AI-minnet.
+
+]]></field>
+  <field name="ai_role">Agenten är en informationssammanställare. Dess uppgift är att hämta och gruppera relevant SWOT-relaterad information från sitt AI-minne.</field>
+  <field name="ai_temperature">0.7</field>
+  <field name="ai_type">default</field>
+  <field name="color">5</field>
+  <field name="image_128">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</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Agent för nulägesbeskrivning SWOT-analys</field>
+  <field name="status">active</field>
+</record>
+
+
+
+<!-- Glue records: agent to tools -->
+
+<!-- Glue records: agent to memory -->
+<record id="ai_agent_ai_memory_60" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_30"/>
+            <field name="ai_memory_id" ref="ai_memory_60"/>
+        </record>
+
+<!-- Glue records: quest to agent -->
+<record id="ai_quest_ai_agent_30" model="ai.quest.agent">
+            <field name="ai_agent_id" ref="ai_agent_30"/>
+            <field name="sequence">1</field>
+            <field name="ai_quest_id" ref="nulagesbeskrivning_swotanaly_78"/>
+        </record>
+
+</data>
+</odoo>

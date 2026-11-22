@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SEKTION 4: Hitta och återanvända
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <record id="slide_category_kb_s4" model="slide.slide">
+        <field name="name">4. Hitta och återanvända</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="sequence">300</field>
+    </record>
+
+    <record id="slide_kb_s4_01" model="slide.slide">
+        <field name="name">Sökning, länkar och AI</field>
+        <field name="sequence">310</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.30</field>
+        <field name="html_content" type="html">
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Kunskap som inte går att hitta är värdelös</h2>
+        <p>En kunskapsbas fyller bara sitt syfte om innehållet går att återfinna. Det finns tre vägar dit: sökning, länkar och AI.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb64">
+    <div class="container s_allow_columns">
+        <table class="table table-bordered">
+            <thead>
+                <tr><th>Väg</th><th>När den används</th><th>Vad som krävs av dig</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Sökning</strong></td>
+                    <td>Du vet ungefär vad du letar efter</td>
+                    <td>Beskrivande rubriker och tydliga nyckelord i texten</td>
+                </tr>
+                <tr>
+                    <td><strong>Länkar</strong></td>
+                    <td>Du läser en anteckning och behöver en relaterad</td>
+                    <td>Att du länkar när du skriver — inte bara nämner</td>
+                </tr>
+                <tr>
+                    <td><strong>AI</strong></td>
+                    <td>Du ställer en fråga i naturligt språk</td>
+                    <td>Att innehållet är skrivet så att det går att förstå utan kontext</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="s_text_image pt32 pb64">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 pt16 pb16">
+                <h3 class="h4-fs">Länka istället för att upprepa</h3>
+                <p>Om samma rutin beskrivs på tre ställen kommer två av dem att vara fel inom ett år. Skriv rutinen en gång och länka till den från de andra anteckningarna.</p>
+                <p class="small text-muted">En anteckning som länkar till fem andra är ofta mer användbar än en som försöker säga allt själv.</p>
+            </div>
+            <div class="col-lg-6 pt16 pb16">
+                <h3 class="h4-fs">Skriv för AI:n också</h3>
+                <p>När assistenten söker i kunskapsbasen läser den din text utan att känna till sammanhanget. Anteckningar som skrivits för en ny kollega fungerar också för AI:n.</p>
+                <p class="small text-muted">Det är samma princip: skriv för den som inte var där.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="s_call_to_action o_cc o_cc5 pt48 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h3>Rensa med jämna mellanrum</h3>
+                <p class="lead">En kunskapsbas som växer utan att någonsin rensas blir till slut oanvändbar. Gå igenom innehållet någon gång per år och ta bort eller uppdatera det som blivit fel.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">De tre vägarna till kunskap — sökning, länkar och AI — och vad de kräver av dig som skriver. Plus varför kunskapsbasen behöver rensas.</field>
+    </record>
+
+    <record id="slide_kb_s4_02" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Hitta</field>
+        <field name="sequence">320</field>
+        <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Testa dina kunskaper om att hitta och återanvända kunskap.</field>
+    </record>
+
+    <record id="slide_kb_s4_02_q1" model="slide.question">
+        <field name="question">Varför ska du länka istället för att upprepa en rutin?</field>
+        <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_kb_s4_02"/>
+    </record>
+    <record id="slide_kb_s4_02_q1_a1" model="slide.answer">
+        <field name="text_value">Annars blir kopiorna fel när rutinen ändras</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! En rutin på tre ställen betyder två felaktiga versioner inom ett år.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q1"/>
+    </record>
+    <record id="slide_kb_s4_02_q1_a2" model="slide.answer">
+        <field name="text_value">Länkar ser snyggare ut</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — det är underhållet som är poängen.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q1"/>
+    </record>
+    <record id="slide_kb_s4_02_q1_a3" model="slide.answer">
+        <field name="text_value">Det går snabbare att skriva</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — det tar ungefär lika lång tid.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q1"/>
+    </record>
+
+    <record id="slide_kb_s4_02_q2" model="slide.question">
+        <field name="question">Varför fungerar anteckningar skrivna för en ny kollega även för AI:n?</field>
+        <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_kb_s4_02"/>
+    </record>
+    <record id="slide_kb_s4_02_q2_a1" model="slide.answer">
+        <field name="text_value">Båda saknar din kontext och behöver tydlig text</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Samma princip: skriv för den som inte var där.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q2"/>
+    </record>
+    <record id="slide_kb_s4_02_q2_a2" model="slide.answer">
+        <field name="text_value">AI:n läser bara rubriker</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — den läser hela texten.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q2"/>
+    </record>
+    <record id="slide_kb_s4_02_q2_a3" model="slide.answer">
+        <field name="text_value">Det är en slump</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — det följer av samma grundprincip.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q2"/>
+    </record>
+
+    <record id="slide_kb_s4_02_q3" model="slide.question">
+        <field name="question">Varför behöver en kunskapsbas rensas?</field>
+        <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_kb_s4_02"/>
+    </record>
+    <record id="slide_kb_s4_02_q3_a1" model="slide.answer">
+        <field name="text_value">Föråldrat innehåll gör den svårare att använda</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! En kunskapsbas som växer utan rensning blir till slut oanvändbar.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q3"/>
+    </record>
+    <record id="slide_kb_s4_02_q3_a2" model="slide.answer">
+        <field name="text_value">Den tar för mycket plats</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — platsen är sällan problemet.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q3"/>
+    </record>
+    <record id="slide_kb_s4_02_q3_a3" model="slide.answer">
+        <field name="text_value">Det krävs av systemet</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — det är en kvalitetsfråga.</field>
+        <field name="question_id" ref="slide_kb_s4_02_q3"/>
+    </record>
+
+    </data>
+</odoo>

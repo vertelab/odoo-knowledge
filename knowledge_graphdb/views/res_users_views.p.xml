@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_users_form_inherit_graphdb" model="ir.ui.view">
+            <field name="name">res.users.form.inherit.graphdb</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="ai_data_context" string="AI Data Context">
+                        <group name="graph_topic_group">
+                            <field name="graph_topic" readonly="1"/>
+                        </group>
+                        <field name="graph_model_ids"
+                               context="{'default_user_id': id}">
+                            <list editable="bottom" multi_edit="1">
+                                <field name="model_id"
+                                       options="{'no_create': True}"/>
+                                <field name="domain"/>
+                                <field name="target_queue"/>
+                                <field name="key_field_ids"/>
+                                <field name="record_count" readonly="1"/>
+                                <field name="state" widget="badge"/>
+                                <field name="graph_status" readonly="1"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- Full records: Quest, agent memory and tools -->
+
+<record model="ai.memory" id="ai_memory_38">
+  <field name="color">2</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Allabolag - UCS One Business AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Allabolag - UCS One Business AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Allabolag - UCS One Business AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/bokslut/ucs-one-business-ab/link%C3%B6ping/redovisning-bokf%C3%B6ring/2K2IX22I5YGRY</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<!-- not exported ai_agent.ai_tool_process_content (Use a copy of this record if you want to export it)-->
+
+<record model="ai.memory" id="ai_memory_42">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Allabolag - Vertel AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Allabolag - Vertel AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Allabolag - Vertel AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/bokslut/vertel-ab/link%C3%B6ping/internet-konsulter-operat%C3%B6rer/2K3USJFI5YFHL</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_37">
+  <field name="color">7</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Befintliga konkurrenter")]</field>
+  <field name="instruction"><![CDATA[Detta är Vertel AB.s befintliga konkurrenter.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Befintliga konkurrenter.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Befintliga konkurrenter</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_55">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Översikt allabolag - Exsitec AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Översikt allabolag - Exsitec AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Översikt allabolag - Exsitec AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/foretag/exsitec-ab/link%C3%B6ping/konsulter/2K1T53ZI5YF3I</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_51">
+  <field name="color">6</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/LinkedIn - Dizparc AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/LinkedIn - Dizparc AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">LinkedIn - Dizparc AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.linkedin.com/search/results/all/?heroEntityKey=urn%3Ali%3Aorganization%3A15182179&amp;keywords=Dizparc&amp;origin=ENTITY_SEARCH_HOME_HISTORY&amp;sid=tjZ</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_52">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Översikt allabolag - Vertel AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Översikt allabolag - Vertel AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Översikt allabolag - Vertel AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/foretag/vertel-ab/link%C3%B6ping/internet-konsulter-operat%C3%B6rer/2K3USJFI5YFHL</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<!-- not exported ai_agent.ai_tool_internet_search_DDGO (Use a copy of this record if you want to export it)-->
+
+<record model="ai.agent" id="ai_agent_25">
+  <field name="ai_backstory"><![CDATA[Varför ska agenten åstadkomma det?
+
+Agenten ska utföra denna uppgift för att systematiskt och självständigt analysera konkurrensen mellan befintliga aktörer inom affärssystembranschen, vilket är en central del av en modern konkurrentanalys enligt Porters femkraftsmodell. Analysen syftar till att ge ett tydligt, dataunderbyggt underlag för att förstå hur företag konkurrerar med varandra, vilka faktorer som påverkar deras position.]]></field>
+  <field name="ai_description"><![CDATA[Hur ska agenten åstadkomma det?
+
+Agenten genomför en jämförelse mellan befintliga konkurrenter för Vertel AB genom att skapa en lista där företagen nämns och där  nyckelkriterier från AI-minnet med dokumentet 'Benchmarking' presenteras. De befintliga konkurrenterna nämns i AI-minnet med dokumentet 'Befintliga konkurrenter' och det är dessa som används i jämförelsen. För att få fram företagsinformation om konkurrenter så använder agenten AI-verktygen "Internet search using DDGO" samt "Process content from a web page". Utöver denna information så ska agenten ska utgå från aktuella, öppna och trovärdiga källor, såsom företagshemsidor. När agenten fått fram nyckelkriterierna för företagen så ska agenten skapa en lista där nyckelkriterierna mellan företagen jämförs, och därefter rangordnas företagen utifrån insamlad data. Alla viktiga begrepp ska förklaras tydligt och agenten ska undvika vaga uttryck. Utöver detta då ska agenten ska också ta fram information kring nyheter som händer bland de befintliga konkurrenterna från LinkedIn vilket kan vara användbart för Vertel AB att ta till sig.]]></field>
+  <field name="ai_goal"><![CDATA[Vad ska agenten åstadkomma?
+
+Agentens uppdrag är att leverera en insiktsfull och välstrukturerad jämförelse av befintliga aktörer/företag inom affärssystembranschen, med fokus på att belysa konkurrensen. Genom att tillämpa ett av Porters femkraftsverktyg – konkurrens mellan befintliga aktörer – ska agenten synliggöra de viktigaste skillnaderna.
+
+Resultatet ska ge en tydlig bild av hur aktörerna förhåller sig till varandra på marknaden och ge underlag för strategiska beslut eller vidare analys. Agenten ska särskilt bidra till att:
+	•	Ta fram sifforna för de aktuella nyckelkriterierna bland aktörerna
+	•	Strukturera och sammanställa dessa siffror i en jämförande översikt.
+	•	Rangordna aktörerna utifrån tydligt motiverade och transparenta bedömningar.
+	•	Tydliggöra viktiga begrepp och undvika oklara formuleringar för att säkerställa förståelse och användbarhet.
+
+Agenten ska också ta fram information kring nyheter som händer bland de befintliga konkurrenterna vilket kan vara användbart för Vertel AB att ta till sig.
+
+Analysen ska redovisa källor som används enligt referensstandard (Harvard), och innehållet ska vara språkligt korrekt, konsekvent och kritiskt granskat för kvalitet.
+
+Konkurrenskraftsuppdraget syftar till att genomföra en omfattande och datadriven analys av befintliga konkurrenter med hjälp av agenten som vet vilka befintliga konkurrenter som finns. Analysen utgår från en av Porters fem krafter, nämligen konkurrens mellan befintliga aktörer, och syftar till att kartlägga hur etablerade företag konkurrerar med varandra genom att jämföra nyckelkriterier mellan företag för att se hur de rangordnas och vilket företag som anses vara den största konkurrenten till Vertel AB. Agenten i uppdraget kommer självständigt och systematiskt samla in och analysera information genom att använda avancerade AI-verktyg för att hitta och bearbeta relevant information, vilket säkerställer att analysen bygger på aktuell och korrekta data. Vertel AB ska också finnas med i listan bland konkurrenterna så man ser hur det går för Vertel.
+
+Rapportstruktur och instruktion: Jag vill att alla företag jämförs vid varje nyckeltal (exempelvis så nämns företagen i liten lista under nyckeltalet "Rörelsemarginal (%)" där aktuella siffror från allabolag.se presenteras, sen går du vidare med nästa nyckeltal), sen kan du gå vidare till nästa rubrik/nyckeltal. Kom ihåg att där det nämns "genomsnittssiffra på 3 år" så ska du faktiskt ta fram genomsnittet från de senaste 3 åren genom att agenten extraherar data från allabolag.se och räknar ut detta. Kom ihåg att agenten ska ange dagens datum, inte ett äldre datum. Alla befintliga konkurrenter måste nämnas. Texten ska vara strukturerad på ett professionellt sätt där rubriker, punkter och brödtext ska vara strukturerat, ingen rörig rapport. Glöm inte bort att Vertel AB ska ingå i jämförelsen, men inte i rangordningen av konkurrenter eftersom konkurrenterna jämförs med Vertel AB. Denna exakta ordning ska följas:
+
+Underrubrik -> Dagens datum: ÅÅÅÅ-MM-DD
+mellanrum 1 rad
+Rubrik -> Jämförelse av befintliga konkurrekter med företagsanalys av nyckeltal
+
+Rubrik -> Företagsinformation
+- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Hämta information om företagets ålder
+- Hämta information om vad företaget erbjuder
+mellanrum 2 rader
+
+Rubrik -> Nyckeltal från Resultaträkningen
+- Rörelsemarginal (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Vinstmarginal (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Omsättningstillväxt (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Avkastning på totalt kapital (ROA) (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Avkastning på eget kapital (ROE) (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+mellanrum 2 rader
+
+Rubrik -> Nyckeltal från Balansräkningen
+- Soliditet (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Skuldsättningsgrad (ggr) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Kassalikviditet (ggr) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Balansomslutning (MSEK)
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+
+Rubrik -> Nyckeltal från Kassaflödesanalys (kompletterande)
+- Kassaflöde från den löpande verksamheten
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Fritt kassaflöde
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+
+Rubrik -> Rangordning av konkurrenter
+En enkel lista där företagen rangordnas med en siffra utefter hur företagen står sig mot Vertel AB:s nycketal och vilket företag som i dagsläget är den största konkurrenten till Vertel AB med en kortare motivaring kring varför, ingen siffra för motiveringen. OBS! Vertel AB deltar inte i denna lista och rangordning, det är de andra företagen som jämförs med Vertel AB för att komma fram till denna bedömning.
+
+Rubrik -> Sammanfattning av jämförelse
+Sammanfattning av hur rangordningen blev och varför och slutligen vilket företag som i dagsläget är den största konkurrenten till Vertel AB och hur deras nycketal står sig mot Vertel AB. En utförlig beskrivnig och analys av nyckeltalen.
+
+För att ta reda på om de skett något nytt bland konkurrenterna så kan en beskrivande lång text skrivas längst ner som baseras på konkurrenternas sociala medier, bland annat LinkedIn. Här är det bra med en djupt analyserande text som beskriver aktuella nyheter.
+
+Rubrik längst ner -> Referenser
+Brödtext -> lista med källor som använts för att ta fram siffrorna och var informationen kommer från. Exempel på hur en källa ska presenteras: 'Författare/Källa. (Årtal). Titel på hemsida. Länk'
+]]></field>
+  <field name="ai_prompt_template"><![CDATA[<div data-oe-version="1.2">agent_list {agent_list}
+        tools {tools}
+        quest {quest_name} {quest_description} {quest_init_type} {quest_model}
+        Company information {company_information}</div>]]></field>
+  <field name="ai_role">Samlar och analyserar data om konkurrensen mellan befintliga aktörer.</field>
+  <field name="ai_temperature">0.7</field>
+  <field name="ai_type">default</field>
+  <field name="color">4</field>
+  <field name="image_128">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dHAHetw8IYAwxiBgaf1b0Gj/AIQwQOADoGENGmgsB19v4UqWGCjTDGP2IO3MadxyWahgQtaIp0qsQ4OGk+ICCd9iOXI6jyXo7ydlvF1r8xPEOLG+VLHd7TjeKRUdXfKa4RtgAjhawSP7OHsh2thr+p0dEbWFYbllhf6xpzi4ZHRG3nmStmdd5ayP2DAHzNY/3ievTqGgHeta1+ylf2YdOHss04/UOg+r7/yu+3GWe2Y29da6lvxr7KlOwbTaRmmWlu3mSZ7q9HB2UaZbnJlhZMebi6e+3RV3x9z/AMd8R+sRfebM8vdPLj7s8vNNNe43iaOGGeOSCKo7t32jZtnyNgM2R8BbXy/euQ+F8U5R5Fs+XeL1isd9tFdT2u74tZ3SXfKIal7iKciCbYlc15cXn3G+7pxHXbh5sta1oDWNAA/QAa0uNhhY7vHAxrj+rmsAK8qYcx72unYAHSZA+ndc1sFp1ajH5v0ta0giZDTI9Dv5+iqnzJyfHbr6fnjNi1qyOhq6m2WW4i4UEFbHJLSv6whvusaSWO0XAdgP3/ut95oz6+XH1HbZkPBfkPx9Y65vDVLTNkyuuZPa72/3Ju1skcx3UOceriS4OaGggO31Pm0I42uL2xtBP9RDQCfuuCGFrDGIWBp/VoYNH/C9OHtLQM22bl/sZ7Lp2DscwNz7cTcA/uOzHQ+XforI9R7DODLHw7iGQ1GC8cYry9X3qcZBZOLbm2egfbg2TrNK1gDY3Fwi6/G9ueAXAfEcrjI44hqKNrQf1DWgf+Lq029E0KWQun/tuenut1lamztxTLi7fU9eQkkwOWpRERXWtERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERf/Z</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Agent konkurrenskraft</field>
+  <field name="status">active</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_45">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Allabolag - Implema AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Allabolag - Implema AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Allabolag - Implema AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/bokslut/implema-aktiebolag/stockholm/konsulter/2K1K436I5YF3I</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.quest" id="konkurrenskraftsuppdra_69">
+  <field name="ai_type">default</field>
+  <field name="chat_history_limit">10</field>
+  <field name="code"><![CDATA[# Sök efter dokumentet du vill uppdatera/skapa (tillfälligt, behålls inte)
+output_doc = env['document.page'].search([
+    ('name', '=', 'Konkurrens mellan befintliga aktörer genererad av schemalagd åtgärd')
+], limit=1)
+
+# Bygg och hämta svaret från quest (utan att använda dokument som input)
+result = quest.build(session=session, message="").invoke(message_invoke)
+answer = quest.get_last_ai_message_content(result)
+
+# Omvandla Markdown till HTML
+answer = self.markdown2html(answer)
+
+if output_doc:
+    # Uppdatera existerande dokument (med HTML)
+    output_doc.write({'content': answer})
+else:
+    # Skapa nytt dokument
+    env['document.page'].create({
+        'name': 'Konkurrens mellan befintliga aktörer genererad av schemalagd åtgärd',
+        'content': answer,
+    })
+]]></field>
+  <field name="color">1</field>
+  <field name="description"><![CDATA[Konkurrenskraftsuppdraget syftar till att genomföra en omfattande och datadriven analys av befintliga konkurrenter med hjälp av agenten som vet vilka befintliga konkurrenter som finns. Analysen utgår från en av Porters fem krafter, nämligen konkurrens mellan befintliga aktörer, och syftar till att kartlägga hur etablerade företag konkurrerar med varandra genom att jämföra nyckelkriterier mellan företag för att se hur de rangordnas och vilket företag som anses vara den största konkurrenten till Vertel AB. Agenten i uppdraget kommer självständigt och systematiskt samla in och analysera information genom att använda avancerade AI-verktyg för att hitta och bearbeta relevant information, vilket säkerställer att analysen bygger på aktuell och korrekta data. Vertel AB ska också finnas med i listan bland konkurrenterna så man ser hur det går för Vertel.
+
+Rapportstruktur och instruktion: Jag vill att alla företag jämförs vid varje nyckeltal (exempelvis så nämns företagen i liten lista under nyckeltalet "Rörelsemarginal (%)" där aktuella siffror från allabolag.se presenteras, sen går du vidare med nästa nyckeltal), sen kan du gå vidare till nästa rubrik/nyckeltal. Kom ihåg att där det nämns "genomsnittssiffra på 3 år" så ska du faktiskt ta fram genomsnittet från de senaste 3 åren genom att agenten extraherar data från allabolag.se och räknar ut detta. Kom ihåg att agenten ska ange dagens datum, inte ett äldre datum. Alla befintliga konkurrenter måste nämnas. Texten ska vara strukturerad på ett professionellt sätt där rubriker, punkter och brödtext ska vara strukturerat, ingen rörig rapport. Glöm inte bort att Vertel AB ska ingå i jämförelsen, men inte i rangordningen av konkurrenter eftersom konkurrenterna jämförs med Vertel AB. Denna exakta ordning ska följas:
+
+Underrubrik -> Dagens datum: ÅÅÅÅ-MM-DD
+mellanrum 1 rad
+Rubrik -> Jämförelse av befintliga konkurrekter med företagsanalys av nyckeltal
+
+Rubrik -> Företagsinformation
+- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Hämta information om företagets ålder
+- Hämta information om vad företaget erbjuder
+mellanrum 2 rader
+
+Rubrik -> Nyckeltal från Resultaträkningen
+- Rörelsemarginal (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Vinstmarginal (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Omsättningstillväxt (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Avkastning på totalt kapital (ROA) (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Avkastning på eget kapital (ROE) (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+mellanrum 2 rader
+
+Rubrik -> Nyckeltal från Balansräkningen
+- Soliditet (%) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Skuldsättningsgrad (ggr) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Kassalikviditet (ggr) -> (genomsnittssiffra på 3 år, detta är en instruktion och ska inte vara med i rapporten) 
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Balansomslutning (MSEK)
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+
+Rubrik -> Nyckeltal från Kassaflödesanalys (kompletterande)
+- Kassaflöde från den löpande verksamheten
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+- Fritt kassaflöde
+Brödtext -> Förklaring av ovanstående nyckeltal vad nyckeltalet betyder och hur det räknas ut
+
+Rubrik -> Rangordning av konkurrenter
+En enkel lista där företagen rangordnas med en siffra utefter hur företagen står sig mot Vertel AB:s nycketal och vilket företag som i dagsläget är den största konkurrenten till Vertel AB med en kortare motivaring kring varför, ingen siffra för motiveringen. OBS! Vertel AB deltar inte i denna lista och rangordning, det är de andra företagen som jämförs med Vertel AB för att komma fram till denna bedömning.
+
+Rubrik -> Sammanfattning av jämförelse
+Sammanfattning av hur rangordningen blev och varför och slutligen vilket företag som i dagsläget är den största konkurrenten till Vertel AB och hur deras nycketal står sig mot Vertel AB. En utförlig beskrivnig och analys av nyckeltalen.
+
+För att ta reda på om de skett något nytt bland konkurrenterna så kan en beskrivande lång text skrivas längst ner som baseras på konkurrenternas sociala medier, bland annat LinkedIn. Här är det bra med en djupt analyserande text som beskriver aktuella nyheter.
+
+Rubrik längst ner -> Referenser
+Brödtext -> lista med källor som använts för att ta fram siffrorna och var informationen kommer från. Exempel på hur en källa ska presenteras: 'Författare/Källa. (Årtal). Titel på hemsida. Länk'
+]]></field>
+  <field name="filter_domain">[("name", "=", "Konkurrens mellan befintliga aktörer genererad av schemalagd åtgärd")]</field>
+  <field name="image_128">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dHAHetw8IYAwxiBgaf1b0Gj/AIQwQOADoGENGmgsB19v4UqWGCjTDGP2IO3MadxyWahgQtaIp0qsQ4OGk+ICCd9iOXI6jyXo7ydlvF1r8xPEOLG+VLHd7TjeKRUdXfKa4RtgAjhawSP7OHsh2thr+p0dEbWFYbllhf6xpzi4ZHRG3nmStmdd5ayP2DAHzNY/3ievTqGgHeta1+ylf2YdOHss04/UOg+r7/yu+3GWe2Y29da6lvxr7KlOwbTaRmmWlu3mSZ7q9HB2UaZbnJlhZMebi6e+3RV3x9z/AMd8R+sRfebM8vdPLj7s8vNNNe43iaOGGeOSCKo7t32jZtnyNgM2R8BbXy/euQ+F8U5R5Fs+XeL1isd9tFdT2u74tZ3SXfKIal7iKciCbYlc15cXn3G+7pxHXbh5sta1oDWNAA/QAa0uNhhY7vHAxrj+rmsAK8qYcx72unYAHSZA+ndc1sFp1ajH5v0ta0giZDTI9Dv5+iqnzJyfHbr6fnjNi1qyOhq6m2WW4i4UEFbHJLSv6whvusaSWO0XAdgP3/ut95oz6+XH1HbZkPBfkPx9Y65vDVLTNkyuuZPa72/3Ju1skcx3UOceriS4OaGggO31Pm0I42uL2xtBP9RDQCfuuCGFrDGIWBp/VoYNH/C9OHtLQM22bl/sZ7Lp2DscwNz7cTcA/uOzHQ+XforI9R7DODLHw7iGQ1GC8cYry9X3qcZBZOLbm2egfbg2TrNK1gDY3Fwi6/G9ueAXAfEcrjI44hqKNrQf1DWgf+Lq029E0KWQun/tuenut1lamztxTLi7fU9eQkkwOWpRERXWtERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERf/Z</field>
+  <field name="init_type">cron</field>
+  <field name="is_favorite">True</field>
+  <field name="name">Konkurrenskraftsuppdrag</field>
+  <field name="sub_description">Skapar dokument till analysen med Porter's five forces</field>
+  <field name="status">active</field>
+  <field name="use_chat_history">True</field>
+  <field name="use_company_info">True</field>
+  <field name="use_personal_info">True</field>
+  <field name="use_personal_lang">True</field>
+  <field name="use_time_context">True</field>
+  <field name="supervisor_prompt"><![CDATA[Du är arbetsledare och ansvarar för att agenten {Agent konkurrenskraft} som genomför uppdraget enligt beskrivningen och med högsta kvalitet. Ditt fokus är att granska, utvärdera och säkerställa att agentens arbete uppfyller samtliga krav i uppdraget:
+
+Guidelines: 
+{self.description}
+{self._extra_context(self)}
+- Godkänn endast arbetet (skicka FINISH) när analysen är komplett, systematisk, relevant och kan användas för vidare beslutsfattande eller rapportering.
+{use_lang}]]></field>
+  <field name="supervisor_temperature">0.7</field>
+  <field name="supervisor_cycles">10</field>
+  <field name="uuid">V7w7kgE4co</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_56">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Översikt allabolag - Implema AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Översikt allabolag - Implema AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Översikt allabolag - Implema AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/foretag/implema-aktiebolag/stockholm/konsulter/2K1K436I5YF3I</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_48">
+  <field name="color">6</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/LinkedIn - Exsitec Holding AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/LinkedIn - Exsitec Holding AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">LinkedIn - Exsitec Holding AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.linkedin.com/company/exsitec/posts/?feedView=all</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_46">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Allabolag - Dizparc Rationell IT Linköping AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Allabolag - Dizparc Rationell IT Linköping AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Allabolag - Dizparc Rationell IT Linköping AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/bokslut/dizparc-rationell-it-link%C3%B6ping-ab/link%C3%B6ping/internet-konsulter-operat%C3%B6rer/2KHA3FRI5YFHL</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_34">
+  <field name="color">11</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Konkurrens mellan befintliga aktörer genererad av schemalagd åtgärd")]</field>
+  <field name="instruction"><![CDATA[Du ska hämta information från modellen document.page genom att identifiera och välja den post vars titel matchar det angivna dokumentnamnet. Använd innehållet i denna post som kunskapskälla för vidare bearbetning eller svarsgenerering]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Konkurrens mellan befintliga aktorer genererad av schemalagd atgard.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Konkurrens mellan befintliga aktörer genererad av schemalagd åtgärd</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_54">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Översikt allabolag - Linserv AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Översikt allabolag - Linserv AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Översikt allabolag - Linserv AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/foretag/linserv-aktiebolag/solna/konsulter/2K20976I5YF3I</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_47">
+  <field name="color">6</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/LinkedIn - UCS One Business.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/LinkedIn - UCS One Business.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">LinkedIn - UCS One Business</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.linkedin.com/company/ucs-one-business/posts/?feedView=all&amp;viewAsMember=true</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_49">
+  <field name="color">6</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/LinkedIn - Implema AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/LinkedIn - Implema AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">LinkedIn - Implema AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.linkedin.com/company/implema-ab/posts/?feedView=all</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_39">
+  <field name="color">6</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[['active' ,'activity_calendar_event_id' ,'activity_date_deadline' ,'activity_exception_decoration' ,'activity_exception_icon' ,'activity_ids' ,'activity_state' ,'activity_summary' ,'activity_type_icon' ,'activity_type_id' ,'activity_user_id' ,'backend_url' ,'child_ids' ,'color' ,'company_id' ,'content' ,'content_date' ,'content_uid' ,'create_date' ,'create_uid' ,'display_name' ,'draft_name' ,'draft_summary' ,'has_message' ,'history_head' ,'history_ids' ,'id' ,'image' ,'menu_id' ,'message_attachment_count' ,'message_follower_ids' ,'message_has_error' ,'message_has_error_counter' ,'message_has_sms_error' ,'message_ids' ,'message_is_follower' ,'message_needaction' ,'message_needaction_counter' ,'message_partner_ids' ,'my_activity_date_deadline' ,'name' ,'parent_id' ,'rating_ids' ,'template' ,'type' ,'website_message_ids' ,'write_date' ,'write_uid']]]></field>
+  <field name="filter_domain">[("name", "=", "Benchmarking")]</field>
+  <field name="instruction"><![CDATA[Detta är nyckeltal/nyckelkriterier som ska användas]]></field>
+  <field name="is_favorite">True</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Benchmarking.faiss"/>
+  <field name="memory_type">model</field>
+  <field name="name">Benchmarking</field>
+  <field name="nbr_days">100</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_43">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Allabolag - Linserv AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Allabolag - Linserv AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Allabolag - Linserv AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/bokslut/linserv-aktiebolag/solna/konsulter/2K20976I5YF3I</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_44">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Allabolag - Exsitec AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Allabolag - Exsitec AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Allabolag - Exsitec AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/bokslut/exsitec-ab/link%C3%B6ping/konsulter/2K1T53ZI5YF3I</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_50">
+  <field name="color">6</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/LinkedIn - Linserv AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/LinkedIn - Linserv AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">LinkedIn - Linserv AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.linkedin.com/company/linserv-ab/posts/?feedView=all</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<record model="ai.memory" id="ai_memory_53">
+  <field name="color">8</field>
+  <field name="debug">True</field>
+  <field name="field_list"><![CDATA[[]]]></field>
+  <field name="instruction"><![CDATA[- Använd företagsnamn och organisationsnummer för att hitta rätt företag på Allabolag.se.
+- Identifiera ägare och eventuella moder-/dotterbolag.
+- Samla in antal anställda om uppgift finns.
+- Omsättning (för senaste räkenskapsår)
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Resultat (vinst/förlust)
+- Tillgångar
+- Skulder
+- Eget kapital
+- Soliditet
+- Balansomslutning
+- Jämför omsättningstillväxt över tid om flera års redovisningar finns.
+- Hämta information om företagets ålder och eventuella namnändringar.]]></field>
+  <field name="is_favorite">True</field>
+  <field name="max_nbr_pages">10</field>
+  <field name="memory_faiss" type="base64" file="intelligence_studies/files/Översikt allabolag - UCS One Business AB.faiss"/>
+  <field name="memory_markdown" type="base64" file="intelligence_studies/files/Översikt allabolag - UCS One Business AB.markdown"/>
+  <field name="memory_type">bs4</field>
+  <field name="name">Översikt allabolag - UCS One Business AB</field>
+  <field name="nbr_days">30</field>
+  <field name="nbr_rags">3</field>
+  <field name="split_chunk_overlap">200</field>
+  <field name="split_chunk_size">1000</field>
+  <field name="status">active</field>
+  <field name="url">https://www.allabolag.se/foretag/ucs-one-business-ab/link%C3%B6ping/redovisning-bokf%C3%B6ring/2K2IX22I5YGRY</field>
+  <field name="vector_type">faiss</field>
+  <field name="uuid">MssfsVdbIe</field>
+</record>
+
+
+
+<!-- Glue records: agent to tools -->
+<record id="ai_agent_ai_tool_2345334" model="ai.agent.tool">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_tool_id" ref="ai_agent.ai_tool_process_content"/>
+        </record><record id="ai_agent_ai_tool_1576" model="ai.agent.tool">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_tool_id" ref="ai_agent.ai_tool_internet_search_DDGO"/>
+        </record>
+<!-- Glue records: agent to memory -->
+<record id="ai_agent_ai_memory_63" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_38"/>
+        </record>
+<record id="ai_agent_ai_memory_64" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_39"/>
+        </record>
+<record id="ai_agent_ai_memory_62" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_37"/>
+        </record>
+<record id="ai_agent_ai_memory_67" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_42"/>
+        </record>
+<record id="ai_agent_ai_memory_68" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_43"/>
+        </record>
+<record id="ai_agent_ai_memory_69" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_44"/>
+        </record>
+<record id="ai_agent_ai_memory_71" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_46"/>
+        </record>
+<record id="ai_agent_ai_memory_70" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_45"/>
+        </record>
+<record id="ai_agent_ai_memory_72" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_47"/>
+        </record>
+<record id="ai_agent_ai_memory_73" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_48"/>
+        </record>
+<record id="ai_agent_ai_memory_76" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_51"/>
+        </record>
+<record id="ai_agent_ai_memory_74" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_49"/>
+        </record>
+<record id="ai_agent_ai_memory_75" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_50"/>
+        </record>
+<record id="ai_agent_ai_memory_77" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_52"/>
+        </record>
+<record id="ai_agent_ai_memory_78" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_53"/>
+        </record>
+<record id="ai_agent_ai_memory_79" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_54"/>
+        </record>
+<record id="ai_agent_ai_memory_81" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_55"/>
+        </record>
+<record id="ai_agent_ai_memory_82" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_56"/>
+        </record>
+<record id="ai_agent_ai_memory_59" model="ai.agent.memory">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            <field name="ai_memory_id" ref="ai_memory_34"/>
+        </record>
+
+<!-- Glue records: quest to agent -->
+<record id="ai_quest_ai_agent_25" model="ai.quest.agent">
+            <field name="ai_agent_id" ref="ai_agent_25"/>
+            
+            <field name="ai_quest_id" ref="konkurrenskraftsuppdra_69"/>
+        </record>
+
+</data>
+</odoo>

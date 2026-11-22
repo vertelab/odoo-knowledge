@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SEKTION 2: Skriva och strukturera
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <record id="slide_category_kb_s2" model="slide.slide">
+        <field name="name">2. Skriva och strukturera</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="sequence">100</field>
+    </record>
+
+    <record id="slide_kb_s2_01" model="slide.slide">
+        <field name="name">Att skriva för den som inte var där</field>
+        <field name="sequence">110</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.30</field>
+        <field name="html_content" type="html">
+<section class="s_cover o_cc o_cc3 pt160 pb160">
+    <div class="container">
+        <h1 class="display-3-fs" style="text-align: center;">Att skriva för den som inte var där</h1>
+        <p class="lead" style="text-align: center;">Läsaren har inte din kontext. Skriv som om du förklarade för en ny kollega.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Fällan: tyst kunskap</h2>
+        <p>När du skriver om något du kan bra utelämnar du automatiskt det som känns självklart. Men det självklara för dig är inte självklart för någon annan.</p>
+        <p>”Starta om tjänsten och kontrollera loggen” är en instruktion som bara fungerar om läsaren vet <em>vilken</em> tjänst, <em>hur</em> man startar om den, och <em>vilken</em> logg.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb64">
+    <div class="container s_allow_columns">
+        <h2>Fyra frågor som räddar anteckningen</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr><th>Fråga</th><th>Varför</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Vem gäller det?</strong></td><td>Roll, avdelning, behörighet</td></tr>
+                <tr><td><strong>När gör man det?</strong></td><td>Vid vilken händelse eller vilket läge?</td></tr>
+                <tr><td><strong>Vad behövs först?</strong></td><td>Förkunskaper, behörigheter, verktyg</td></tr>
+                <tr><td><strong>Hur vet man att det lyckades?</strong></td><td>Förväntat resultat — annars går det inte att verifiera</td></tr>
+            </tbody>
+        </table>
+        <p class="small text-muted">Den sista är nästan alltid bortglömd. Utan den vet läsaren inte om det gick bra.</p>
+    </div>
+</section>
+
+<section class="s_call_to_action o_cc o_cc5 pt48 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h3>Skriv kort — men inte för kort</h3>
+                <p class="lead">En anteckning ska vara tillräcklig, inte uttömmande. Om den blir för lång blir den inte läst. Om den blir för kort går den inte att följa.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">Hur du skriver anteckningar som går att använda utan din kontext. Fällan med tyst kunskap och fyra frågor som räddar anteckningen.</field>
+    </record>
+
+    <record id="slide_kb_s2_02" model="slide.slide">
+        <field name="name">Struktur och rubriker</field>
+        <field name="sequence">120</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.25</field>
+        <field name="html_content" type="html">
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Rubriken avgör om den hittas</h2>
+        <p>En anteckning som heter ”Diverse” eller ”Anteckningar 2026” är i praktiken förlorad. Rubriken är det första — och ofta enda — du ser i en sökträff.</p>
+        <p>Skriv rubriken som den fråga anteckningen besvarar: <strong>”Så här återställer du lösenordet för en kundanvändare”</strong> snarare än <strong>”Lösenord”</strong>.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt32 pb64">
+    <div class="container s_allow_columns">
+        <h2>En enkel struktur som håller</h2>
+        <ol>
+            <li><strong>Syfte</strong> — en mening om vad anteckningen hjälper dig med</li>
+            <li><strong>Förutsättningar</strong> — vad som måste vara på plats</li>
+            <li><strong>Stegen</strong> — numrerade, ett moment per steg</li>
+            <li><strong>Resultat</strong> — hur du vet att det lyckades</li>
+            <li><strong>Om det går fel</strong> — vanliga problem och vad du gör</li>
+        </ol>
+        <p class="small text-muted">Sista punkten är guld värd. Det är precis den kunskap som brukar försvinna.</p>
+    </div>
+</section>
+
+<section class="s_text_image pt32 pb64">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 pt16 pb16">
+                <h3 class="h4-fs">Undvik</h3>
+                <ul class="small">
+                    <li>Ett enda långt textblock</li>
+                    <li>Förkortningar utan förklaring</li>
+                    <li>”Se tidigare anteckning” — den går inte att hitta</li>
+                    <li>Rubriker som bara du förstår</li>
+                </ul>
+            </div>
+            <div class="col-lg-6 pt16 pb16">
+                <h3 class="h4-fs">Gör istället</h3>
+                <ul class="small">
+                    <li>Korta stycken och punktlistor</li>
+                    <li>Skriv ut förkortningen första gången</li>
+                    <li>Länka till den andra anteckningen</li>
+                    <li>Rubrik som beskriver innehållet</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">Hur rubrik och struktur avgör om en anteckning hittas. En enkel femstegsstruktur och vanliga misstag att undvika.</field>
+    </record>
+
+    <record id="slide_kb_s2_03" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Skriva</field>
+        <field name="sequence">130</field>
+        <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="knowledge_onboarding.slide_channel_knowledge"/>
+        <field name="is_published" eval="True"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Testa dina kunskaper om att skriva och strukturera anteckningar som går att hitta och följa.</field>
+    </record>
+
+    <record id="slide_kb_s2_03_q1" model="slide.question">
+        <field name="question">Vad kännetecknar en bra rubrik?</field>
+        <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_kb_s2_03"/>
+    </record>
+    <record id="slide_kb_s2_03_q1_a1" model="slide.answer">
+        <field name="text_value">Den beskriver vad anteckningen svarar på</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Rubriken är ofta det enda man ser i en sökträff.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q1"/>
+    </record>
+    <record id="slide_kb_s2_03_q1_a2" model="slide.answer">
+        <field name="text_value">Den är kort</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — kort är bra, men beskrivande är viktigare. ”Lösenord” säger ingenting.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q1"/>
+    </record>
+    <record id="slide_kb_s2_03_q1_a3" model="slide.answer">
+        <field name="text_value">Den innehåller datum</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — datum hjälper sällan när man söker.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q1"/>
+    </record>
+
+    <record id="slide_kb_s2_03_q2" model="slide.question">
+        <field name="question">Varför är avsnittet ”Om det går fel” värdefullt?</field>
+        <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_kb_s2_03"/>
+    </record>
+    <record id="slide_kb_s2_03_q2_a1" model="slide.answer">
+        <field name="text_value">Det fångar den kunskap som annars försvinner</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Felsökningskunskap är precis det som brukar finnas bara i huvudet på någon.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q2"/>
+    </record>
+    <record id="slide_kb_s2_03_q2_a2" model="slide.answer">
+        <field name="text_value">Det gör anteckningen längre</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — längden är inte poängen.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q2"/>
+    </record>
+    <record id="slide_kb_s2_03_q2_a3" model="slide.answer">
+        <field name="text_value">Det krävs av mallen</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — det är innehållet som är värdefullt.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q2"/>
+    </record>
+
+    <record id="slide_kb_s2_03_q3" model="slide.question">
+        <field name="question">Vad är problemet med ”Se tidigare anteckning”?</field>
+        <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_kb_s2_03"/>
+    </record>
+    <record id="slide_kb_s2_03_q3_a1" model="slide.answer">
+        <field name="text_value">Läsaren kan inte hitta den</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Rätt! Länka istället till den specifika anteckningen.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q3"/>
+    </record>
+    <record id="slide_kb_s2_03_q3_a2" model="slide.answer">
+        <field name="text_value">Det tar för lite plats</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — platsen är inte problemet.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q3"/>
+    </record>
+    <record id="slide_kb_s2_03_q3_a3" model="slide.answer">
+        <field name="text_value">Det ser oprofessionellt ut</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Nej — det är användbarheten som brister.</field>
+        <field name="question_id" ref="slide_kb_s2_03_q3"/>
+    </record>
+
+    </data>
+</odoo>

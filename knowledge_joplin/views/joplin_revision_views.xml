@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+        <record id="view_joplin_revision_tree" model="ir.ui.view">
+            <field name="name">joplin.revision.tree</field>
+            <field name="model">joplin.revision</field>
+            <field name="arch" type="xml">
+                <list string="Revisions" default_order="created_time desc">
+                    <field name="created_time"/>
+                    <field name="note_id" optional="show"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="resource_ref" optional="show"/>
+                    <field name="title_diff"/>
+                    <field name="body_diff"/>
+                </list>
+            </field>
+        </record>
+
+    </data>
+</odoo>
