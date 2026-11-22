@@ -15,7 +15,7 @@
     "license": "AGPL-3",
     "data": [
         'views/document_page.xml',
-        'security/ir.access.csv',
+        'security/ir.model.access.csv',
         'security/security_post_rules.xml'
     ],
     "installable": True,

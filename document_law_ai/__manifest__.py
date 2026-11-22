@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Knowledge: Document Law AI',
-    'version': '18.0.1.0.0',
+    'version': '1.0.0',
     'summary': 'OKF bridge for document.law + a law-reading agent for the general assistant',
     'category': 'Hidden',
     'author': 'Vertel Sverige AB',

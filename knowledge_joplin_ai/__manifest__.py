@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Knowledge: Joplin AI',
-    'version': '18.0.1.1.0',
+    'version': '1.1.0',
     'summary': 'OKF indexing of joplin.note + note-saving tools for the Odoo specialist',
     'category': 'Hidden',
     'author': 'Vertel Sverige AB',

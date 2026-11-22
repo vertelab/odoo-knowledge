@@ -27,7 +27,7 @@ Joplin Backend
     },
     'data': [
         'security/security.xml',
-        'security/ir.access.csv',
+        'security/ir.model.access.csv',
         'views/joplin_note_views.xml',
         'views/joplin_folder_views.xml',
         'views/joplin_tag_views.xml',

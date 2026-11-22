@@ -1,0 +1,14 @@
+document_law/security/ir.access.csv
+document_law/static/description/index.html
+document_publish/static/description/index.html
+intelligence_studies/static/description/index.html
+knowledge_category_access/security/ir.access.csv
+knowledge_category_access/static/description/index.html
+knowledge_forum_website/security/ir.access.csv
+knowledge_forum_website/static/description/index.html
+knowledge_graphdb/security/ir.access.csv
+knowledge_graphdb/static/description/index.html
+knowledge_joplin/migrations/18.0.1.1.0/post-migrate.py
+knowledge_joplin/migrations/18.0.1.1.2/post-migrate.py
+knowledge_joplin/security/ir.access.csv
+knowledge_joplin/static/description/index.html

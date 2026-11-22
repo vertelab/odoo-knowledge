@@ -25,7 +25,7 @@
 {
     'name': "Knowledge: Intelligence Studies",
     'summary': "Adds templates and articles for intelligence studies.",
-    'version': '18.0.1.0.0',
+    'version': '1.0.0',
     'author': "Vertel Sverige AB",
     'category': 'Tools',
     'author': 'Vertel Sverige AB',

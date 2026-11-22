@@ -34,6 +34,7 @@ class JoplinTag(models.Model):
     # Soft delete on every item type, as in Joplin's own data model.
     # joplin.tag does not inherit mail.thread, so 'tracking' is not a valid
     # field parameter here — unlike joplin.note, which does.
+    deleted_time = fields.Datetime(string='Deleted Time')
     active = fields.Boolean(string='Active', default=True)
 
     _sql_constraints = [
@@ -65,6 +66,8 @@ class JoplinTag(models.Model):
         if changed and 'updated_time' not in vals:
             vals['updated_time'] = datetime.utcnow()
 
+        if 'active' in vals and not vals['active'] and 'deleted_time' not in vals:
+            vals['deleted_time'] = datetime.utcnow()
 
         res = super().write(vals)
         if vals.get('active') is False:
@@ -77,7 +80,7 @@ class JoplinTag(models.Model):
         self.write({'active': False})
 
     def action_restore(self):
-        self.write({'active': True})
+        self.write({'active': True, 'deleted_time': False})
 
     def unlink(self):
         self._log_event(3)

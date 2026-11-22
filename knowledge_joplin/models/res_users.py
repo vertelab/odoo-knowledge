@@ -18,7 +18,7 @@ class ResUsers(models.Model):
 
     @api.depends_context('uid')
     def _compute_joplin_api_url(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url', '')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', '')
         for user in self:
             user.joplin_api_url = f"{base_url}/joplin"
 

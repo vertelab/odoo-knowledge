@@ -103,6 +103,12 @@
                     <filter string="My Configs" name="filter_mine"
                             domain="[('user_id', '=', uid)]"
                             groups="knowledge_graphdb.group_graph_user"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Model" name="group_model"
+                                context="{'group_by': 'model_id'}"/>
+                        <filter string="State" name="group_state"
+                                context="{'group_by': 'state'}"/>
+                    </group>
                 </search>
             </field>
         </record>

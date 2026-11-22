@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     'name': 'Knowledge: Onboarding (LMS)',
-    'version': '18.0.3.0.0',
+    'version': '3.0.0',
     'summary': 'Onboardingskurs: kunskapsbas, anteckningar och dokument-pages',
     'description': """
 Kunskap & anteckningar i Vertel

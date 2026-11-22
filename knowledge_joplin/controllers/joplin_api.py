@@ -739,10 +739,10 @@ class JoplinApi(http.Controller):
         if auth_err:
             return auth_err
         res = request.env['joplin.resource'].search([('joplin_id', '=', joplin_id)], limit=1)
-        if not res or not res.raw:
+        if not res or not res.datas:
             return self._response({'error': 'Resource not found'}, 404)
         import base64
-        content = base64.b64decode(res.raw)
+        content = base64.b64decode(res.datas)
         headers = [('Content-Type', res.mime or 'application/octet-stream'),
                     ('Content-Disposition', f'attachment; filename="{res.filename or "file"}"')]
         return request.make_response(content, headers)
@@ -792,8 +792,7 @@ class JoplinApi(http.Controller):
             if data.get('filename'):
                 vals['filename'] = data['filename']
             if data.get('datas'):
-                # `datas` is gone in 20.0; `raw` is the writable binary.
-                vals['raw'] = data['datas']
+                vals['datas'] = data['datas']
             if data.get('id'):
                 vals['joplin_id'] = data['id']
             if data.get('note_id'):

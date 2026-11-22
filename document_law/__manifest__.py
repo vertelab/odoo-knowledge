@@ -40,7 +40,7 @@
        "python": ["rss_parser", "xmltodict",],
      },
     'data': [
-        'security/ir.access.csv',
+        'security/ir.model.access.csv',
         "security/security.xml",
         'views/document_law.xml',
         'views/res_company.xml',

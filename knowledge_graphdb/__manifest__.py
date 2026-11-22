@@ -30,7 +30,7 @@ Graph Database Bridge
     },
     'data': [
         'security/security.xml',
-        'security/ir.access.csv',
+        'security/ir.model.access.csv',
         'views/graph_model_views.xml',
         'views/res_users_views.xml',
         'data/data.xml',
