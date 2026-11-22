@@ -723,9 +723,15 @@ def content_for(env, path):
 
     if kind == 'resource_blob':
         res = _find_model_record(env, 'resource', jid)
+        # #if VERSION >= "20.0"
+        if not res or not res.raw:
+            return None, None
+        return base64.b64decode(res.raw), res.mime or 'application/octet-stream'
+        # #else
         if not res or not res.datas:
             return None, None
         return base64.b64decode(res.datas), res.mime or 'application/octet-stream'
+        # #endif
 
     if kind == 'raw':
         Item = env['joplin.item'].sudo()

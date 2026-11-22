@@ -1,23 +1,26 @@
 import logging
 from datetime import datetime, timezone
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
 
-class JoplinTag(models.Model):
-    _name = 'joplin.tag'
-    _description = 'Joplin Tag'
+class JoplinFolder(models.Model):
+    _name = 'joplin.folder'
+    _description = 'Joplin Folder (Notebook)'
     _order = 'name'
     _rec_name = 'name'
 
     joplin_id = fields.Char(string='Joplin ID', required=True, index=True, copy=False)
     name = fields.Char(string='Name', required=True, translate=True)
+    parent_id = fields.Many2one('joplin.folder', string='Parent Folder',
+                                 index=True, ondelete='cascade')
+    child_ids = fields.One2many('joplin.folder', 'parent_id', string='Subfolders')
     user_id = fields.Many2one('res.users', string='User', required=True,
                                default=lambda self: self.env.user, ondelete='cascade')
-    note_ids = fields.Many2many('joplin.note', 'joplin_tag_note_rel', 'tag_id', 'note_id',
-                                 string='Notes')
+    note_ids = fields.One2many('joplin.note', 'folder_id', string='Notes')
     note_count = fields.Integer(string='Note Count', compute='_compute_note_count')
 
     created_time = fields.Datetime(string='Created Time', default=fields.Datetime.now)
@@ -26,15 +29,20 @@ class JoplinTag(models.Model):
     user_updated_time = fields.Datetime(string='User Updated Time')
 
     is_shared = fields.Boolean(string='Is Shared', default=False)
-    parent_id = fields.Char(string='Parent ID')
+    share_id = fields.Char(string='Share ID')
+    icon = fields.Char(string='Icon')
+
     encryption_cipher_text = fields.Text(string='Encryption Cipher Text')
     encryption_applied = fields.Boolean(string='Encryption Applied', default=False)
+    master_key_id = fields.Char(string='Master Key ID')
 
-    color = fields.Integer(string='Color', default=0)
-    # Soft delete on every item type, as in Joplin's own data model.
-    # joplin.tag does not inherit mail.thread, so 'tracking' is not a valid
-    # field parameter here — unlike joplin.note, which does.
+    # Joplin carries deleted_time on EVERY item type, not only on notes.
+    # Without it the sync protocol cannot report a deleted notebook, and
+    # _FOLDER_FIELDS (which maps it) raised a KeyError on every folder.
+    # No 'tracking' here: joplin.folder does not inherit mail.thread.
+    # #if VERSION <= "19.0"
     deleted_time = fields.Datetime(string='Deleted Time')
+    # #endif
     active = fields.Boolean(string='Active', default=True)
 
     _sql_constraints = [
@@ -43,8 +51,8 @@ class JoplinTag(models.Model):
 
     @api.depends('note_ids')
     def _compute_note_count(self):
-        for tag in self:
-            tag.note_count = len(tag.note_ids)
+        for folder in self:
+            folder.note_count = len(folder.note_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -61,13 +69,17 @@ class JoplinTag(models.Model):
         return records
 
     def write(self, vals):
-        changed = 'name' in vals
-        # See joplin.folder.write(): an explicit updated_time wins.
+        changed = any(k in vals for k in ('name', 'parent_id', 'icon'))
+        # Trust the client's updated_time when it supplies one: the sync
+        # ingest passes the timestamp from the Joplin item, and overwriting
+        # it here made every ingest look like a modification.
         if changed and 'updated_time' not in vals:
             vals['updated_time'] = datetime.utcnow()
 
+        # #if VERSION <= "19.0"
         if 'active' in vals and not vals['active'] and 'deleted_time' not in vals:
             vals['deleted_time'] = datetime.utcnow()
+        # #endif
 
         res = super().write(vals)
         if vals.get('active') is False:
@@ -80,7 +92,11 @@ class JoplinTag(models.Model):
         self.write({'active': False})
 
     def action_restore(self):
+        # #if VERSION >= "20.0"
+        self.write({'active': True})
+        # #else
         self.write({'active': True, 'deleted_time': False})
+        # #endif
 
     def unlink(self):
         self._log_event(3)
@@ -88,7 +104,7 @@ class JoplinTag(models.Model):
 
     def _log_event(self, event_type):
         self.env['joplin.event'].create([
-            {'item_type': 5, 'item_id': r.joplin_id, 'event_type': event_type}
+            {'item_type': 2, 'item_id': r.joplin_id, 'event_type': event_type}
             for r in self
         ])
 
@@ -96,17 +112,3 @@ class JoplinTag(models.Model):
     def _generate_joplin_id(self):
         import secrets
         return secrets.token_hex(16)
-
-
-class JoplinNoteTag(models.Model):
-    _name = 'joplin.note.tag'
-    _description = 'Joplin Note-Tag Relation'
-
-    note_id = fields.Many2one('joplin.note', string='Note', required=True,
-                               ondelete='cascade')
-    tag_id = fields.Many2one('joplin.tag', string='Tag', required=True,
-                              ondelete='cascade')
-
-    _sql_constraints = [
-        ('note_tag_uniq', 'unique(note_id, tag_id)', 'Note-Tag relation must be unique!'),
-    ]

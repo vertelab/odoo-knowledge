@@ -402,7 +402,11 @@ class TestServeIngestFixedPoint(TransactionCase):
             'file_extension': 'txt',
             'note_id': note.id,
             'joplin_id': _jid(),
+            # #if VERSION >= "20.0"
+            'raw': 'aGVsbG8=',
+            # #else
             'datas': 'aGVsbG8=',
+            # #endif
         })
         served, again = self._round_trip(
             'joplin.resource', resource, '/%s.md' % resource.joplin_id)
@@ -544,6 +548,9 @@ class TestNotebookTreeAgreement(TransactionCase):
         resource = self.env['joplin.resource'].create({
             'filename': 'r.txt', 'mime': 'text/plain', 'joplin_id': _jid(),
             'note_id': notes[0].id, 'datas': 'aGVsbG8='})
+            # #if VERSION >= "20.0"
+            # (raw replaces datas on 20.0 — see the create above)
+            # #endif
         return root, sub, notes, tag, resource
 
     def _all_delta_names(self):
@@ -649,12 +656,20 @@ class TestPerUserBoundary(TransactionCase):
         self.user_a = Users.create({
             'name': 'Sync A', 'login': 'sync_a_%s' % _jid()[:8],
             'email': 'a_%s@example.invalid' % _jid()[:8],
+            # #if VERSION >= "19.0"
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+            # #else
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            # #endif
         })
         self.user_b = Users.create({
             'name': 'Sync B', 'login': 'sync_b_%s' % _jid()[:8],
             'email': 'b_%s@example.invalid' % _jid()[:8],
+            # #if VERSION >= "19.0"
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+            # #else
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            # #endif
         })
         self.note_b = self.env['joplin.note'].with_user(self.user_b).create({
             'title': 'private to B', 'body': 'secret', 'joplin_id': _jid(),

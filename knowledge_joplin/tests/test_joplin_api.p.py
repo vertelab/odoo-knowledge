@@ -219,7 +219,11 @@ class TestJoplinModels(common.TransactionCase):
             'name': 'test.txt',
             'mime': 'text/plain',
             'filename': 'test.txt',
+            # #if VERSION >= "20.0"
+            'raw': base64.b64encode(b'Hello World').decode('utf-8'),
+            # #else
             'datas': base64.b64encode(b'Hello World').decode('utf-8'),
+            # #endif
             'note_id': note.id,
             'user_id': self.User1.id,
         })
@@ -234,7 +238,11 @@ class TestJoplinModels(common.TransactionCase):
             'joplin_id': secrets.token_hex(16),
             'name': 'data.bin',
             'mime': 'application/octet-stream',
+            # #if VERSION >= "20.0"
+            'raw': base64.b64encode(b'\x00\x01\x02').decode('utf-8'),
+            # #else
             'datas': base64.b64encode(b'\x00\x01\x02').decode('utf-8'),
+            # #endif
             'note_id': note.id,
             'user_id': self.User1.id,
         })

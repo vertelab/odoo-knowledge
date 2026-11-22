@@ -800,7 +800,12 @@ class JoplinApi(http.Controller):
             if data.get('filename'):
                 vals['filename'] = data['filename']
             if data.get('datas'):
+                # #if VERSION >= "20.0"
+                # `datas` is gone in 20.0; `raw` is the writable binary.
+                vals['raw'] = data['datas']
+                # #else
                 vals['datas'] = data['datas']
+                # #endif
             if data.get('id'):
                 vals['joplin_id'] = data['id']
             if data.get('note_id'):
