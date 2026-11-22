@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Page-creation tools for the Odoo specialist (document-page-skill).
+
+        All three go through `document.page.create()` + the `content`
+        inverse (design D3): OCA's `document.page.content` is a compute
+        with an inverse (`_inverse_content`), which writes a new
+        `document.page.history` row and re-points `history_head`. No tool
+        sets `history_head` directly, and no tool writes `content` on an
+        existing page (that is an edit, not a creation).
+
+        Verified against OCA document_page 18.0.2.1.2:
+          document_page.py:31-35  content = compute + inverse
+          document_page.py:151-160 _inverse_content -> _create_history
+          document_page_history.py:12-30  the history model
+
+        SCOPE: these tools write to `company` — the team's knowledge.
+        Unlike `joplin.note` (personal), there is no direct-write path:
+        the approval gate applies regardless of `memory_learning_direct`.
+
+        The tools run in the ai.tool sandbox: `env`, `json`, `datetime`,
+        `os`, `re` plus a small builtins set (with `__import__`). They
+        build dicts and call the ORM — nothing else.
+    -->
+
+    <!-- ── page_create — free text ──────────────────────────────────── -->
+    <record id="tool_page_create" model="ai.tool">
+        <field name="name">page_create</field>
+        <field name="description">Create a knowledge page (document.page) for the team from text you supply. Use when the user asks you to document something so that colleagues can read it. Returns the new page's id, title and history id. Required: title. Optional: content (HTML), category (parent category name — created if missing), summary (one line describing the change). The page is team knowledge: it always passes the approval gate, and you must never document on your own initiative — propose and ask first.</field>
+        <field name="parameters">{"type": "object", "properties": {"title": {"type": "string", "description": "Page title (required). Short, specific and findable."}, "content": {"type": "string", "description": "Page body as HTML. Plain paragraphs are fine."}, "category": {"type": "string", "description": "Parent category name. Created if it does not exist."}, "summary": {"type": "string", "description": "One line describing what this page establishes."}}, "required": ["title"]}</field>
+        <field name="risk_level">write</field>
+        <field name="code"><![CDATA[
+async def execute(title=None, content=None, category=None, summary=None):
+    """Create a document.page from free text."""
+    if not title or not str(title).strip():
+        return json.dumps({
+            'error': "Missing required argument 'title'",
+            'parameter': 'title',
+            'expected': 'a non-empty page title',
+            'actual': '(empty)',
+            'retryable': True,
+        })
+    vals = {
+        'name': str(title).strip(),
+        'type': 'content',
+    }
+    parent_id = _resolve_category(category)
+    if parent_id:
+        vals['parent_id'] = parent_id
+    if summary and str(summary).strip():
+        vals['draft_summary'] = str(summary).strip()
+    page = env['document.page'].create(vals)
+    if content is not None and str(content).strip():
+        # The inverse writes the history row and re-points history_head.
+        page.write({'content': str(content)})
+        page.invalidate_recordset()
+        if not page.history_head:
+            return json.dumps({
+                'error': 'Page %s was created but no history row exists — '
+                         'the content did not reach document.page.history'
+                         % page.id,
+                'parameter': 'content',
+                'expected': 'a document.page.history row after write',
+                'actual': 'history_head is empty',
+                'retryable': False,
+            })
+    return json.dumps({
+        'id': page.id,
+        'title': page.name,
+        'history_id': page.history_head.id if page.history_head else None,
+        'category': page.parent_id.name or None,
+    }, ensure_ascii=False, default=str)
+
+
+def _resolve_category(name):
+    """Return the id of the category named `name`, creating it on miss."""
+    if not name or not str(name).strip():
+        return None
+    name = str(name).strip()
+    page = env['document.page'].search(
+        [('name', '=ilike', name), ('type', '=', 'category')], limit=1)
+    if not page:
+        page = env['document.page'].create({
+            'name': name, 'type': 'category'})
+    return page.id
+]]></field>
+    </record>
+
+    <!-- ── page_create_from_record — summarise an Odoo record ───────── -->
+    <record id="tool_page_create_from_record" model="ai.tool">
+        <field name="name">page_create_from_record</field>
+        <field name="description">Create a knowledge page (document.page) for the team that documents an existing Odoo record. Use when a record's content is worth documenting for colleagues. Required: model (technical name) and res_id. Optional: title (defaults to the record's display name), content (your HTML summary; defaults to a short generated summary), category, summary. The model must be one you are allowed to read — a model outside your scope is denied. The page is team knowledge and always passes the approval gate.</field>
+        <field name="parameters">{"type": "object", "properties": {"model": {"type": "string", "description": "Odoo model technical name, e.g. project.task (required)."}, "res_id": {"type": "integer", "description": "Id of the record to document (required)."}, "title": {"type": "string", "description": "Page title. Defaults to the model name plus the record display name."}, "content": {"type": "string", "description": "HTML summary of the record. Defaults to a short generated summary."}, "category": {"type": "string", "description": "Parent category name. Created if it does not exist."}, "summary": {"type": "string", "description": "One line describing what this page establishes."}}, "required": ["model", "res_id"]}</field>
+        <field name="risk_level">write</field>
+        <field name="code"><![CDATA[
+async def execute(model=None, res_id=None, title=None, content=None,
+                  category=None, summary=None):
+    """Create a document.page documenting an Odoo record."""
+    if not model or not str(model).strip():
+        return json.dumps({
+            'error': "Missing required argument 'model'",
+            'parameter': 'model',
+            'expected': 'an Odoo model technical name',
+            'actual': '(empty)',
+            'retryable': True,
+        })
+    model = str(model).strip()
+    if res_id is None or str(res_id).strip() == '':
+        return json.dumps({
+            'error': "Missing required argument 'res_id'",
+            'parameter': 'res_id',
+            'expected': 'an integer record id',
+            'actual': '(empty)',
+            'retryable': True,
+        })
+    try:
+        res_id = int(res_id)
+    except (TypeError, ValueError):
+        return json.dumps({
+            'error': "Invalid value for 'res_id'",
+            'parameter': 'res_id',
+            'expected': 'an integer record id',
+            'actual': str(res_id),
+            'retryable': True,
+        })
+    if model not in env.registry:
+        return json.dumps({
+            'error': 'Unknown model: %s' % model,
+            'parameter': 'model',
+            'expected': 'an installed Odoo model',
+            'actual': model,
+            'retryable': False,
+        })
+    # Reuse the AI core's scoped-model check (odoo-model-tools 2.2) — do
+    # not invent a second one. Same function odoo_search/odoo_create use.
+    _tools = __import__(
+        'odoo.addons.ai_agent_core.core.tools',
+        fromlist=['_model_scope_error'])
+    scope_err = _tools._model_scope_error(env, model)
+    if scope_err:
+        return json.dumps({
+            'error': scope_err,
+            'parameter': 'model',
+            'expected': 'a model within the session scope',
+            'actual': model,
+            'retryable': False,
+        })
+    record = env[model].browse(res_id).exists()
+    if not record:
+        return json.dumps({
+            'error': '%s #%s not found' % (model, res_id),
+            'parameter': 'res_id',
+            'expected': 'an existing %s id' % model,
+            'actual': str(res_id),
+            'retryable': False,
+        })
+    if not title or not str(title).strip():
+        title = '%s %s' % (model, record.display_name)
+    if content is None or not str(content).strip():
+        content = _default_record_summary(record)
+    vals = {
+        'name': str(title).strip(),
+        'type': 'content',
+    }
+    parent_id = _resolve_category(category)
+    if parent_id:
+        vals['parent_id'] = parent_id
+    if summary and str(summary).strip():
+        vals['draft_summary'] = str(summary).strip()
+    page = env['document.page'].create(vals)
+    page.write({'content': str(content)})
+    page.invalidate_recordset()
+    if not page.history_head:
+        return json.dumps({
+            'error': 'Page %s was created but no history row exists — '
+                     'the content did not reach document.page.history'
+                     % page.id,
+            'parameter': 'content',
+            'expected': 'a document.page.history row after write',
+            'actual': 'history_head is empty',
+            'retryable': False,
+        })
+    return json.dumps({
+        'id': page.id,
+        'title': page.name,
+        'history_id': page.history_head.id,
+        'source': '%s,%s' % (model, res_id),
+        'category': page.parent_id.name or None,
+    }, ensure_ascii=False, default=str)
+
+
+def _default_record_summary(record):
+    """A short deterministic summary when the agent supplies no content."""
+    lines = ['<h1>%s</h1>' % record.display_name]
+    for fname in ('name', 'description', 'state'):
+        if fname not in record._fields:
+            continue
+        value = record[fname]
+        if not value:
+            continue
+        lines.append('<p><strong>%s:</strong> %s</p>'
+                     % (fname, str(value)[:2000]))
+    return '\n'.join(lines)
+
+
+def _resolve_category(name):
+    """Return the id of the category named `name`, creating it on miss."""
+    if not name or not str(name).strip():
+        return None
+    name = str(name).strip()
+    page = env['document.page'].search(
+        [('name', '=ilike', name), ('type', '=', 'category')], limit=1)
+    if not page:
+        page = env['document.page'].create({
+            'name': name, 'type': 'category'})
+    return page.id
+]]></field>
+    </record>
+
+    <!-- ── page_create_from_conversation — document the dialogue ────── -->
+    <record id="tool_page_create_from_conversation" model="ai.tool">
+        <field name="name">page_create_from_conversation</field>
+        <field name="description">Create a knowledge page (document.page) for the team that documents the current conversation. Use when a conclusion reached in dialogue is worth documenting for colleagues. You supply the title and the HTML content — you already hold the conversation in context, so write it yourself. Required: title and content. Optional: category, summary. Fails with an actionable error when content is empty (nothing to document). The page is team knowledge and always passes the approval gate.</field>
+        <field name="parameters">{"type": "object", "properties": {"title": {"type": "string", "description": "Page title (required). Short and specific."}, "content": {"type": "string", "description": "HTML body documenting the conversation (required)."}, "category": {"type": "string", "description": "Parent category name. Created if it does not exist."}, "summary": {"type": "string", "description": "One line describing what this page establishes."}}, "required": ["title", "content"]}</field>
+        <field name="risk_level">write</field>
+        <field name="code"><![CDATA[
+async def execute(title=None, content=None, category=None, summary=None):
+    """Create a document.page documenting the current conversation."""
+    if not title or not str(title).strip():
+        return json.dumps({
+            'error': "Missing required argument 'title'",
+            'parameter': 'title',
+            'expected': 'a non-empty page title',
+            'actual': '(empty)',
+            'retryable': True,
+        })
+    if content is None or not str(content).strip():
+        return json.dumps({
+            'error': "Missing required argument 'content'",
+            'parameter': 'content',
+            'expected': 'a non-empty HTML summary of the conversation',
+            'actual': '(empty)',
+            'retryable': True,
+        })
+    vals = {
+        'name': str(title).strip(),
+        'type': 'content',
+    }
+    parent_id = _resolve_category(category)
+    if parent_id:
+        vals['parent_id'] = parent_id
+    if summary and str(summary).strip():
+        vals['draft_summary'] = str(summary).strip()
+    page = env['document.page'].create(vals)
+    page.write({'content': str(content)})
+    page.invalidate_recordset()
+    if not page.history_head:
+        return json.dumps({
+            'error': 'Page %s was created but no history row exists — '
+                     'the content did not reach document.page.history'
+                     % page.id,
+            'parameter': 'content',
+            'expected': 'a document.page.history row after write',
+            'actual': 'history_head is empty',
+            'retryable': False,
+        })
+    return json.dumps({
+        'id': page.id,
+        'title': page.name,
+        'history_id': page.history_head.id,
+        'category': page.parent_id.name or None,
+    }, ensure_ascii=False, default=str)
+
+
+def _resolve_category(name):
+    """Return the id of the category named `name`, creating it on miss."""
+    if not name or not str(name).strip():
+        return None
+    name = str(name).strip()
+    page = env['document.page'].search(
+        [('name', '=ilike', name), ('type', '=', 'category')], limit=1)
+    if not page:
+        page = env['document.page'].create({
+            'name': name, 'type': 'category'})
+    return page.id
+]]></field>
+    </record>
+</odoo>
