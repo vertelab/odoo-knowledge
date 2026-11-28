@@ -44,6 +44,7 @@
         "security/security.xml",
         'views/document_law.xml',
         'views/res_company.xml',
+        'wizard/law_import_wizard.xml',
         'data/create_law_records_cron.xml',
     ],
     'demo': [],
